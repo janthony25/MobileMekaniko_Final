@@ -6,12 +6,13 @@ namespace MobileMekaniko_Final.Repository
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _data;
-        private readonly ILogger<CustomerRepository> _logger;
+        private readonly ILoggerFactory _loggerFactory;
 
-        public UnitOfWork(ApplicationDbContext data, ILogger<CustomerRepository> logger)
+        public UnitOfWork(ApplicationDbContext data, ILoggerFactory loggerFactory)
         {
             _data = data;
-            Customer = new CustomerRepository(_data, _logger);
+            _loggerFactory = loggerFactory;
+            Customer = new CustomerRepository(_data, _loggerFactory);
         }
         public ICustomerRepository Customer { get; private set; }
     }

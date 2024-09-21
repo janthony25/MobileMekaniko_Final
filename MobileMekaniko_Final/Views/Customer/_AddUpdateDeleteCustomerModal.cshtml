@@ -1,0 +1,53 @@
+﻿@model MobileMekaniko_Final.Models.Dto.CustomerDetailsDto
+
+
+<!-- Add/Update/Delete Modal -->
+<div class="modal fade" id="customerModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="customerModalTitle"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @Html.AntiForgeryToken()
+                <input id="CustomerId" asp-for="CustomerId" type="hidden" value="0"/>
+                <div class=" mb-2">
+                    <label asp-for="CustomerName"></label>
+                    <input id="CustomerName" asp-for="CustomerName" class="form-control" />
+                    <span id="CustomerNameError" class="text-danger"></span>
+                </div>
+                <div id="customerAddress-container" class=" mb-2">
+                    <label asp-for="CustomerAddress"></label>
+                    <input id="CustomerAddress" asp-for="CustomerAddress" class="form-control" />
+                    <span id="CustomerAddressError" class="text-danger"></span>
+                </div>
+                <div id="customerEmail-container" class=" mb-2">
+                    <label asp-for="CustomerEmail"></label>
+                    <input id="CustomerEmail" asp-for="CustomerEmail" class="form-control" />
+                    <span id="CustomerEmailError" class="text-danger"></span>
+                </div>
+                <div id="customerNumber-container" class=" mb-2">
+                    <label asp-for="CustomerNumber"></label>
+                    <input id="CustomerNumber" asp-for="CustomerNumber" class="form-control" />
+                    <span id="CustomerNumberError" class="text-danger"></span>
+                </div>
+                <div id="dateEdited-container" class="mb-2">
+                    <label asp-for="DateEdited"></label>
+                    <input type="text" id="DateEdited" asp-for="DateEdited" class="form-control" />
+                    <span id="DateEditedError" class="text-danger"></span>
+                </div>
+                <div id="dateAdded-container" class="mb-2">
+                    <label asp-for="DateAdded"></label>
+                    <input type="text" id="DateAdded" asp-for="DateAdded" class="form-control" />
+                    <span id="DateAddedError" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="addCustomer"  class="btn btn-primary" onclick="AddCustomer();">Add</button>
+                <button type="submit" id="btnUpdateCustomer" class="btn btn-warning" onclick="UpdateCustomer();">Update</button>
+                <button type="submit" id="btnDeleteCustomer" class="btn btn-danger" onclick="DeleteCustomer();">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

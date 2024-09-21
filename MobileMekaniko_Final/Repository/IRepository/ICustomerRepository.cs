@@ -5,7 +5,9 @@ namespace MobileMekaniko_Final.Repository.IRepository
     public interface ICustomerRepository
     {
         Task<List<CustomerListSummaryDto>> GetCustomersAsync();
-        Task AddCustomerAsync(AddCustomerDto dto);
-        Task<bool> UpdateCustomerAsync(UpdateDeleteCustomerDto dto);
+        Task<CustomerDetailsDto> GetCustomerDetailsAsync(int id); 
+        Task AddCustomerAsync(CustomerDetailsDto dto);
+        Task UpdateCustomerAsync(CustomerDetailsDto dto);
+        Task DeleteCustomerAsync(int id);
     }
 }

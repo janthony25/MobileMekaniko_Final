@@ -51,8 +51,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 
-// Repository
+builder.Logging.AddConsole();
+
+// Repository and logging
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddLogging();
+
 
 // Razor Runtime Compilation
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();

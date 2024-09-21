@@ -4,29 +4,30 @@
     ViewData["Title"] = "CUSTOMERS";
 }
 
-<h4 class="text-center mb-5 mt-5 fw-bold">@ViewData["Title"]</h4>
+<h4 class="text-center fw-bold mb-5 mt-5">@ViewData["Title"]</h4>
 
-<div class="d-flex justify-content-end align-items-center mb-2">
-    <button class="btn btn-primary" id="btnAddCustomer"><i class="bi bi-plus-lg"></i> Customer</button>
+
+<div class="text-end">
+    <button id="btnAddCustomer" class="btn btn-primary" onclick="CustomerModal(0, 'addCustomer')"><i class="bi bi-plus-lg"></i> Customer</button>
 </div>
 
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Customer Name</th>
-            <th>Email Address</th>
-            <th>Contact #</th>
-            <th></th>
+            <td class="text-center fw-bold">ID</td>
+            <td class="text-center fw-bold">Customer Name</td>
+            <td class="text-center fw-bold">Email Address</td>
+            <td class="text-center fw-bold">Contact #</td>
+            <td class="text-center"></td>
         </tr>
     </thead>
-    <tbody id="tblBody">
+    <tbody id="customerTblBody">
 
     </tbody>
 </table>
 
-<partial name="_AddCustomerModal" />
-<partial name="_UpdateDeleteCustomerModal" />
+<partial name="_AddUpdateDeleteCustomerModal">
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/getcustomer.js"></script>
+
+<script src="~/js/getcustomers.js"></script>

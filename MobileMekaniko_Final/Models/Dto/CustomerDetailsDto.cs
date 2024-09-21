@@ -2,7 +2,7 @@
 
 namespace MobileMekaniko_Final.Models.Dto
 {
-    public class UpdateDeleteCustomerDto
+    public class CustomerDetailsDto
     {
         [DisplayName("ID")]
         public int CustomerId { get; set; }
@@ -18,6 +18,9 @@ namespace MobileMekaniko_Final.Models.Dto
 
         [DisplayName("Contact #")]
         public string? CustomerNumber { get; set; }
+
+        [DisplayName("Date Added")]
+        public DateTime DateAdded { get; set; } = DateTime.Now;
 
         [DisplayName("Last Edited")]
         public DateTime? DateEdited { get; set; }
