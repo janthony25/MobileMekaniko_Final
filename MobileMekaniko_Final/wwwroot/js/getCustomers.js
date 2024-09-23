@@ -83,8 +83,12 @@ function CustomerModal(customerId, action) {
                 $('#customerModal').modal('show');
                 $('#customerModalTitle').text('Update Customer');
                 $('#addCustomer').hide();
+                $('#CustomerName').prop('readonly', false);
                 $('#btnDeleteCustomer').hide();
-                $('#btnUpdateCustomer').css('display', 'block');
+                $('#btnUpdateCustomer').show();
+                $('#customerAddress-container').show();
+                $('#customerEmail-container').show();
+                $('#customerNumber-container').show();
                 $('#dateEdited-container').show();
                 $('#dateAdded-container').show();
                 
@@ -276,4 +280,57 @@ function DeleteCustomer() {
             alert('An error occurred while deleting customer.');
         }
     });
+}
+
+
+function SearchCustomer() {
+    const searchCustomer = $('#searchCustomer').val();
+
+    $.ajax({
+        url: 'customer/SearchCustomers',
+        type: 'GET',
+        data: {
+            customerName: searchCustomer
+        },
+        success: function (response) {
+            if (response.success) {
+                // populate customer table or handle the search results
+                console.log(response.customer);
+                UpdateCustomerTable(response.customers);
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert('An errror occurred while searching for customer.');
+        }
+    });
+
+}
+
+// Update customer table in the UI
+function UpdateCustomerTable(customers) {
+    let tableRows = '';
+
+    if (customers.length === 0) {
+        tableRows = `
+            <tr>
+                <td colspan="5" class="text-center">No customers found.</td>
+            </tr>`;
+    } else {
+        $.each(customers, function (index, customer) {
+            tableRows += `
+                <tr>
+                    <td class="text-center">${customer.customerId}</td>
+                    <td class="text-center">${customer.customerName}</td>
+                    <td class="text-center">${customer.customerEmail}</td>
+                    <td class="text-center">${customer.customerNumber}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-danger" onclick="DeleteCustomer(${customer.customerId})">Delete</button>
+                    </td>
+                </tr>`;
+        });
+    }
+
+    $('#customerTblBody').html(tableRows);  // Assuming you have a table with this ID
 }

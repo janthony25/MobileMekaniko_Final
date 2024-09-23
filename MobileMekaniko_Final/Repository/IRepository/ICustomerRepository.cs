@@ -9,5 +9,6 @@ namespace MobileMekaniko_Final.Repository.IRepository
         Task AddCustomerAsync(CustomerDetailsDto dto);
         Task UpdateCustomerAsync(CustomerDetailsDto dto);
         Task DeleteCustomerAsync(int id);
+        Task<List<CustomerListSummaryDto>> SearchCustomerByNameAsync(string customerName);
     }
 }

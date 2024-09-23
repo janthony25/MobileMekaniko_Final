@@ -7,6 +7,12 @@
 <h4 class="text-center fw-bold mb-5 mt-5">@ViewData["Title"]</h4>
 
 
+<div class="d-flex align-items-center justify-content-end mb-5">
+    <input id="searchCustomer" placeholder="Search Customer" /> 
+    <button id="btnSearchCustomer" class="btn btn-primary btn-sm ms-1" onclick="SearchCustomer();"><i class="bi bi-search "></i></button>
+    
+</div>
+
 <div class="text-end">
     <button id="btnAddCustomer" class="btn btn-primary" onclick="CustomerModal(0, 'addCustomer')"><i class="bi bi-plus-lg"></i> Customer</button>
 </div>

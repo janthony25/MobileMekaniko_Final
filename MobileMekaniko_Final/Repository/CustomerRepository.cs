@@ -7,6 +7,7 @@ using MobileMekaniko_Final.Models;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
 using NuGet.Protocol;
+using System.Reflection.Metadata.Ecma335;
 
 namespace MobileMekaniko_Final.Repository
 {
@@ -127,6 +128,38 @@ namespace MobileMekaniko_Final.Repository
             catch (Exception ex)
             {
                 _logger.LogInformation(ex, "An error occurred while fetching customers.");
+                throw;
+            }
+        }
+
+        public async Task<List<CustomerListSummaryDto>> SearchCustomerByNameAsync(string customerName)
+        {
+            try
+            {
+
+                if (string.IsNullOrEmpty(customerName))
+                {
+                    _logger.LogInformation("customer name is empty. Fetching all customers.");
+                    return await GetCustomersAsync();
+                }
+
+                // Find customer by Id
+                var customer = await _data.Customers
+                    .Where(c => c.CustomerName.Contains(customerName))
+                    .Select(c => new CustomerListSummaryDto
+                    {
+                        CustomerId = c.CustomerId,
+                        CustomerName = c.CustomerName,
+                        CustomerEmail = c.CustomerEmail,
+                        CustomerNumber = c.CustomerNumber
+                    }).ToListAsync();
+
+                _logger.LogInformation($"Successfully found {customer.Count} customers with {customerName} in their name.");
+                return customer;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Something went wrong while fetching customer with {customerName} in their name.");
                 throw;
             }
         }

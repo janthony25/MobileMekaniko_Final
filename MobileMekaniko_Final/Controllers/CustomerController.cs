@@ -1,4 +1,5 @@
 ﻿
+using Azure.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Execution;
 using MobileMekaniko_Final.Models.Dto;
@@ -130,8 +131,32 @@ namespace MobileMekaniko_Final.Controllers
             }
             catch(Exception ex)
             {
-                _logger.LogWarning($"Something went wrong while trying to delete customer with id {id}");
+                _logger.LogWarning(ex, $"Something went wrong while trying to delete customer with id {id}");
                 return Json(new { success = false, message = "Something went wrong while deleting customer." });
+            }
+        }
+
+        // GET : Search Customer
+        public async Task<IActionResult> SearchCustomers(string customerName)
+        {
+            try
+            {
+                _logger.LogInformation($"Request to search for customers with {customerName} in their name.");
+
+                var customers = await _unitOfWork.Customer.SearchCustomerByNameAsync(customerName);
+
+                if (customers == null || customers.Count ==0)
+                {
+                    _logger.LogInformation($"No customers found with the name: {customerName}");
+                    return Json(new { success = false, message = "No customer found." });
+                }
+                _logger.LogInformation($"Found {customers.Count} customers with {customerName}.");
+                return Json(new {success=true,customers = customers});
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while searching customers with the name {customerName}");
+                return Json(new { success = false, message = "An error occurred while searching for the customer name." });
             }
         }
 
