@@ -73,6 +73,47 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task<CustomerDto> GetCustomerCarsByIdAsync(int id)
+        {
+            try
+            {
+                // Trying to fetch customer car details
+                var customerCar = await _data.Customers
+                     .Include(c => c.Car)
+                         .ThenInclude(car => car.CarMake)
+                             .ThenInclude(cm => cm.Make)
+                     .Where(c => c.CustomerId == id)
+                     .Select(c => new CustomerDto
+                     {
+                         CustomerId = c.CustomerId,
+                         CustomerName = c.CustomerName,
+                         CustomerAddress = c.CustomerAddress,
+                         CustomerEmail = c.CustomerEmail,
+                         CustomerNumber = c.CustomerNumber,
+                         CarDto = c.Car.Select(car => new CarDto
+                         {
+                             CarId = car.CarId,
+                             CarRego = car.CarRego,
+                             CarModel = car.CarModel,
+                             CarYear = car.CarYear,
+                             MakeDto = car.CarMake.Select(cm => new MakeDto
+                             {
+                                 MakeId = cm.Make.MakeId,
+                                 MakeName = cm.Make.MakeName
+                             }).ToList()
+                         }).ToList()
+                     }).FirstOrDefaultAsync();
+
+                _logger.LogInformation($"Successfully fetched customer car details from customer with id {id}");
+                return customerCar;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "An error occurred while fetching customer car details");
+                throw;
+            }
+        }
+
         public async Task<CustomerDetailsDto> GetCustomerDetailsAsync(int id)
         {
             try

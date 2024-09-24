@@ -1,0 +1,48 @@
+﻿@model MobileMekaniko_Final.Models.Dto.CarDetailsDto
+
+<!-- Add/Update/Delete Modal -->
+<div class="modal fade" id="customerModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="customerModalTitle"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @Html.AntiForgeryToken()
+                <input id="CustomerId" asp-for="CustomerId" type="hidden" value="0" />
+                <div class=" mb-2">
+                    <label asp-for="CarRego"></label>
+                    <input id="CarRego" asp-for="CarRego" class="form-control" />
+                    <span id="CarRegoError" class="text-danger"></span>
+                </div>
+                
+                <div id="carModel-container" class=" mb-2">
+                    <label asp-for="CarModel"></label>
+                    <input id="CarModel" asp-for="CarModel" class="form-control" />
+                    <span id="CarModelError" class="text-danger"></span>
+                </div>
+                <div id="carYear-container" class=" mb-2">
+                    <label asp-for="CarYear"></label>
+                    <input id="CarYear" asp-for="CarYear" class="form-control" />
+                    <span id="CarYearError" class="text-danger"></span>
+                </div>
+                <div id="dateEdited-container" class="mb-2">
+                    <label asp-for="DateEdited"></label>
+                    <input type="text" id="DateEdited" asp-for="DateEdited" class="form-control" />
+                    <span id="DateEditedError" class="text-danger"></span>
+                </div>
+                <div id="dateAdded-container" class="mb-2">
+                    <label asp-for="DateAdded"></label>
+                    <input type="text" id="DateAdded" asp-for="DateAdded" class="form-control" />
+                    <span id="DateAddedError" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="addCustomer" class="btn btn-primary" onclick="AddCustomer();">Add</button>
+                <button type="submit" id="btnUpdateCustomer" class="btn btn-warning" onclick="UpdateCustomer();">Update</button>
+                <button type="submit" id="btnDeleteCustomer" class="btn btn-danger" onclick="DeleteCustomer();">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

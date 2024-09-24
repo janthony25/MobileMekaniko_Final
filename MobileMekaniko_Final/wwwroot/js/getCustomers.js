@@ -33,8 +33,9 @@ function GetCustomers() {
                             <td class="text-center">${item.customerEmail ? item.customerEmail : ''}</td>
                             <td class="text-center">${item.customerNumber ? item.customerNumber : ''}</td>
                             <td class="text-center">
-                                <div>   
-                                    <a class="btn btn-danger btn-sm"><i class="bi bi-trash3" onclick="CustomerModal(${item.customerId}, 'deleteCustomer')"></i></a>
+                                <div>
+                                    <a href="/customer/GetCustomerCars/${item.customerId}" class="btn btn-primary btn-sm"><i class="bi bi-car-front" id="viewCar"></i> View</a>
+                                    <a class="btn btn-danger btn-sm" onclick="CustomerModal(${item.customerId}, 'deleteCustomer')"><i class="bi bi-trash3"></i></a>
                                 </div>
                             </td>
                         </tr>`;

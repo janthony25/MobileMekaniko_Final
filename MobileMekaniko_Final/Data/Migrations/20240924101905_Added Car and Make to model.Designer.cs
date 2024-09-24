@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MobileMekaniko_Final.Data;
 
@@ -11,9 +12,11 @@ using MobileMekaniko_Final.Data;
 namespace MobileMekaniko_Final.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240924101905_Added Car and Make to model")]
+    partial class AddedCarandMaketomodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,9 +235,6 @@ namespace MobileMekaniko_Final.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CarId"));
 
-                    b.Property<DateTime>("CarAdded")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("CarModel")
                         .HasColumnType("nvarchar(max)");
 
@@ -247,9 +247,6 @@ namespace MobileMekaniko_Final.Data.Migrations
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("DateEdited")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("CarId");
 

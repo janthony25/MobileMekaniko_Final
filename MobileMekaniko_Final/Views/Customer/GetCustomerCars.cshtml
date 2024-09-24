@@ -1,0 +1,60 @@
+﻿@model MobileMekaniko_Final.Models.Dto.CustomerDto
+
+<h4 class="fw-bold">CUSTOMER DETAILS</h4>
+
+<div class="customer-details mt-5">
+    <p>Customer ID: <span class="fw-bold">@Model.CustomerId</span></p>
+    <p>Customer Name: <span class="fw-bold">@Model.CustomerName</span></p>
+    <p>Email Address: <span class="fw-bold">@Model.CustomerEmail</span></p>
+    <p>Contact #: <span class="fw-bold">@Model.CustomerNumber</span></p>
+</div>
+
+
+<div class="d-flex justify-content-between align-items-center mt-5">
+    <h4>Car List</h4>
+    <button class="btn btn-primary"><i class="bi bi-plus-lg"></i> Cars</button>
+</div>  
+
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th class="text-center">ID</th>
+            <th class="text-center">Rego #</th>
+            <th class="text-center">Make</th>
+            <th class="text-center">Model</th>
+            <th class="text-center">Year</th>
+            <th class="text-center"></th>
+        </tr>
+    </thead>
+    <tbody id="tblCustomerCarBody">
+        @if (!Model.CarDto.Any())
+        {
+            <tr>
+                <td colspan="6" class="text-center">No cars available for this customer</td>
+            </tr>
+        }
+        else{
+            @foreach(var car in Model.CarDto)
+            {
+                <tr>
+                    <td class="text-center">@car.CarId</td>
+                    <td class="text-center">@car.CarRego</td>
+                    <td class="text-center">
+                        @foreach(var make in car.MakeDto)
+                        {
+                            <span>@make.MakeName</span>
+                        }
+                    </td>
+                    <td class="text-center">@car.CarModel</td>
+                    <td class="text-center">@car.CarYear</td>
+                    <td class="text-center" style="width:250px;">
+                        <a class="btn btn-primary btn-sm">Invoice</a>
+                        <a class="btn btn-secondary btn-sm">Quotation</a>
+                        <a class="btn btn-danger btn-sm"><i class="bi bi-trash3"></i> Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

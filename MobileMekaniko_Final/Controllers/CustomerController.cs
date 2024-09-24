@@ -161,5 +161,24 @@ namespace MobileMekaniko_Final.Controllers
         }
 
 
+        // GET : Customer Cars
+        public async Task<IActionResult> GetCustomerCars(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Request to fetch customer car details.");
+
+                var customerCar = await _unitOfWork.Customer.GetCustomerCarsByIdAsync(id);
+
+                _logger.LogInformation("Successfully fetched customer car details. Returning customer car details");
+                return View(customerCar);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching customer car details.");
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
     }
 }
