@@ -33,13 +33,7 @@ namespace MobileMekaniko_Final.Controllers
 
                 var customer = await _unitOfWork.Customer.GetCustomersAsync();
 
-                if (customer == null || customer.Count == 0)
-                {
-                    _logger.LogWarning("No customer was found.");
-                    return Json(new { success = false, message = "No customer was found in the database." });
-                }
-
-
+             
                 _logger.LogInformation($"Successfully retrieved {customer.Count} customers.");
                 return Json(customer);
             }
@@ -169,6 +163,8 @@ namespace MobileMekaniko_Final.Controllers
                 _logger.LogInformation("Request to fetch customer car details.");
 
                 var customerCar = await _unitOfWork.Customer.GetCustomerCarsByIdAsync(id);
+                var makes = await _unitOfWork.Car.GetMakesAsync();
+                ViewBag.Makes = makes;
 
                 _logger.LogInformation("Successfully fetched customer car details. Returning customer car details");
                 return View(customerCar);

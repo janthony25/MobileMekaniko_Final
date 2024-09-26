@@ -3,5 +3,6 @@
     public interface IUnitOfWork
     {
         ICustomerRepository Customer { get; }
+        ICarRepository Car { get; }
     }
 }
