@@ -4,24 +4,41 @@
         HideModal();
     });
 
+    // Save the car to Db
     $('#addCustomer').on('click', function () {
         console.log('Trying to add car.');
         AddCar();
+        HideModal();
+        location.reload();
     });
+
+    // Open add car modal and pass values
+    $('#btnAddCar').on('click', function () {
+        const carId = $(this).data('car-id');
+        const action = $(this).data('action');
+        const customerId = $(this).data('customer-id');
+
+        console.log(customerId, carId, action);
+
+        $('#CustomerId').val(customerId);
+
+        CarModal(carId, action);
+    });
+
+    // Open update car modal and pass values
+    $('.btnUpdateCar').on('click', function () {
+        console.log('opening update car modal...');
+
+        const carId = $(this).data('customer-id');
+        const action = $(this).data('action');
+
+        console.log(carId, action);
+        CarModal(carId, action);
+    });
+   
 });
 
-$('#btnAddCar').on('click', function () {
-    const carId = $(this).data('car-id');
-    const action = $(this).data('action');
-    const customerId = $(this).data('customer-id');
 
-    console.log(customerId, carId, action);
-
-    $('#CustomerId').val(customerId);
-
-    CarModal(carId, action);
-
-})
 
 function CarModal(carId, action) {
     $.ajax({
@@ -49,8 +66,6 @@ function CarModal(carId, action) {
                     response.makes.forEach(make => {
                         makesDropdown.append(`<option value="${make.makeId}">${make.makeName}</option>`);
 
-
-
                     });
                 } else {
                     makesDropdown.append('<option value="" disabled>No makes available</option>');
@@ -62,7 +77,10 @@ function CarModal(carId, action) {
                 $('#car-dateEdited-container').hide();
                 $('#btnUpdateCustomer').hide();
                 $('#btnDeleteCustomer').hide();
-              
+
+            }
+            else if (action === 'UpdateCar') {
+                console.log('Updating car..');
             }
         },
         error: function () {
@@ -125,6 +143,8 @@ function HideModal() {
     $('#makeIdSelection').css('border-color', 'Lightgrey');
     $('#CarRegoError').text('');   // Clear error message for Car Rego
     $('#MakeIdError').text('');    // Clear error message for Car Make
+
+    $('#carActionModal').modal('hide');
 }
 
 

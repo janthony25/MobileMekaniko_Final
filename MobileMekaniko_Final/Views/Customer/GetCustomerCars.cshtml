@@ -38,7 +38,9 @@
             @foreach(var car in Model.CarDto)
             {
                 <tr>
-                    <td class="text-center">@car.CarId</td>
+                    <td class="text-center">
+                        <a href="#" class="btnUpdateCar" data-car-id="@car.CarId" data-action="UpdateCar">@car.CarId</a>
+                    </td>
                     <td class="text-center">@car.CarRego</td>
                     <td class="text-center">
                         @foreach(var make in car.MakeDto)
