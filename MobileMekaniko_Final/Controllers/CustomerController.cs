@@ -163,8 +163,8 @@ namespace MobileMekaniko_Final.Controllers
                 _logger.LogInformation("Request to fetch customer car details.");
 
                 var customerCar = await _unitOfWork.Customer.GetCustomerCarsByIdAsync(id);
-                var makes = await _unitOfWork.Car.GetMakesAsync();
-                ViewBag.Makes = makes;
+                //var makes = await _unitOfWork.Car.GetMakesAsync();
+                //ViewBag.Makes = makes;
 
                 _logger.LogInformation("Successfully fetched customer car details. Returning customer car details");
                 return View(customerCar);

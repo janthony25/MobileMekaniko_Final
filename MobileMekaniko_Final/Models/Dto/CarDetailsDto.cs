@@ -28,7 +28,7 @@ namespace MobileMekaniko_Final.Models.Dto
 
         // Make Details
         public int MakeId { get; set; }
-        public string MakeName { get; set; }    
+        public string MakeName { get; set; }
 
     }
 }

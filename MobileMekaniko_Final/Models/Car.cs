@@ -18,7 +18,7 @@ namespace MobileMekaniko_Final.Models
         public int? CarYear { get; set; }
 
         [DisplayName("Date Added")]
-        public DateTime CarAdded { get; set; } = DateTime.Now;
+        public DateTime DateAdded { get; set; } = DateTime.Now;
 
         [DisplayName("DateEdited")]
         public DateTime? DateEdited { get; set; }

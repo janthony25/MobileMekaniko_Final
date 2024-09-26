@@ -16,6 +16,41 @@ namespace MobileMekaniko_Final.Repository
             _data = data;
             _logger = loggerFactory.CreateLogger<CarRepository>();
         }
+
+        public async Task<CarDetailsDto> GetCarDetailsAsync(int id)
+        {
+            try
+            {
+                // Trying to fetch car details
+                var car = await _data.Cars
+                    .Where(car => car.CarId == id)
+                    .Select(car => new CarDetailsDto
+                    {
+                        CarId = car.CarId,
+                        CarRego = car.CarRego,
+                        MakeName = car.CarMake.Select(cm => cm.Make.MakeName).FirstOrDefault(),
+                        CarModel = car.CarModel,
+                        CarYear = car.CarYear,
+                        DateAdded = car.DateAdded,
+                        DateEdited = car.DateEdited
+                    }).FirstOrDefaultAsync();
+
+                if (car == null || car.CarId == null)
+                {
+                    _logger.LogInformation("No car details was found.");
+                    return car;
+                }
+
+                _logger.LogInformation($"Successfully fetched car details of car with id {id}");
+                return car;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while trying to fetch car details of car with id {id}");
+                throw;
+            }
+        }
+
         public async Task<List<MakeDto>> GetMakesAsync()
         {
             try

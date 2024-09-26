@@ -14,9 +14,26 @@ namespace MobileMekaniko_Final.Controllers
             _unitOfWork = unitOfWork;
             _logger = logger;   
         }
-        public IActionResult Index()
+        
+        // GET : Get Car Details
+        public async Task<IActionResult> GetCarDetails(int id)
         {
-            return View();
+            try
+            {
+                _logger.LogInformation($"Request to fetch car details for Car Id {id}");
+
+                var car = await _unitOfWork.Car.GetCarDetailsAsync(id);
+                var makes = await _unitOfWork.Car.GetMakesAsync();
+                ViewBag.Makes = makes;
+
+                _logger.LogInformation($"Successfully fetched car details. returning car details");
+                return Json(new { car, makes });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching car details");
+                return Json(new { success = false, message = "An error occurred while fetching car details." });
+            }
         }
     }
 }

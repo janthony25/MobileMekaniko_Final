@@ -5,5 +5,6 @@ namespace MobileMekaniko_Final.Repository.IRepository
     public interface ICarRepository
     {
         Task<List<MakeDto>> GetMakesAsync();
+        Task<CarDetailsDto> GetCarDetailsAsync(int id);
     }
 }

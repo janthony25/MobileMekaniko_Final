@@ -5,7 +5,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="customerModalTitle"></h1>
+                <h1 class="modal-title fs-5" id="carModalTitle"></h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -18,7 +18,7 @@
                 </div>
 
                 @*Dropdown for Car Make*@
-                <div id="car-choose-carMake-container" class="mb-2">
+              @*   <div id="car-choose-carMake-container" class="mb-2">
                     <label class="form-label">Make</label>
                     @if (ViewBag.Makes != null && ViewBag.Makes.Count > 0)
                     {
@@ -32,12 +32,23 @@
                     }
                     else
                     {
-                        <select class="form-select" id="MakeId" name="MakeId" required disabled>
+                        <select class="form-select" id="MakeId" name="MakeId" required>
                             <option value="" disabled selected>No makes available</option>
                         </select>
                     }
                     <span id="MakeIdError" class="text-danger"></span>
+                </div> *@
+
+                <div id="car-choose-carMake-container" class="mb-2">
+                    <label class="form-label">Make</label>
+                    <select class="form-select" id="makeIdSelection" name="MakeId" required>
+                        <option value="" disabled selected>Select Car Make</option>
+                    </select>
+                    <span id="MakeIdError" class="text-danger"></span>
                 </div>
+                
+
+                
                 
                 <div id="car-carModel-container" class=" mb-2">
                     <label asp-for="CarModel"></label>
