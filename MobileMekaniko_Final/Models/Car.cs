@@ -24,7 +24,7 @@ namespace MobileMekaniko_Final.Models
         public DateTime? DateEdited { get; set; }
 
         // Many to Many Car-Make
-        public List<CarMake> CarMake { get; set; } 
+        public List<CarMake>? CarMake { get; set; } 
             
 
         // FK to Customer

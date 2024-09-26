@@ -1,11 +1,18 @@
 ﻿$(function () {
-
+    $('#addCustomer').on('click', function () {
+        console.log('Trying to add car.');
+        AddCar();
+    });
 });
 
 $('#btnAddCar').on('click', function () {
     const carId = $(this).data('car-id');
     const action = $(this).data('action');
-    console.log(carId, action);
+    const customerId = $(this).data('customer-id');
+
+    console.log(customerId, carId, action);
+
+    $('#CustomerId').val(customerId);
 
     CarModal(carId, action);
 
@@ -64,3 +71,64 @@ function CarModal(carId, action) {
 //    const selectedMakeId = $(this).val();
 //    console.log("Selected MakeId:", selectedMakeId);
 //});
+
+function AddCar() {
+
+    let result = Validate();
+
+    if (result == false) {
+        return false;
+    }
+    const token = $('input[name="__RequestVerificationToken"]').val();
+
+    let formData = {
+        __RequestVerificationToken: token,
+        carRego: $('#CarRego').val(),
+        carModel: $('#CarModel').val(),
+        carYear: $('#CarYear').val(),
+        customerId: $('#CustomerId').val(),
+        makeId: $('#makeIdSelection').val()
+    };
+
+
+    console.log(formData);
+
+    $.ajax({
+        url: '/car/AddCar',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert('An error occurred while adding new car to customer.');
+        }
+    });
+}
+
+function Validate() {
+    let isValid = true;
+
+    if ($('#CarRego').val().trim() === "") {
+        $('#CarRego').css('border-color', 'Red');
+        $('#CarRegoError').text('Car Rego is required');
+        isValid = false;
+    } else {
+        $('#CarRego').css('border-color', 'Lightgrey');
+        $('#CarRegoError').text('');
+    }
+
+    if ($('#makeIdSelection').val() === null || $('#makeIdSelection').val() === "") {
+        $('#makeIdSelection').css('border-color', 'Red');
+        $('#MakeIdError').text('Car Make is required.');
+        isValid = false;
+    } else {
+        $('#makeIdSelection').css('border-color', 'Lightgrey');
+        $('#MakeIdError').text('');
+    }
+    return isValid;
+}

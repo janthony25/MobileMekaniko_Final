@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository;
 using MobileMekaniko_Final.Repository.IRepository;
 
@@ -33,6 +34,29 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError(ex, "An error occurred while fetching car details");
                 return Json(new { success = false, message = "An error occurred while fetching car details." });
+            }
+        }
+
+        // POST: Add Car
+        public async Task<IActionResult> AddCar(CarDetailsDto dto)
+        {
+            try
+            {
+                _logger.LogInformation("Request to add new car.");
+                if (ModelState.IsValid)
+                {
+                    await _unitOfWork.Car.AddCarAsync(dto);
+                    _logger.LogInformation("Car added successfully.");
+                    return Json(new { success = true, message = "Car added successfully." });
+                }
+                _logger.LogWarning("Invalid model state");
+
+                return Json(new { success = false, message = "Invalid data provided." });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding car to customer.");
+                return Json(new { success = false, message = "An error occurred while adding new car to customer." });
             }
         }
     }

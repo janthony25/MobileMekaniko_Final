@@ -10,7 +10,8 @@
             </div>
             <div class="modal-body">
                 @Html.AntiForgeryToken()
-                <input id="CustomerId" asp-for="CustomerId" type="hidden" value="0" />
+                <input id="CustomerId" asp-for="CustomerId" type="hidden" />
+                <input id="CarId" asp-for="CarId" type="hidden"/>
                 <div class=" mb-2">
                     <label asp-for="CarRego"></label>
                     <input id="CarRego" asp-for="CarRego" class="form-control" />
@@ -43,6 +44,7 @@
                     <label class="form-label">Make</label>
                     <select class="form-select" id="makeIdSelection" name="MakeId" required>
                         <option value="" disabled selected>Select Car Make</option>
+                        <!-- The MakeId should be populated here via your AJAX call -->
                     </select>
                     <span id="MakeIdError" class="text-danger"></span>
                 </div>
@@ -73,7 +75,7 @@
                 
             </div>
             <div class="modal-footer">
-                <button type="submit" id="addCustomer" class="btn btn-primary" onclick="AddCustomer();">Add</button>
+                <button type="submit" id="addCustomer" class="btn btn-primary">Add</button>
                 <button type="submit" id="btnUpdateCustomer" class="btn btn-warning" onclick="UpdateCustomer();">Update</button>
                 <button type="submit" id="btnDeleteCustomer" class="btn btn-danger" onclick="DeleteCustomer();">Delete</button>
             </div>
