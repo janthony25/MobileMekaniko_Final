@@ -1,4 +1,9 @@
 ﻿$(function () {
+
+    $('#carActionModal').on('hidden.bs.modal', function () {
+        HideModal();
+    });
+
     $('#addCustomer').on('click', function () {
         console.log('Trying to add car.');
         AddCar();
@@ -109,6 +114,19 @@ function AddCar() {
         }
     });
 }
+
+function HideModal() {
+    $('#CarRego').val('');  // Clear Car Rego
+    $('#CarModel').val('');  // Fixed typo (changed .va() to .val())
+    $('#CarYear').val('');   // Clear Car Year
+
+    // Reset border colors to default and clear any error messages
+    $('#CarRego').css('border-color', 'Lightgrey');
+    $('#makeIdSelection').css('border-color', 'Lightgrey');
+    $('#CarRegoError').text('');   // Clear error message for Car Rego
+    $('#MakeIdError').text('');    // Clear error message for Car Make
+}
+
 
 function Validate() {
     let isValid = true;
