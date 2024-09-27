@@ -26,12 +26,9 @@
     });
 
     // Open update car modal and pass values
-    $('.btnUpdateCar').on('click', function () {
-        console.log('opening update car modal...');
-
-        const carId = $(this).data('customer-id');
+    $(document).on('click', '.btnUpdateCar', function () {
+        const carId = $(this).data('car-id');
         const action = $(this).data('action');
-
         console.log(carId, action);
         CarModal(carId, action);
     });
@@ -80,7 +77,57 @@ function CarModal(carId, action) {
 
             }
             else if (action === 'UpdateCar') {
-                console.log('Updating car..');
+                console.log(response);
+
+                const makesDropdown = $('#makeIdSelection');
+                makesDropdown.empty();  // Empty previous dropdown content
+
+                // Populate the makes dropdown
+                if (response.makes && response.makes.length > 0) {
+                    // Populate the dropdown with car makes
+                    response.makes.forEach(make => {
+                        // Set the current MakeId as the selected option
+                        if (make.makeId === response.car.makeId) {
+                            makesDropdown.append(`<option value="${make.makeId}" selected>${make.makeName}</option>`);
+                        } else {
+                            makesDropdown.append(`<option value="${make.makeId}">${make.makeName}</option>`);
+                        }
+                    });
+                } else {
+                    makesDropdown.append('<option value="" disabled>No makes available</option>');
+                }
+
+
+                $('#carActionModal').modal('show');
+                $('#carModalTitle').text('Update Car');
+               /* $('#car-choose-carMake-container').hide();*/
+
+                $('#btnUpdateCustomer').show();
+                $('#addCustomer').hide();
+                $('#btnDeleteCustomer').hide();
+
+                $('#CarRego').val(response.car.carRego);
+                $('#MakeName').val(response.car.makeName);
+                $('#CarModel').val(response.car.carModel);
+                $('#CarYear').val(response.car.carYear);
+
+                // Date Added
+                if (response.car.dateAdded && new Date(response.car.dateAdded).getTime() !== 0) {
+                    let formattedDate = new Date(response.car.dateAdded).toLocaleString();
+                    $('#DateAdded').val(formattedDate).prop('readonly', true);
+                }
+                else {
+                    $('#DateAdded').val('');
+                    $('#DateAdded').val(formattedDate).prop('readonly', true);
+                }
+
+                // Date Edited
+                if (response.car.dateEdited && new Date(response.car.dateEdited).getTime() !== 0) {
+                    let formattedDate = new Date(response.car.dateEdited).toLocaleString();
+                    $('#DateEdited').val(formattedDate).prop('readonly', true); // prop expects true, not 'true'
+                } else {
+                    $('#DateEdited').val('').prop('readonly', true); // Ensure it is readonly even if empty
+                }
             }
         },
         error: function () {
