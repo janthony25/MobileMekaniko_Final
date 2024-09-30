@@ -8,8 +8,7 @@
     $('#addCustomer').on('click', function () {
         console.log('Trying to add car.');
         AddCar();
-        HideModal();
-        location.reload();
+        
     });
 
     // Open add car modal and pass values
@@ -25,6 +24,7 @@
         CarModal(carId, action);
     });
 
+
     // Open update car modal and pass values
     $(document).on('click', '.btnUpdateCar', function () {
         const carId = $(this).data('car-id');
@@ -32,6 +32,14 @@
         console.log(carId, action);
         CarModal(carId, action);
     });
+
+    // Update the car details.
+    $(document).on('click', '#UpdateCustomer', function () {
+        console.log('Trying to edit car details.');
+        UpdateCar();
+    })
+
+    
    
 });
 
@@ -77,37 +85,28 @@ function CarModal(carId, action) {
 
             }
             else if (action === 'UpdateCar') {
-                console.log(response);
 
                 const makesDropdown = $('#makeIdSelection');
                 makesDropdown.empty();  // Empty previous dropdown content
 
-                // Populate the makes dropdown
-                if (response.makes && response.makes.length > 0) {
-                    // Populate the dropdown with car makes
-                    response.makes.forEach(make => {
-                        // Set the current MakeId as the selected option
-                        if (make.makeId === response.car.makeId) {
-                            makesDropdown.append(`<option value="${make.makeId}" selected>${make.makeName}</option>`);
-                        } else {
-                            makesDropdown.append(`<option value="${make.makeId}">${make.makeName}</option>`);
-                        }
-                    });
+                // Populate the makes dropdown with the current car's make
+                if (response.car && response.car.makeId && response.car.makeName) {
+                    makesDropdown.append(`<option value="${response.car.makeId}" selected>${response.car.makeName}</option>`);
                 } else {
-                    makesDropdown.append('<option value="" disabled>No makes available</option>');
+                    makesDropdown.append('<option value="" disabled>No make available</option>');
                 }
 
+                makesDropdown.prop('disabled', true);
 
                 $('#carActionModal').modal('show');
                 $('#carModalTitle').text('Update Car');
-               /* $('#car-choose-carMake-container').hide();*/
 
                 $('#btnUpdateCustomer').show();
                 $('#addCustomer').hide();
                 $('#btnDeleteCustomer').hide();
 
+                $('#CarId').val(response.car.carId);
                 $('#CarRego').val(response.car.carRego);
-                $('#MakeName').val(response.car.makeName);
                 $('#CarModel').val(response.car.carModel);
                 $('#CarYear').val(response.car.carYear);
 
@@ -115,18 +114,16 @@ function CarModal(carId, action) {
                 if (response.car.dateAdded && new Date(response.car.dateAdded).getTime() !== 0) {
                     let formattedDate = new Date(response.car.dateAdded).toLocaleString();
                     $('#DateAdded').val(formattedDate).prop('readonly', true);
-                }
-                else {
-                    $('#DateAdded').val('');
-                    $('#DateAdded').val(formattedDate).prop('readonly', true);
+                } else {
+                    $('#DateAdded').val('').prop('readonly', true);
                 }
 
                 // Date Edited
                 if (response.car.dateEdited && new Date(response.car.dateEdited).getTime() !== 0) {
                     let formattedDate = new Date(response.car.dateEdited).toLocaleString();
-                    $('#DateEdited').val(formattedDate).prop('readonly', true); // prop expects true, not 'true'
+                    $('#DateEdited').val(formattedDate).prop('readonly', true);
                 } else {
-                    $('#DateEdited').val('').prop('readonly', true); // Ensure it is readonly even if empty
+                    $('#DateEdited').val('').prop('readonly', true);
                 }
             }
         },
@@ -170,12 +167,53 @@ function AddCar() {
         success: function (response) {
             if (response.success) {
                 alert(response.message);
+                HideModal();
+                location.reload();
             } else {
                 alert(response.message);
             }
         },
         error: function () {
             alert('An error occurred while adding new car to customer.');
+        }
+    });
+}
+
+function UpdateCar() {
+    let result = Validate();
+    if (result == false) {
+        return false;
+    }
+
+    const token = $('input[name="__RequestVerificationToken"]').val();
+    const carId = $('#CarId').val();
+
+    let formData = {
+        __RequestVerificationToken: token,
+        carId: $('#CarId').val(),
+        carRego: $('#CarRego').val(),
+        carModel: $('#CarModel').val(),
+        carYear: $('#CarYear').val(),
+        dateEdited: $('#DateEdited').val(),
+        makeId: $('#makeIdSelection').val()
+    };
+
+    $.ajax({
+        url: '/car/UpdateCar',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);
+                HideModal();
+                location.reload();
+            }
+            else {
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert("An error occurred while updating car.");
         }
     });
 }

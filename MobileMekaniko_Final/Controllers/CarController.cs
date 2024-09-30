@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository;
 using MobileMekaniko_Final.Repository.IRepository;
@@ -38,6 +39,8 @@ namespace MobileMekaniko_Final.Controllers
         }
 
         // POST: Add Car
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCar(CarDetailsDto dto)
         {
             try
@@ -57,6 +60,28 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError(ex, "An error occurred while adding car to customer.");
                 return Json(new { success = false, message = "An error occurred while adding new car to customer." });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateCar(CarDetailsDto dto)
+        {
+            try
+            {
+                _logger.LogInformation("Request to update car.");
+                if (ModelState.IsValid)
+                {
+                    await _unitOfWork.Car.UpdateCarAsync(dto);
+                    _logger.LogInformation("Car updated successfully.");
+                    return Json(new { success = true, message = "Car successfully updated." });
+                }
+                return Json(new { success = false, message = "Invalid data provided." });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating car.");
+                return Json(new { success = false, message = "An error occurred while updating car." });
             }
         }
     }

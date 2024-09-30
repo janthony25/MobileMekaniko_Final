@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MobileMekaniko_Final.Data;
+using MobileMekaniko_Final.Data.Migrations;
 using MobileMekaniko_Final.Models;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
@@ -77,13 +78,16 @@ namespace MobileMekaniko_Final.Repository
                     {
                         CarId = car.CarId,
                         CarRego = car.CarRego,
-                        MakeName = car.CarMake.Select(cm => cm.Make.MakeName).FirstOrDefault(),
+                        MakeId = car.CarMake.FirstOrDefault().MakeId, // Get the associated MakeId directly
+                        MakeName = car.CarMake.FirstOrDefault().Make.MakeName, // Get the associated MakeName directly
                         CarModel = car.CarModel,
                         CarYear = car.CarYear,
                         DateAdded = car.DateAdded,
                         DateEdited = car.DateEdited,
                         CustomerId = car.CustomerId
                     }).FirstOrDefaultAsync();
+
+
 
                 if (car == null || car.CarId == null)
                 {
@@ -124,7 +128,33 @@ namespace MobileMekaniko_Final.Repository
            
         }
 
-        
-        
+        public async Task UpdateCarAsync(CarDetailsDto dto)
+        {
+            try
+            {
+                // Find car using id
+                var car = await _data.Cars.FindAsync(dto.CarId);
+
+                if (car == null || car.CarId == 0)
+                {
+                    _logger.LogWarning($"No car was found with id {dto.CarId}");
+                    throw new KeyNotFoundException("No car was found.");
+                }
+
+                car.CarRego = dto.CarRego;
+                car.CarModel = dto.CarModel;
+                car.CarYear = dto.CarYear;
+                car.DateEdited = DateTime.Now;
+
+                // Save changes to db
+                await _data.SaveChangesAsync();
+                _logger.LogInformation($"Successfully updated car.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating car details.");
+                throw;
+            }
+        }
     }
 }
