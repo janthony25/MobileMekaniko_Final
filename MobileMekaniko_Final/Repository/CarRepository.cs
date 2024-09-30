@@ -67,6 +67,30 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task DeleteCarAsync(int id)
+        {
+            try
+            {
+                // Find car by id
+                var car = await _data.Cars.FindAsync(id);
+
+                if(car == null || car.CarId == 0)
+                {
+                    _logger.LogWarning($"Car with id {id} not found.");
+                    throw new KeyNotFoundException("Car not found.");
+                }
+
+                _data.Cars.Remove(car);
+                _logger.LogInformation($"Deleting car with id {id}.");
+                await _data.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting car.");
+                throw;
+            }
+        }
+
         public async Task<CarDetailsDto> GetCarDetailsAsync(int id)
         {
             try

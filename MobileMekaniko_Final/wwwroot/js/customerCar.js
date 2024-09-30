@@ -46,6 +46,12 @@
         console.log(carId, action);
         CarModal(carId, action);
     })
+
+    // Delete Car Details
+    $('#DeleteCustomer').on('click', function () {
+        console.log('Trying to delete car.');
+        DeleteCar();
+    });
    
 });
 
@@ -136,7 +142,7 @@ function CarModal(carId, action) {
                 $('#carModalTitle').text('Delete Car');
 
                 $('#CarId').val(response.car.carId);
-                $('#CarRego').val(response.car.carRego);
+                $('#CarRego').val(response.car.carRego).prop('readonly', true);
                 $('#car-choose-carMake-container').hide();
                 $('#car-carModel-container').hide();
                 $('#car-carYear-container').hide();
@@ -233,6 +239,30 @@ function UpdateCar() {
         },
         error: function () {
             alert("An error occurred while updating car.");
+        }
+    });
+}
+
+function DeleteCar() {
+    const token = $('input[name="__RequestVerificationToken"]').val();
+    const carId = $('#CarId').val();
+
+    $.ajax({
+        url: '/car/DeleteCar',
+        type: 'POST',
+        data: {
+            __RequestVerificationToken: token,
+            id: carId
+        },
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);
+                HideModal();
+                location.reload();
+            }
+        },
+        error: function () {
+            alert('An error occurred while deleting car.');
         }
     });
 }

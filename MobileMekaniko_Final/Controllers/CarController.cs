@@ -63,6 +63,8 @@ namespace MobileMekaniko_Final.Controllers
             }
         }
 
+
+        // POST: Update Car
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCar(CarDetailsDto dto)
@@ -82,6 +84,25 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError(ex, "An error occurred while updating car.");
                 return Json(new { success = false, message = "An error occurred while updating car." });
+            }
+        }
+
+        // POST: Delete car
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCar(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Request to delete car..");
+
+                await _unitOfWork.Car.DeleteCarAsync(id);
+                return Json(new { success = true, message = "Car was deleted successfully." });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to delete car.");
+                return Json(new { success = false, message = "An error occurred while trying to delete car." });
             }
         }
     }

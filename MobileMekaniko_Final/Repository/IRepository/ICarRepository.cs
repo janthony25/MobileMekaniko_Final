@@ -8,5 +8,6 @@ namespace MobileMekaniko_Final.Repository.IRepository
         Task<CarDetailsDto> GetCarDetailsAsync(int id);
         Task AddCarAsync(CarDetailsDto dto);
         Task UpdateCarAsync(CarDetailsDto dto);
+        Task DeleteCarAsync(int id);
      }
 }
