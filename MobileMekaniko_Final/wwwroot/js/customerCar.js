@@ -88,8 +88,11 @@ function CarModal(carId, action) {
                     makesDropdown.append('<option value="" disabled>No makes available</option>');
                 }
 
+                makesDropdown.prop('disabled', false);
+
                 $('#carActionModal').modal('show');
                 $('#carModalTitle').text('Add Car');
+                $('#addCustomer').show();
                 $('#car-dateAdded-container').hide();
                 $('#car-dateEdited-container').hide();
                 $('#UpdateCustomer').hide();
