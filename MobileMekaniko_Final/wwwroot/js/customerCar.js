@@ -39,7 +39,13 @@
         UpdateCar();
     })
 
-    
+    // Open Delete car modal and pass values
+    $(document).on('click', '.btnDeleteCar', function () {
+        const carId = $(this).data('car-id');
+        const action = $(this).data('action');
+        console.log(carId, action);
+        CarModal(carId, action);
+    })
    
 });
 
@@ -80,8 +86,8 @@ function CarModal(carId, action) {
                 $('#carModalTitle').text('Add Car');
                 $('#car-dateAdded-container').hide();
                 $('#car-dateEdited-container').hide();
-                $('#btnUpdateCustomer').hide();
-                $('#btnDeleteCustomer').hide();
+                $('#UpdateCustomer').hide();
+                $('#DeleteCustomer').hide();
 
             }
             else if (action === 'UpdateCar') {
@@ -125,6 +131,19 @@ function CarModal(carId, action) {
                 } else {
                     $('#DateEdited').val('').prop('readonly', true);
                 }
+            } else if (action === 'DeleteCar') {
+                $('#carActionModal').modal('show');
+                $('#carModalTitle').text('Delete Car');
+
+                $('#CarId').val(response.car.carId);
+                $('#CarRego').val(response.car.carRego);
+                $('#car-choose-carMake-container').hide();
+                $('#car-carModel-container').hide();
+                $('#car-carYear-container').hide();
+                $('#car-dateEdited-container').hide();
+                $('#car-dateAdded-container').hide();
+                $('#addCustomer').hide();
+                $('#UpdateCustomer').hide();
             }
         },
         error: function () {

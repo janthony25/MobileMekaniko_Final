@@ -35,7 +35,7 @@ function GetCustomers() {
                             <td class="text-center">
                                 <div>
                                     <a href="/customer/GetCustomerCars/${item.customerId}" class="btn btn-primary btn-sm"><i class="bi bi-car-front" id="viewCar"></i> View</a>
-                                    <a class="btn btn-danger btn-sm" onclick="CustomerModal(${item.customerId}, 'deleteCustomer')"><i class="bi bi-trash3"></i></a>
+                                    <a class="btn btn-secondary btn-sm" onclick="CustomerModal(${item.customerId}, 'deleteCustomer')"><i class="bi bi-trash3"></i></a>
                                 </div>
                             </td>
                         </tr>`;
@@ -327,7 +327,8 @@ function UpdateCustomerTable(customers) {
                     <td class="text-center">${customer.customerEmail}</td>
                     <td class="text-center">${customer.customerNumber}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-danger" onclick="DeleteCustomer(${customer.customerId})">Delete</button>
+                        <a href="/customer/GetCustomerCars/${customer.customerId}" class="btn btn-primary btn-sm"><i class="bi bi-car-front" id="viewCar"></i> View</a>
+                        <button class="btn btn-sm btn-secondary" onclick="DeleteCustomer(${customer.customerId})">Delete</button>
                     </td>
                 </tr>`;
         });
