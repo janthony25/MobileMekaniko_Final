@@ -105,5 +105,23 @@ namespace MobileMekaniko_Final.Controllers
                 return Json(new { success = false, message = "An error occurred while trying to delete car." });
             }
         }
+
+        // GET : Car Invoice Summary
+        public async Task<IActionResult> GetCarInvoiceSummary(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Requet to fetch car invoice summary.");
+
+                var car = await _unitOfWork.Car.GetCarInvoiceSummaryAsync(id);
+                _logger.LogInformation($"Success fully fetched car invoice summary of car with id {id}.. returning it to view");
+                return View(car);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex,"An error occurred while fetching car invoice summary.");
+                return NotFound();
+            }
+        }
     }
 }

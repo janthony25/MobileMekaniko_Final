@@ -129,6 +129,56 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task<CarInvoiceSummaryDto> GetCarInvoiceSummaryAsync(int id)
+        {
+            try
+            {
+                // Find car using Id
+                var car = await _data.Cars
+                    .Include(car => car.Customer)
+                    .Include(car => car.CarMake)
+                        .ThenInclude(cm => cm.Make)
+                    .Include(car => car.Invoice)
+                    .Where(car => car.CarId == id)
+                    .Select(car => new CarInvoiceSummaryDto
+                    {
+                        CustomerId = car.Customer.CustomerId,
+                        CustomerName = car.Customer.CustomerName,
+                        CustomerEmail = car.Customer.CustomerEmail,
+                        CustomerNumber = car.Customer.CustomerNumber,
+                        CarId = car.CarId,
+                        CarRego = car.CarRego,
+                        MakeName = car.CarMake.FirstOrDefault().Make.MakeName,
+                        CarModel = car.CarModel,
+                        CarYear = car.CarYear,
+                        Invoices = car.Invoice.Select(i => new InvoiceSummaryDto
+                        {
+                            InvoiceId = i.InvoiceId,
+                            IssueName = i.IssueName,
+                            DateAdded = i.DateAdded,
+                            DueDate = i.DueDate,
+                            TotalAmount = i.TotalAmount,
+                            AmountPaid = i.AmountPaid,
+                            isPaid = i.IsPaid
+                        }).ToList()
+                    }).FirstOrDefaultAsync();
+
+                if(car == null || car.CarId == 0)
+                {
+                    _logger.LogWarning("Invalid car id");
+                    throw new KeyNotFoundException("Invalid car id");
+                }
+
+                _logger.LogInformation($"Successfully fetched invoice details for car with Id {id}");
+                return car;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex,"An error occurred while fetching car invoice summary.");
+                throw;  
+            }
+        }
+
         public async Task<List<MakeDto>> GetMakesAsync()
         {
             try

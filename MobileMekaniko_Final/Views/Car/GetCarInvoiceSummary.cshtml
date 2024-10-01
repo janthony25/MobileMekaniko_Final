@@ -1,0 +1,70 @@
+﻿@model MobileMekaniko_Final.Models.Dto.CarInvoiceSummaryDto
+
+<h5 class="fw-bold mt-5">CUSTOMER DETAILS</h5>
+
+<div class="d-flex justify-content-between align-items-center">
+    <div class="car-invoice-left">
+        <p>Customer ID: @Model.CustomerId</p>
+        <p>Customer Name: @Model.CustomerName</p>
+        <p>Email Address: @Model.CustomerEmail</p>
+        <p>Contact #: @Model.CustomerNumber</p>
+    </div>
+    <div class="car-invoice-right">
+        <p>Car Id: @Model.CarId</p>
+        <p>Rego #: @Model.CarRego</p>
+        <p>Make: @Model.MakeName</p>
+        <p>Model: @Model.CarModel</p>
+        <p>Year: @Model.CarYear</p>
+    </div>
+</div>
+
+<div class="text-end mt-5">
+    <button class="btn btn-warning btnAddInvoice"><i class="bi bi-plus-square-fill"></i> Invoice</button>
+</div>
+
+<h5 class="fw-bold mt-5">TRANSACTIONS</h5>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="text-center">Invoice ID</th>
+            <th class="text-center">Issue</th>
+            <th class="text-center">Date Issued</th>
+            <th class="text-center">Due Date</th>
+            <th class="text-center">Total Amount</th>
+            <th class="text-center">Amount Paid</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Invoices.Any())
+        {
+            <tr>
+                <td class="text-center" colspan="8">No Invoice Available</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var invoice in Model.Invoices)
+            {
+                <tr>
+                    <td class="text-center">@invoice.InvoiceId</td>
+                    <td class="text-center">@invoice.IssueName</td>
+                    <td class="text-center">@invoice.DateAdded</td>
+                    <td class="text-center">@invoice.DueDate</td>
+                    <td class="text-center">@invoice.TotalAmount</td>
+                    <td class="text-center">@invoice.AmountPaid</td>
+                    <td class="text-center">@invoice.isPaid</td>
+                </tr>
+            }
+        }
+       
+    </tbody>
+</table>
+
+<partial name="_CarInvoiceModals" />
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/carinvoice.js"></script>
