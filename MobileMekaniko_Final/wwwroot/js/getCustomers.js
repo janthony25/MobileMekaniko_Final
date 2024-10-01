@@ -297,6 +297,7 @@ function SearchCustomer() {
             if (response.success) {
                 // populate customer table or handle the search results
                 console.log(response.customer);
+                $('#searchCustomer').val('');
                 UpdateCustomerTable(response.customers);
             } else {
                 alert(response.message);

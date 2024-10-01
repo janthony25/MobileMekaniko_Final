@@ -24,11 +24,16 @@ namespace MobileMekaniko_Final.Models
         public DateTime? DateEdited { get; set; }
 
         // Many to Many Car-Make
-        public List<CarMake>? CarMake { get; set; } 
-            
+        public List<CarMake>? CarMake { get; set; }
+
+        // One to Many Car-Invoice
+        public ICollection<Invoice> Invoice { get; set; }
+
 
         // FK to Customer
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }  
+
+        
     }
 }

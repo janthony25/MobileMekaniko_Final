@@ -156,6 +156,7 @@ namespace MobileMekaniko_Final.Repository
             try
             {
                 var customer = await _data.Customers
+                    .OrderByDescending(c => c.DateAdded)
                     .Select(c => new CustomerListSummaryDto
                     {
                         CustomerId = c.CustomerId,
