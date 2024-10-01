@@ -4,6 +4,7 @@
     {
         public int InvoiceId { get; set; }
         public DateTime? DateAdded { get; set; } = DateTime.Now;
+        public DateTime? DateEdited { get; set; }    
         public DateTime? DueDate { get; set; }
         public required string IssueName { get; set; }
         public string? PaymentTerm { get; set; }
@@ -21,6 +22,9 @@
         // FK to Car
         public int CarId { get; set; }
         public Car Car { get; set; }
+
+        // One to Many Invoice-Invoice Item 
+        public ICollection<InvoiceItem> InvoiceItem { get; set; }
 
     }
 }
