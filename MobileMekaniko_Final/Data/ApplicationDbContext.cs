@@ -15,6 +15,8 @@ namespace MobileMekaniko_Final.Data
         public DbSet<Car> Cars { get; set; }
         public DbSet<Make> Makes { get; set; }
         public DbSet<CarMake> CarMakes { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }    
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -43,6 +45,19 @@ namespace MobileMekaniko_Final.Data
                 .HasForeignKey(cm => cm.MakeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // One to Many Car-Invoice
+            builder.Entity<Car>()
+                .HasMany(car => car.Invoice)
+                .WithOne(i => i.Car)
+                .HasForeignKey(i => i.CarId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // One to Many Invoice-Invoice Item
+            builder.Entity<Invoice>()
+                .HasMany(i => i.InvoiceItem)
+                .WithOne(ii => ii.Invoice)
+                .HasForeignKey(ii => ii.InvoiceId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }   
