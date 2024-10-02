@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MobileMekaniko_Final.Data;
+using MobileMekaniko_Final.Models;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
 
@@ -14,6 +15,62 @@ namespace MobileMekaniko_Final.Repository
         {
             _data = data;
             _logger = loggerFactory.CreateLogger<InvoiceRepository>();
+        }
+
+        public async Task AddInvoiceAsync(AddInvoiceDto dto)
+        {
+            try
+            {
+                // Fetching CarId
+                var car = await _data.Cars.FindAsync(dto.CarId);
+
+                // Creating new Invoice
+                var invoice = new Invoice
+                {
+                    IssueName = dto.IssueName,
+                    DateAdded = dto.DateAdded,
+                    DueDate = dto.DueDate,
+                    PaymentTerm = dto.PaymentTerm,
+                    Notes = dto.Notes,
+                    LaborPrice = dto.LaborPrice,
+                    Discount = dto.Discount,
+                    ShippingFee = dto.ShippingFee,
+                    SubTotal = dto.SubTotal,
+                    TotalAmount = dto.TotalAmount,
+                    AmountPaid = dto.AmountPaid,
+                    IsPaid = dto.IsPaid,
+                    CarId = car.CarId
+                };
+
+                _logger.LogInformation($"Adding invoice details to car with id {dto.CarId}");
+                _data.Invoices.Add(invoice);
+
+                // Save changes
+                await _data.SaveChangesAsync();
+
+                // add new InvoiceItem 
+                var invoiceItem = dto.InvoiceItems.Select(item => new InvoiceItem
+                {
+                    ItemName = item.ItemName,
+                    Quantity = item.Quantity,
+                    ItemPrice = item.ItemPrice,
+                    ItemTotal = item.ItemTotal,
+                    InvoiceId = invoice.InvoiceId
+                }).ToList();
+
+                _logger.LogInformation($"Adding {invoiceItem.Count} invoice items to invoice with id {invoice.InvoiceId}");
+                _data.InvoiceItems.AddRange(invoiceItem);
+
+                await _data.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding invoice.");
+                throw;
+            }
+
+
         }
 
         public async Task<InvoiceCustomerCarDetailsDto> GetCustomerCarDetailsAsync(int id)

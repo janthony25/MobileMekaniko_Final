@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
+using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
 
 namespace MobileMekaniko_Final.Controllers
@@ -49,6 +50,31 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError($"An error occurred while trying to fetch customer and car details for car id {id}");
                 return Json(new { success = false, message = "An error occurred while trying to fetch customer and car details." });
+            }
+        }
+
+        // POST : Add Invoice
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddInvoice(AddInvoiceDto dto)
+        {
+            try
+            {
+                _logger.LogInformation("Request to add new invoice");
+                if (ModelState.IsValid)
+                {
+                    await _unitOfWork.Invoice.AddInvoiceAsync(dto);
+                    _logger.LogInformation($"Successfully added new invoice to car with id {dto.CarId}");
+                    return Json(new { success = true, message = "Successfully added new invoice!" });
+                }
+
+                _logger.LogWarning("Invalid data provided");
+                return Json(new { success = false, message = "Invalid data provided" });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding new invoice.");
+                return Json(new { success = false, message = "An error occurred while adding new Invoice." });
             }
         }
     }
