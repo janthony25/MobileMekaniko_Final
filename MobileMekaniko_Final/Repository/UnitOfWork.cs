@@ -14,9 +14,12 @@ namespace MobileMekaniko_Final.Repository
             _loggerFactory = loggerFactory;
             Customer = new CustomerRepository(_data, _loggerFactory);
             Car = new CarRepository(_data, _loggerFactory);
+            Invoice = new InvoiceRepository(_data, _loggerFactory);
         }
         public ICustomerRepository Customer { get; private set; }
 
         public ICarRepository Car { get; private set; }
+
+        public IInvoiceRepository Invoice { get; private set; }
     }
 }
