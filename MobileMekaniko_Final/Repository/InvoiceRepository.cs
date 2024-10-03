@@ -83,6 +83,7 @@ namespace MobileMekaniko_Final.Repository
                         .Where(car => car.CarId == id)
                         .Select(car => new InvoiceCustomerCarDetailsDto
                         {
+                            CarId = car.CarId,
                             CustomerName = car.Customer.CustomerName,
                             CarRego = car.CarRego
                         }).FirstOrDefaultAsync();
@@ -110,6 +111,7 @@ namespace MobileMekaniko_Final.Repository
                     .Select(i => new InvoiceDetailsDto
                     {
                         CustomerName = i.Car.Customer.CustomerName,
+                        CarId = i.Car.CarId,
                         CarRego = i.Car.CarRego,
                         DateAdded = i.DateAdded,
                         DueDate = i.DueDate,

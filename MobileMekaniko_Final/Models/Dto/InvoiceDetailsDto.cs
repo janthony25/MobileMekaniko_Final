@@ -3,6 +3,7 @@
     public class InvoiceDetailsDto
     {
         public string CustomerName { get; set; }
+        public int CarId { get; set; }  
         public string CarRego { get; set; }
         public int? InvoiceId { get; set; }
         public DateTime? DateAdded { get; set; }

@@ -54,6 +54,13 @@
         updateTotals();
     });
 
+    // Adding invoice to db
+    $('#addInvoice').on('click', function () {
+        console.log('add invoice clicked.');
+        console.log('IssueName:', $('#IssueName').val());
+        AddInvoice();
+    });
+
 
 });
 
@@ -85,8 +92,12 @@ function updateTotals() {
 
     // Determine and update payment status
     var amountPaid = parseFloat($('#AmountPaid').val()) || 0;
-    var paymentStatus = (amountPaid >= totalAmount && totalAmount > 0) ? 'Paid' : 'Not Paid';
-    $('#isPaid').val(paymentStatus);
+    var isPaid = (amountPaid >= totalAmount && totalAmount > 0);
+    $('#isPaid').val(isPaid);  // Set it to the boolean value directly
+
+    // Set the display value for the user
+    var paymentStatusDisplay = isPaid ? 'Paid' : 'Not Paid';
+    $('#isPaidDisplay').val(paymentStatusDisplay);
 }
 function UpdateDeleteInvoiceModal(invoiceId, action) {
     $.ajax({
@@ -129,6 +140,8 @@ function AddInvoiceModal(carId) {
             $('#carInvoiceModal').modal('show');
             $('#carInvoiceModalTitle').text('Add Invoice');
 
+
+            $('#CarId').val(response.carId);
             $('#CustomerName').val(response.customerName).prop('disabled', true);
             $('#CarRego').val(response.carRego).prop('disabled', true);
         },
@@ -139,5 +152,57 @@ function AddInvoiceModal(carId) {
 }
 
 function AddInvoice() {
-    cosnt 
+    const token = $('input[name="__RequestVerificationToken"]').val();
+
+    let formData = {
+        __RequestVerificationToken: token,
+        carId: $('#CarId').val(),
+        dateAdded: $('#DateAdded').val(),
+        dueDate: $('#DueDate').val(),
+        issueName: $('#IssueName').val(),
+        paymentTerm: $('#PaymentTerm').val(),
+        notes: $('#Notes').val(),
+        LaborPrice: parseFloat($('#LabourPrice').val()) || 0,
+        Discount: parseFloat($('#Discount').val()) || 0,
+        ShippingFee: parseFloat($('#ShippingFee').val()) || 0,
+        SubTotal: parseFloat($('#SubTotal').val()) || 0,
+        TotalAmount: parseFloat($('#TotalAmount').val()) || 0,
+        AmountPaid: parseFloat($('#AmountPaid').val()) || 0,
+        IsPaid: $('#isPaid').val() === 'true',
+        InvoiceItems: []
+    };
+
+    $('.invoice-item').each(function () {
+        let item = {
+            ItemName: $(this).find('.item-name').val(),
+            Quantity: parseFloat($(this).find('.item-quantity').val()) || 0,
+            ItemPrice: parseFloat($(this).find('.item-price').val()) || 0,
+            ItemTotal: parseFloat($(this).find('.item-total').val()) || 0
+        };
+        formData.InvoiceItems.push(item);
+    });
+
+    $.ajax({
+        url: '/invoice/AddInvoice',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        data: JSON.stringify(formData),
+        success: function (response) {
+            console.log("trying to add invoice:", response);
+            if (response.success) {
+                console.log(formData);
+                alert(response.message);
+            } else {
+                console.log(formData);
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert('An error occurred while adding new invoice.');
+        }
+    });
 }

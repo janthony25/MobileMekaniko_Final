@@ -8,7 +8,8 @@ namespace MobileMekaniko_Final.Models.Dto
         public string CustomerName { get; set; }
 
         [DisplayName("Rego #")]
-        public string CarRego { get; set; } 
+        public string CarRego { get; set; }
+        public int CarId { get; set; }
 
     }
 }

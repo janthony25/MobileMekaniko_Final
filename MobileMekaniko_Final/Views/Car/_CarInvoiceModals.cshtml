@@ -16,6 +16,7 @@
                             <label asp-for="CustomerName"></label><br />
                             <input id="CustomerName" asp-for="CustomerName" class="form-control" />
                         </div>
+                        <input id="CarId" asp-for="CarId" type="hidden" />
                         <div>
                             <label asp-for="CarRego"></label><br />
                             <input id="CarRego" asp-for="CarRego" class="form-control" />
@@ -44,7 +45,7 @@
                         </div>
                         <div class="mb-2">
                             <label asp-for="@Model.IssueName"></label> <br />
-                            <input id="IssueName" asp-for="IssueName" class="form-control" />
+                            <input name="IssueName" id="IssueName" asp-for="IssueName" class="form-control" />
                         </div>
                         <div class="mb-2">
                             <label asp-for="@Model.PaymentTerm"></label> <br />
@@ -86,15 +87,17 @@
                             </div>
                             <div class="mb-2">
                                 <label asp-for="@Model.isPaid"></label> <br />
-                                <input id="isPaid" asp-for="isPaid" class="form-control" readonly />
+                                <!-- Hidden input to hold the Boolean value -->
+                                <input type="hidden" id="isPaid" asp-for="isPaid" />
+                                <!-- Text input to display "Paid" or "Not Paid" to the user -->
+                                <input id="isPaidDisplay" class="form-control" readonly />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-warning" id="addInvoice">Add Invoice</button>
             </div>
         </div>
     </div>

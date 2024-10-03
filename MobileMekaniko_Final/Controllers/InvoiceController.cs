@@ -56,11 +56,12 @@ namespace MobileMekaniko_Final.Controllers
         // POST : Add Invoice
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddInvoice(AddInvoiceDto dto)
+        public async Task<IActionResult> AddInvoice([FromBody]AddInvoiceDto dto)
         {
             try
             {
                 _logger.LogInformation("Request to add new invoice");
+                _logger.LogInformation($"Received DTO: {System.Text.Json.JsonSerializer.Serialize(dto)}");
                 if (ModelState.IsValid)
                 {
                     await _unitOfWork.Invoice.AddInvoiceAsync(dto);
