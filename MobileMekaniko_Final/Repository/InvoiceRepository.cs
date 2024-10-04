@@ -151,5 +151,39 @@ namespace MobileMekaniko_Final.Repository
             }
                     
         }
+
+        public async Task UpdateInvoiceAsync(UpdateInvoiceDto dto)
+        {
+            try
+            {
+                // Find Invoice by id
+                var invoice = await _data.Invoices.FindAsync(dto.InvoiceId);
+
+                if(invoice == null)
+                {
+                    _logger.LogWarning($"No details found with invoice id {dto.InvoiceId}");
+                    throw new KeyNotFoundException($"Invoice with id {dto.InvoiceId} not found.");
+                }
+
+                invoice.IssueName = dto.IssueName;
+                invoice.PaymentTerm = dto.PaymentTerm;
+                invoice.Notes = dto.Notes;
+                invoice.LaborPrice = dto.LaborPrice;
+                invoice.Discount = dto.Discount;
+                invoice.ShippingFee = dto.ShippingFee;
+                invoice.SubTotal = dto.SubTotal;
+                invoice.TotalAmount = dto.TotalAmount;
+                invoice.AmountPaid = dto.AmountPaid;
+                invoice.IsPaid = dto.IsPaid;
+
+                await _data.SaveChangesAsync();
+                _logger.LogInformation($"Invoice with id {dto.InvoiceId} has been updated successfully");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while updating invoice with id {dto.InvoiceId}");
+                throw;
+            }
+        }
     }
 }
