@@ -6,7 +6,7 @@
         public int CarId { get; set; }  
         public string CarRego { get; set; }
         public int? InvoiceId { get; set; }
-        public DateTime? DateAdded { get; set; }
+        public DateTime? DateAdded { get; set; } 
         public DateTime? DueDate { get; set; }
         public string? IssueName { get; set; }
         public string? PaymentTerm { get; set; }

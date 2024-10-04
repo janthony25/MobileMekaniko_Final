@@ -1,4 +1,12 @@
 ﻿$(function () {
+
+
+    // Clear modal fields when modal is closed
+    $('#carInvoiceModal').on('hidden.bs.modal', function () {
+        HideModal();
+    });
+
+
     $(document).on('click', '.btnAddInvoice', function () {
         const carId = $(this).data('car-id');
         console.log(carId);
@@ -117,7 +125,64 @@ function UpdateDeleteInvoiceModal(invoiceId, action) {
 
                 $('#CustomerName').val(response.customerName).prop('disabled', true);
                 $('#CarRego').val(response.carRego).prop('disabled', true);
-                $('#DateAdded').val(response.dateAdded);
+
+                // Parse the date without causing timezone offset
+                let dateAdded = response.dateAdded ? response.dateAdded.split('T')[0] : '';
+                let dueDate = response.dueDate ? response.dueDate.split('T')[0] : '';
+
+                $('#DateAdded').val(dateAdded);
+                $('#DueDate').val(dueDate);
+
+                $('#IssueName').val(response.issueName);
+                $('#PaymentTerm').val(response.paymentTerm);
+                $('#Notes').val(response.notes);
+                $('#LabourPrice').val(response.labourPrice);
+                $('#Discount').val(response.discount);
+                $('#ShippingFee').val(response.shippingFee);
+                $('#SubTotal').val(response.subTotal);
+                $('#TotalAmount').val(response.totalAmount);
+                $('#AmountPaid').val(response.amountPaid);
+                $('#isPaidDisplay').val();
+
+                // clear the existing items
+                $('#invoiceItems').empty();
+
+                // Populate item list from response
+                if (response.invoiceItemDto && response.invoiceItemDto.length > 0) {
+                    // Add headers dynamically before adding items
+                    let headers = `
+                        <div class="row invoice-item-header d-flex justify-content-between align-items-center mb-2">
+                            <div class="col-4"><strong>Item Name</strong></div>
+                            <div class="col-2"><strong>Quantity</strong></div>
+                            <div class="col-3"><strong>Price</strong></div>
+                            <div class="col-3"><strong>Total Price</strong></div>
+                        </div>
+                    `;
+                    $('#invoiceItems').append(headers);
+
+                    // Append each item
+                    $.each(response.invoiceItemDto, function (index, item) {
+                        let newItem = $(`
+                        <div class="row invoice-item d-flex justify-content-between align-items-center mb-2">
+                            <div class="col-4">
+                                <input type="text" class="form-control item-name" placeholder="Item Name" value="${item.itemName}" readonly>
+                            </div>
+                            <div class="col-2">
+                                <input type="number" class="form-control item-quantity" placeholder="Quantity" value="${item.quantity}" readonly>
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="form-control item-price" placeholder="Price" value="${item.itemPrice}" readonly>
+                            </div>
+                            <div class="col-3 d-flex">
+                                <input type="number" class="form-control item-total me-2" placeholder="Total" value="${item.itemTotal}" readonly>
+                                <button type="button" class="btn btn-danger remove-item"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </div>
+                        `);
+                        $('#invoiceItems').append(newItem);
+                    });
+                }
+
             }
         },
         error: function () {
@@ -144,6 +209,9 @@ function AddInvoiceModal(carId) {
             $('#CarId').val(response.carId);
             $('#CustomerName').val(response.customerName).prop('disabled', true);
             $('#CarRego').val(response.carRego).prop('disabled', true);
+
+            // Fields
+            $('#IssueName').prop('readonly', false);
         },
         error: function () {
 
@@ -152,6 +220,11 @@ function AddInvoiceModal(carId) {
 }
 
 function AddInvoice() {
+    let result = Validate();
+    if (result == false) {
+        return false;
+    }
+
     const token = $('input[name="__RequestVerificationToken"]').val();
 
     let formData = {
@@ -196,6 +269,8 @@ function AddInvoice() {
             if (response.success) {
                 console.log(formData);
                 alert(response.message);
+                HideModal();
+                location.reload();
             } else {
                 console.log(formData);
                 alert(response.message);
@@ -205,4 +280,84 @@ function AddInvoice() {
             alert('An error occurred while adding new invoice.');
         }
     });
+}
+
+function HideModal() {
+    // Clear text fields
+    $('#IssueName').val('');
+    $('#PaymentTerm').val('');
+    $('#Notes').val('');
+    $('#LabourPrice').val('');
+    $('#Discount').val('');
+    $('#ShippingFee').val('');
+    $('#SubTotal').val('');
+    $('#TotalAmount').val('');
+    $('#AmountPaid').val('');
+    $('#isPaid').val('');
+    $('#isPaidDisplay').val('');
+
+    // Clear date fields
+    $('#DateAdded').val('');
+    $('#DueDate').val('');
+
+    // Clear borders 
+    $('#DueDate').css('border-color', 'Lightgrey');
+    $('#IssueName').css('border-color', 'Lightgrey');
+
+    // Clear fields error text
+    $('#DueDateError').text('');
+    $('#IssueNameError').text('');
+
+    // Clear dynamically added item list
+    $('#invoiceItems').empty();
+
+    $('#carInvoiceModal').modal('hide');
+}
+
+function Validate() {
+    let isValid = true;
+
+    if ($('#IssueName').val().trim() === "") {
+        $('#IssueName').css('border-color', 'Red');
+        $('#IssueNameError').text('Issue name is required.');
+        isValid = false;
+    } else {
+        $('#IssueName').css('border-color', 'Lightgrey');
+        $('#IssueNameError').text('');
+    }
+
+
+    if ($('#DateAdded').val().trim() === "") {
+        let currentDate = new Date();
+        let formattedDate = currentDate.toISOString().split('T')[0];
+        $('#DateAdded').val(formattedDate);
+    }
+
+    if ($('#DueDate').val().trim() === "") {
+        $('#DueDate').css('border-color', 'Red');
+        $('#DueDateError').text('Due date is required.');
+        isValid = false;
+    } else {
+        $('#DueDate').css('border-color', 'Lightgrey');
+        $('#DueDateError').text('');
+    }
+
+    if ($('.item-name').length > 0) {
+        $('.item-name').each(function () {
+            let itemNameInput = $(this);
+            let itemNameError = $(this).find('.item-name-error');
+
+            // Check if item name is empty
+            if (itemNameInput.val().trim() === "") {
+                itemNameInput.css('border-color', 'Red');
+
+                isValid = false;
+            } else {
+                itemNameInput.css('border-color', 'Lightgrey');
+                itemNameError.remove();  // Remove the error message if the field is valid
+            }
+        });
+    }
+
+    return isValid;
 }

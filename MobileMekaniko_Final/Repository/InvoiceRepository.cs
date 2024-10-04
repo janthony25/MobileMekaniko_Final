@@ -128,6 +128,7 @@ namespace MobileMekaniko_Final.Repository
                         InvoiceItemDto = i.InvoiceItem.Select(ii => new InvoiceItemDto
                         {
                             InvoiceItemId = ii.InvoiceItemId,
+                            ItemName = ii.ItemName,
                             Quantity = ii.Quantity,
                             ItemPrice = ii.ItemPrice,
                             ItemTotal = ii.ItemPrice
