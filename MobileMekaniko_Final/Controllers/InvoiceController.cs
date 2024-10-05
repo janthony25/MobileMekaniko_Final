@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
+using MobileMekaniko_Final.Services;
 using NuGet.Protocol.Plugins;
 
 namespace MobileMekaniko_Final.Controllers
@@ -10,11 +11,13 @@ namespace MobileMekaniko_Final.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<InvoiceController> _logger;    
+        private readonly IInvoicePdfService _invoicePdfService;
 
-        public InvoiceController(IUnitOfWork unitOfWork, ILogger<InvoiceController> logger)
+        public InvoiceController(IUnitOfWork unitOfWork, ILogger<InvoiceController> logger, IInvoicePdfService invoicePdfService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _invoicePdfService = invoicePdfService;
         }
         
 
@@ -126,6 +129,28 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError(ex, $"An error occurred while deleting invoice with id {id}");
                 return Json(new { success = false, message = "An error occurred while deleting invoice" });
+            }
+        }
+
+        // GET : Convert Invoice to PDF
+        [HttpGet]
+        public async Task<IActionResult> ViewPdf(int id)
+        {
+            try
+            {
+                var invoice = await _unitOfWork.Invoice.GetInvoiceDetailsAsync(id);
+                if (invoice == null)
+                {
+                    return NotFound();
+                }
+
+                var pdfBytes = _invoicePdfService.CreateInvoicePdf(invoice);
+                return File(pdfBytes, "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while generating PDF for invoice {id}");
+                return StatusCode(500, "An error occurred while generating the PDF.");
             }
         }
     }

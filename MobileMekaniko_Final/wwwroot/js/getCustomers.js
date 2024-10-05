@@ -205,10 +205,12 @@ function AddCustomer() {
 
     let formData = {
         __RequestVerificationToken: token,
+        customerAddress: $('#CustomerAddress').val(),
         customerName: $('#CustomerName').val(),
         customerEmail: $('#CustomerEmail').val(),
         customerNumber: $('#CustomerNumber').val()
     };
+
 
     $.ajax({
         url: '/customer/AddCustomer',

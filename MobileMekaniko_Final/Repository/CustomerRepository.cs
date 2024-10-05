@@ -35,6 +35,8 @@ namespace MobileMekaniko_Final.Repository
                 };
 
                 _logger.LogInformation($"Adding customer {dto.CustomerName} to the database.");
+                _logger.LogInformation($"Adding customer email {dto.CustomerEmail}");
+                _logger.LogInformation($"Adding customer address {dto.CustomerAddress}");
 
                 _data.Customers.Add(customer);
                 await _data.SaveChangesAsync();

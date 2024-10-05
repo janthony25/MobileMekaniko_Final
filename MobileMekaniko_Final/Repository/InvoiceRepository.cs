@@ -136,8 +136,14 @@ namespace MobileMekaniko_Final.Repository
                     .Select(i => new InvoiceDetailsDto
                     {
                         CustomerName = i.Car.Customer.CustomerName,
+                        CustomerAddress = i.Car.Customer.CustomerAddress,
+                        CustomerEmail = i.Car.Customer.CustomerEmail,
+                        CustomerNumber = i.Car.Customer.CustomerNumber,
                         CarId = i.Car.CarId,
                         CarRego = i.Car.CarRego,
+                        MakeName = i.Car.CarMake.FirstOrDefault().Make.MakeName,
+                        CarModel = i.Car.CarModel,
+                        CarYear = i.Car.CarYear,
                         InvoiceId = i.InvoiceId,
                         DateAdded = i.DateAdded,
                         DueDate = i.DueDate,

@@ -56,8 +56,8 @@ builder.Logging.AddConsole();
 // Repository and logging
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IInvoicePdfService, InvoicePdfService>();
 builder.Services.AddLogging();
-
 
 // Razor Runtime Compilation
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();

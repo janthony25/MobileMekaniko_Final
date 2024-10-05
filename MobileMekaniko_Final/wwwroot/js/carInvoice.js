@@ -89,6 +89,12 @@
     });
 
 
+    // Invoice to PDF
+    $(document).on('click', '.view-pdf', function () {
+        const invoiceId = $(this).data('invoice-id');
+        viewPdf(invoiceId);
+    });
+
 });
 
 // Function to update invoice totals
@@ -579,4 +585,32 @@ function Validate() {
     }
 
     return isValid;
+}
+
+
+// View Invoice PDF 
+function viewPdf(invoiceId) {
+    // Create a modal to display the PDF
+    const modal = $('<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">')
+        .append($('<div class="modal-dialog modal-xl" style="max-width: 90%; width: 90%; height: 90vh;">')
+            .append($('<div class="modal-content h-100">')
+                .append($('<div class="modal-header">')
+                    .append($('<h5 class="modal-title">').text('View Invoice PDF'))
+                    .append($('<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">')))
+                .append($('<div class="modal-body p-0" style="height: calc(100% - 56px);">')
+                    .append($('<iframe>')
+                        .attr('src', `/Invoice/ViewPdf/${invoiceId}`)
+                        .attr('width', '100%')
+                        .attr('height', '100%')
+                        .attr('frameborder', '0')
+                        .attr('style', 'overflow: hidden;')))));
+
+    // Add the modal to the body and show it
+    $('body').append(modal);
+    modal.modal('show');
+
+    // Remove the modal from the DOM when it's hidden
+    modal.on('hidden.bs.modal', function () {
+        modal.remove();
+    });
 }
