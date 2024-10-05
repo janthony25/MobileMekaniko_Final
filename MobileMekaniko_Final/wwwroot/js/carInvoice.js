@@ -69,6 +69,12 @@
         AddInvoice();
     });
 
+    // Update Invoice to db
+    $('#updateInvoice').on('click', function () {
+        console.log('Updating invoice..');
+        UpdateInvoice();
+    });
+
 
 });
 
@@ -133,6 +139,7 @@ function UpdateDeleteInvoiceModal(invoiceId, action) {
                 $('#DateAdded').val(dateAdded);
                 $('#DueDate').val(dueDate);
 
+                $('#InvoiceId').val(response.invoiceId);
                 $('#IssueName').val(response.issueName);
                 $('#PaymentTerm').val(response.paymentTerm);
                 $('#Notes').val(response.notes);
@@ -142,7 +149,12 @@ function UpdateDeleteInvoiceModal(invoiceId, action) {
                 $('#SubTotal').val(response.subTotal);
                 $('#TotalAmount').val(response.totalAmount);
                 $('#AmountPaid').val(response.amountPaid);
-                $('#isPaidDisplay').val();
+
+
+                // Remove add invoice button 
+                $('#addInvoice').hide();
+                $('#updateInvoice').show();
+
 
                 // clear the existing items
                 $('#invoiceItems').empty();
@@ -182,6 +194,8 @@ function UpdateDeleteInvoiceModal(invoiceId, action) {
                         $('#invoiceItems').append(newItem);
                     });
                 }
+
+                updateTotals();
 
             }
         },
@@ -235,22 +249,22 @@ function AddInvoice() {
         issueName: $('#IssueName').val(),
         paymentTerm: $('#PaymentTerm').val(),
         notes: $('#Notes').val(),
-        LaborPrice: parseFloat($('#LabourPrice').val()) || 0,
-        Discount: parseFloat($('#Discount').val()) || 0,
-        ShippingFee: parseFloat($('#ShippingFee').val()) || 0,
-        SubTotal: parseFloat($('#SubTotal').val()) || 0,
-        TotalAmount: parseFloat($('#TotalAmount').val()) || 0,
-        AmountPaid: parseFloat($('#AmountPaid').val()) || 0,
-        IsPaid: $('#isPaid').val() === 'true',
-        InvoiceItems: []
+        laborPrice: parseFloat($('#LabourPrice').val()) || 0,
+        discount: parseFloat($('#Discount').val()) || 0,
+        shippingFee: parseFloat($('#ShippingFee').val()) || 0,
+        subTotal: parseFloat($('#SubTotal').val()) || 0,
+        totalAmount: parseFloat($('#TotalAmount').val()) || 0,
+        amountPaid: parseFloat($('#AmountPaid').val()) || 0,
+        isPaid: $('#isPaid').val() === 'true',
+        invoiceItems: []
     };
 
     $('.invoice-item').each(function () {
         let item = {
-            ItemName: $(this).find('.item-name').val(),
-            Quantity: parseFloat($(this).find('.item-quantity').val()) || 0,
-            ItemPrice: parseFloat($(this).find('.item-price').val()) || 0,
-            ItemTotal: parseFloat($(this).find('.item-total').val()) || 0
+            itemName: $(this).find('.item-name').val(),
+            quantity: parseFloat($(this).find('.item-quantity').val()) || 0,
+            itemPrice: parseFloat($(this).find('.item-price').val()) || 0,
+            itemTotal: parseFloat($(this).find('.item-total').val()) || 0
         };
         formData.InvoiceItems.push(item);
     });
@@ -281,6 +295,59 @@ function AddInvoice() {
         }
     });
 }
+
+function UpdateInvoice() {
+    let result = Validate();
+
+    if (result == false) {
+        return false;
+    }
+
+    const token = $('input[name="__RequestVerificationToken"]').val();
+
+    let formData = {
+        invoiceId: $('#InvoiceId').val(),
+        dueDate: $('#DueDate').val(),
+        issueName: $('#IssueName').val(),
+        paymentTerm: $('#PaymentTerm').val(),
+        notes: $('#Notes').val(),
+        laborPrice: parseFloat($('#LabourPrice').val()) || 0,
+        discount: parseFloat($('#Discount').val()) || 0,
+        shippingFee: parseFloat($('#ShippingFee').val()) || 0,
+        subTotal: parseFloat($('#SubTotal').val()) || 0,
+        totalAmount: parseFloat($('#TotalAmount').val()) || 0,
+        amountPaid: parseFloat($('#AmountPaid').val()) || 0,
+        isPaid: $('#isPaid').val() === 'true'
+    };
+
+    console.log("formdata = ", formData);
+
+    $.ajax({
+        url: '/invoice/UpdateInvoice',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        headers: {
+            'RequestVerificationToken': token // Include the verification token in the headers
+        },
+        data: JSON.stringify(formData),
+        success: function (response) {
+            if (response.success) {
+                console.log(formData);
+                alert(response.message);
+                HideModal();
+                location.reload();
+            } else {
+                console.log(formData);
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert('An error occurred while updating the invoice.');
+        }
+    });
+}
+
 
 function HideModal() {
     // Clear text fields

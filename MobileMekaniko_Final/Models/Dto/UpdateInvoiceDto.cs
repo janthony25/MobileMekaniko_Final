@@ -13,6 +13,7 @@
         public decimal? TotalAmount { get; set; }
         public decimal? AmountPaid { get; set; }
         public bool IsPaid { get; set; }
+        public DateTime DueDate { get; set; }   
         public DateTime DateEdited { get; set; } = DateTime.Now;
     }
 }

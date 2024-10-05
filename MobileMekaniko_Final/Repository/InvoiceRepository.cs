@@ -113,6 +113,7 @@ namespace MobileMekaniko_Final.Repository
                         CustomerName = i.Car.Customer.CustomerName,
                         CarId = i.Car.CarId,
                         CarRego = i.Car.CarRego,
+                        InvoiceId = i.InvoiceId,
                         DateAdded = i.DateAdded,
                         DueDate = i.DueDate,
                         IssueName = i.IssueName,
@@ -165,6 +166,7 @@ namespace MobileMekaniko_Final.Repository
                     throw new KeyNotFoundException($"Invoice with id {dto.InvoiceId} not found.");
                 }
 
+                invoice.DueDate = dto.DueDate;
                 invoice.IssueName = dto.IssueName;
                 invoice.PaymentTerm = dto.PaymentTerm;
                 invoice.Notes = dto.Notes;

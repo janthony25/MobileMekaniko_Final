@@ -78,5 +78,30 @@ namespace MobileMekaniko_Final.Controllers
                 return Json(new { success = false, message = "An error occurred while adding new Invoice." });
             }
         }
+
+        // POST : Update Invoice
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateInvoice([FromBody] UpdateInvoiceDto dto)
+        {
+            try
+            {
+                _logger.LogInformation($"Request to update invoice with id {dto.InvoiceId}");
+                if (ModelState.IsValid)
+                {
+                    await _unitOfWork.Invoice.UpdateInvoiceAsync(dto);
+                    _logger.LogInformation($"Successfully updated invoice with id {dto.InvoiceId}");
+                    return Json(new { success = true, message = "Invoice successfully updated." });
+                }
+
+                _logger.LogWarning($"Invalid data");
+                return Json(new { success = false, message = "Invalid data provided" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while updating invoice with id {dto.InvoiceId}");
+                return Json(new { success = false, message = "An error occurred while updating invoice" });
+            }
+        }
     }
 }

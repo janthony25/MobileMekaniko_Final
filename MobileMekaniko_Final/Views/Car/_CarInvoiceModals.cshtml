@@ -34,6 +34,7 @@
                     <button id="addItemButton" class="btn btn-primary">Add Item</button>
                 </div>
 
+                <input id="InvoiceId" asp-for="InvoiceId" type="hidden" />
                 <div class="invoice-details d-flex justify-content-between align-items-center mt-5">
                     <div class="invoice-details-left">
                         <div class="mb-2">
@@ -101,7 +102,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-warning" id="addInvoice">Add Invoice</button>
+                <button type="button" class="btn btn-primary" id="addInvoice">Add Invoice</button>
+                <button type="button" class="btn btn-warning" id="updateInvoice">Update Invoice</button>
             </div>
         </div>
     </div>
