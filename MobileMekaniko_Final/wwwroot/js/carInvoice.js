@@ -95,6 +95,14 @@
         viewPdf(invoiceId);
     });
 
+    // Download Invoice PDF
+    $(document).on('click', '.download-pdf', function (e) {
+        e.preventDefault();
+        const invoiceId = $(this).data('invoice-id');
+        downloadPdf(invoiceId);
+        console.log('Trying to download pdf..');
+    });
+
 });
 
 // Function to update invoice totals
@@ -613,4 +621,22 @@ function viewPdf(invoiceId) {
     modal.on('hidden.bs.modal', function () {
         modal.remove();
     });
+}
+
+// Download Invoice PDF
+function downloadPdf(invoiceId) {
+    // Log to console for debugging
+    console.log('Downloading PDF for invoice:', invoiceId);
+
+    // Create a temporary anchor element
+    var link = document.createElement('a');
+    link.href = `/Invoice/DownloadPdf/${invoiceId}`;
+
+    // Set download attribute to force download
+    link.setAttribute('download', '');
+
+    // Append to body, click programmatically, and remove
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }

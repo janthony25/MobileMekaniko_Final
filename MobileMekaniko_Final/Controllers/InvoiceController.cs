@@ -4,6 +4,7 @@ using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
 using MobileMekaniko_Final.Services;
 using NuGet.Protocol.Plugins;
+using System.Text.RegularExpressions;
 
 namespace MobileMekaniko_Final.Controllers
 {
@@ -146,6 +147,36 @@ namespace MobileMekaniko_Final.Controllers
 
                 var pdfBytes = _invoicePdfService.CreateInvoicePdf(invoice);
                 return File(pdfBytes, "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while generating PDF for invoice {id}");
+                return StatusCode(500, "An error occurred while generating the PDF.");
+            }
+        }
+
+        // GET : Download Invoice PDF
+        [HttpGet]
+        public async Task<IActionResult> DownloadPdf(int id)
+        {
+            _logger.LogInformation($"DownloadPdf action called for invoice ID: {id}");
+            try
+            {
+                var invoice = await _unitOfWork.Invoice.GetInvoiceDetailsAsync(id);
+                if (invoice == null)
+                {
+                    _logger.LogWarning($"Invoice not found for ID: {id}");
+                    return NotFound();
+                }
+
+                _logger.LogInformation($"Generating PDF for invoice ID: {id}");
+                var pdfBytes = _invoicePdfService.CreateInvoicePdf(invoice);
+
+                string safeCarRego = Regex.Replace(invoice.CarRego, @"[^\w\-]", "_");
+                string fileName = $"{safeCarRego}_Invoice_{id}.pdf";
+
+                _logger.LogInformation($"Returning PDF file: {fileName}");
+                return File(pdfBytes, "application/pdf", fileName);
             }
             catch (Exception ex)
             {
