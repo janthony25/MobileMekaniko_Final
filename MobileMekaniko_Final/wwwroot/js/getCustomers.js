@@ -4,6 +4,21 @@
     $('#customerModal').on('hidden.bs.modal', function () {
         HideModal();
     })
+
+    //$(document).on('click', '.btn-add-customer', function () {
+    //    customerId = $(this).data('customer-id');
+    //    action = $(this).data('action');
+    //    console.log(customerId, action);
+    //    CustomerModal(customerId, action);
+    //});
+
+    //// Add customer to db
+    //$('#AddCustomer').on('click', function () {
+    //    console.log('Adding customer');
+    //  /*  AddCustomer();*/
+    //});
+
+
 });
 
 function GetCustomers() {
@@ -67,6 +82,8 @@ function CustomerModal(customerId, action) {
                 console.log(customerId);
                 $('#customerModal').modal('show');
                 $('#customerModalTitle').text('Add Customer');
+
+                $('#CustomerAddress').val('');
                 $('#CustomerName').prop('readonly', false);
                 $('#addCustomer').show();
                 $('#btnDeleteCustomer').hide();
@@ -211,6 +228,7 @@ function AddCustomer() {
         customerNumber: $('#CustomerNumber').val()
     };
 
+    console.log('adding customer details: ', formData);
 
     $.ajax({
         url: '/customer/AddCustomer',

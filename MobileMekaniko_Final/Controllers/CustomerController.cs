@@ -68,8 +68,9 @@ namespace MobileMekaniko_Final.Controllers
             try
             {
                 _logger.LogInformation($"Request to add: {dto.CustomerName}");
+                _logger.LogInformation($"Received DTO: {System.Text.Json.JsonSerializer.Serialize(dto)}");
 
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     await _unitOfWork.Customer.AddCustomerAsync(dto);
                     return Json(new { success = true, message = "Successfully added a customer." });
