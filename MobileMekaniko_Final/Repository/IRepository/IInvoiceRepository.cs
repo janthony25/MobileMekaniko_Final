@@ -8,5 +8,6 @@ namespace MobileMekaniko_Final.Repository.IRepository
         Task<InvoiceCustomerCarDetailsDto> GetCustomerCarDetailsAsync(int id);
         Task AddInvoiceAsync(AddInvoiceDto dto);
         Task UpdateInvoiceAsync(UpdateInvoiceDto dto);
+        Task DeleteInvoiceAsync(int id);
     }
 }

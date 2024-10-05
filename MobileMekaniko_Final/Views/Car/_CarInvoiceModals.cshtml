@@ -37,7 +37,7 @@
                 <input id="InvoiceId" asp-for="InvoiceId" type="hidden" />
                 <div class="invoice-details d-flex justify-content-between align-items-center mt-5">
                     <div class="invoice-details-left">
-                        <div class="mb-2">
+                        <div class="mb-2 date-added-container">
                             <label asp-for="@Model.DateAdded"></label> <br />
                             <input type="date" id="DateAdded" asp-for="DateAdded" class="form-control" />
                             <span id="DateAddedError" class="text-danger"></span>
@@ -104,6 +104,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="addInvoice">Add Invoice</button>
                 <button type="button" class="btn btn-warning" id="updateInvoice">Update Invoice</button>
+                <button type="button" class="btn btn-danger" id="deleteInvoice">Delete Invoice</button>
             </div>
         </div>
     </div>

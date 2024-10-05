@@ -22,6 +22,14 @@
         UpdateDeleteInvoiceModal(invoiceId, action);
     });
 
+    $(document).on('click', '.delete-invoice-btn', function () {
+        const invoiceId = $(this).data('invoiceId');
+        const action = $(this).data('action');
+        console.log(invoiceId, action);
+
+        UpdateDeleteInvoiceModal(invoiceId, action);
+    });
+
     $('#addItemButton').on('click', function () {
         var newItem = $(`
         <div class="row invoice-item d-flex justify-content-between align-items-center mb-2">
@@ -73,6 +81,11 @@
     $('#updateInvoice').on('click', function () {
         console.log('Updating invoice..');
         UpdateInvoice();
+    });
+
+    $('#deleteInvoice').on('click', function () {
+        console.log('Deleting invoice...');
+        DeleteInvoice();
     });
 
 
@@ -133,27 +146,34 @@ function UpdateDeleteInvoiceModal(invoiceId, action) {
                 $('#CarRego').val(response.carRego).prop('disabled', true);
 
                 // Parse the date without causing timezone offset
-                let dateAdded = response.dateAdded ? response.dateAdded.split('T')[0] : '';
                 let dueDate = response.dueDate ? response.dueDate.split('T')[0] : '';
 
-                $('#DateAdded').val(dateAdded);
-                $('#DueDate').val(dueDate);
+                $('#DueDate').val(dueDate).prop('readonly', false);
 
                 $('#InvoiceId').val(response.invoiceId);
-                $('#IssueName').val(response.issueName);
-                $('#PaymentTerm').val(response.paymentTerm);
-                $('#Notes').val(response.notes);
-                $('#LabourPrice').val(response.labourPrice);
-                $('#Discount').val(response.discount);
-                $('#ShippingFee').val(response.shippingFee);
-                $('#SubTotal').val(response.subTotal);
-                $('#TotalAmount').val(response.totalAmount);
-                $('#AmountPaid').val(response.amountPaid);
+
+                $('#IssueName').val(response.issueName).prop('readonly', false);
+                $('#PaymentTerm').val(response.paymentTerm).prop('readonly', false);
+                $('#Notes').val(response.notes).prop('readonly', false);
+                $('#LabourPrice').val(response.labourPrice).prop('readonly', false);
+                $('#Discount').val(response.discount).prop('readonly', false);
+                $('#ShippingFee').val(response.shippingFee).prop('readonly', false);
+                $('#SubTotal').val(response.subTotal).prop('readonly', false);
+                $('#TotalAmount').val(response.totalAmount).prop('readonly', false);
+                $('#AmountPaid').val(response.amountPaid).prop('readonly', false);
+
+                // Hide Date Added
+                $('#DateAdded').closest('.date-added-container').hide();
 
 
                 // Remove add invoice button 
                 $('#addInvoice').hide();
                 $('#updateInvoice').show();
+                $('#deleteInvoice').hide();
+
+
+                // Remove Add invoie item btn
+                $('#addItemButton').hide();
 
 
                 // clear the existing items
@@ -187,17 +207,90 @@ function UpdateDeleteInvoiceModal(invoiceId, action) {
                             </div>
                             <div class="col-3 d-flex">
                                 <input type="number" class="form-control item-total me-2" placeholder="Total" value="${item.itemTotal}" readonly>
-                                <button type="button" class="btn btn-danger remove-item"><i class="bi bi-trash3-fill"></i></button>
                             </div>
                         </div>
                         `);
                         $('#invoiceItems').append(newItem);
                     });
                 }
-
                 updateTotals();
-
             }
+            else if (action === 'deleteInvoice') {
+                $('#carInvoiceModal').modal('show');
+                $('#carInvoiceModalTitle').text('Delete Invoice');
+
+                $('#CustomerName').val(response.customerName).prop('disabled', true);
+                $('#CarRego').val(response.carRego).prop('disabled', true);
+
+                $('#InvoiceId').val(response.invoiceId);
+
+                // Parse the date without causing timezone offset
+                let dateAdded = response.dateAdded ? response.dateAdded.split('T')[0] : '';
+                let dueDate = response.dueDate ? response.dueDate.split('T')[0] : '';
+
+                $('#DateAdded').val(dateAdded).prop('readonly', true);
+                $('#DueDate').val(dueDate).prop('readonly', true);
+
+                $('#IssueName').val(response.issueName).prop('readonly', true);
+                $('#PaymentTerm').val(response.paymentTerm).prop('readonly', true);
+                $('#Notes').val(response.notes).prop('readonly', true);
+                $('#LabourPrice').val(response.labourPrice).prop('readonly', true);
+                $('#Discount').val(response.discount).prop('readonly', true);
+                $('#ShippingFee').val(response.shippingFee).prop('readonly', true);
+                $('#SubTotal').val(response.subTotal).prop('readonly', true);
+                $('#TotalAmount').val(response.totalAmount).prop('readonly', true);
+                $('#AmountPaid').val(response.amountPaid).prop('readonly', true);
+
+
+                // Remove add invoice button 
+                $('#addInvoice').hide();
+                $('#updateInvoice').hide();
+                $('#deleteInvoice').show();
+
+                // Remove Add invoie item btn
+                $('#addItemButton').hide();
+
+
+                // clear the existing items
+                $('#invoiceItems').empty();
+
+                // Populate item list from response
+                if (response.invoiceItemDto && response.invoiceItemDto.length > 0) {
+                    // Add headers dynamically before adding items
+                    let headers = `
+                        <div class="row invoice-item-header d-flex justify-content-between align-items-center mb-2">
+                            <div class="col-4"><strong>Item Name</strong></div>
+                            <div class="col-2"><strong>Quantity</strong></div>
+                            <div class="col-3"><strong>Price</strong></div>
+                            <div class="col-3"><strong>Total Price</strong></div>
+                        </div>
+                    `;
+                    $('#invoiceItems').append(headers);
+
+                    // Append each item
+                    $.each(response.invoiceItemDto, function (index, item) {
+                        let newItem = $(`
+                        <div class="row invoice-item d-flex justify-content-between align-items-center mb-2">
+                            <div class="col-4">
+                                <input type="text" class="form-control item-name" placeholder="Item Name" value="${item.itemName}" readonly>
+                            </div>
+                            <div class="col-2">
+                                <input type="number" class="form-control item-quantity" placeholder="Quantity" value="${item.quantity}" readonly>
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="form-control item-price" placeholder="Price" value="${item.itemPrice}" readonly>
+                            </div>
+                            <div class="col-3 d-flex">
+                                <input type="number" class="form-control item-total me-2" placeholder="Total" value="${item.itemTotal}" readonly>
+                            </div>
+                        </div>
+                        `);
+                        $('#invoiceItems').append(newItem);
+                    });
+                }
+                updateTotals();
+            }
+
         },
         error: function () {
             alert('An error occurred while fetching invoice details.');
@@ -220,12 +313,38 @@ function AddInvoiceModal(carId) {
             $('#carInvoiceModalTitle').text('Add Invoice');
 
 
+
             $('#CarId').val(response.carId);
             $('#CustomerName').val(response.customerName).prop('disabled', true);
             $('#CarRego').val(response.carRego).prop('disabled', true);
 
+            $('#DateAdded').prop('disabled', false);
+            $('#DueDate').prop('disabled', false);
+
+            $('#IssueName').val(response.issueName).prop('disabled', false);
+            $('#PaymentTerm').val(response.paymentTerm).prop('disabled', false);
+            $('#Notes').val(response.notes).prop('disabled', false);
+            $('#LabourPrice').val(response.labourPrice).prop('disabled', false);
+            $('#Discount').val(response.discount).prop('disabled', false);
+            $('#ShippingFee').val(response.shippingFee).prop('disabled', false);
+            $('#SubTotal').val(response.subTotal).prop('disabled', false);
+            $('#TotalAmount').val(response.totalAmount).prop('disabled', false);
+            $('#AmountPaid').val(response.amountPaid).prop('disabled', false);
+
+
+            // show Date Added
+            $('#DateAdded').closest('.date-added-container').show();
+
             // Fields
             $('#IssueName').prop('readonly', false);
+
+            //  Add invoie item btn
+            $('#addItemButton').show();
+
+            // Update Invoice button
+            $('#updateInvoice').hide();
+            $('#addInvoice').show(); // shows the invoice btn
+            $('#deleteInvoice').hide();
         },
         error: function () {
 
@@ -266,7 +385,7 @@ function AddInvoice() {
             itemPrice: parseFloat($(this).find('.item-price').val()) || 0,
             itemTotal: parseFloat($(this).find('.item-total').val()) || 0
         };
-        formData.InvoiceItems.push(item);
+        formData.invoiceItems.push(item);
     });
 
     $.ajax({
@@ -339,6 +458,39 @@ function UpdateInvoice() {
                 location.reload();
             } else {
                 console.log(formData);
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert('An error occurred while updating the invoice.');
+        }
+    });
+}
+
+function DeleteInvoice() {
+    const token = $('input[name="__RequestVerificationToken"]').val();
+    const invoiceId = $('#InvoiceId').val();
+
+    console.log('id = ', invoiceId);
+
+    $.ajax({
+        url: '/invoice/DeleteInvoice',
+        type: 'POST',
+        dataType: 'json',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        data: {
+            id: invoiceId
+        },
+        success: function (response) {
+            console.log(invoiceId);
+            if (response.success) {
+                alert(response.message);
+                HideModal();
+                location.reload();
+            } else {
+                console.log(invoiceId);
                 alert(response.message);
             }
         },

@@ -73,6 +73,31 @@ namespace MobileMekaniko_Final.Repository
 
         }
 
+        public async Task DeleteInvoiceAsync(int id)
+        {
+            try
+            {
+                // Find Invoice by id
+                var invoice = await _data.Invoices.FindAsync(id);
+
+                if (invoice == null)
+                {
+                    _logger.LogWarning("No invoice found.");
+                    throw new KeyNotFoundException($"No invoice found with id {id}");
+                }
+
+                // Remove invoice 
+                _data.Invoices.Remove(invoice);
+                await _data.SaveChangesAsync();
+                _logger.LogInformation($"Invoice with id {id} successfully deleted.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while deleting invoice with id {id}");
+                throw;
+            }
+        }
+
         public async Task<InvoiceCustomerCarDetailsDto> GetCustomerCarDetailsAsync(int id)
         {
             try
@@ -177,6 +202,7 @@ namespace MobileMekaniko_Final.Repository
                 invoice.TotalAmount = dto.TotalAmount;
                 invoice.AmountPaid = dto.AmountPaid;
                 invoice.IsPaid = dto.IsPaid;
+                invoice.DateEdited = DateTime.Now;
 
                 await _data.SaveChangesAsync();
                 _logger.LogInformation($"Invoice with id {dto.InvoiceId} has been updated successfully");

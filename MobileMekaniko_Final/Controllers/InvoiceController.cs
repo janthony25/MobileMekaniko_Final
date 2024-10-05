@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
+using NuGet.Protocol.Plugins;
 
 namespace MobileMekaniko_Final.Controllers
 {
@@ -101,6 +102,30 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError(ex, $"An error occurred while updating invoice with id {dto.InvoiceId}");
                 return Json(new { success = false, message = "An error occurred while updating invoice" });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteInvoice(int id)
+        {
+            try
+            {
+                _logger.LogInformation($"Request to delete invoice with id {id}");
+                await _unitOfWork.Invoice.DeleteInvoiceAsync(id);
+
+                if(id == 0)
+                {
+                    _logger.LogWarning($"No invoice found with id of {id}");
+                    return Json(new { success = false, message = "Invoice not found." });
+                }
+
+                return Json(new { success = true, message = "Invoice successfully deleted." });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while deleting invoice with id {id}");
+                return Json(new { success = false, message = "An error occurred while deleting invoice" });
             }
         }
     }
