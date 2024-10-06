@@ -43,7 +43,7 @@ namespace MobileMekaniko_Final.Services
             header.Format.Font.Size = 20;
             header.Format.Font.Bold = true;
             header.Format.Alignment = ParagraphAlignment.Center;
-            header.Format.SpaceAfter = 10;
+            header.Format.SpaceAfter = 50;
         }
 
         private void AddCustomerCarAndInvoiceDetails(Section section, InvoiceDetailsDto invoice)
