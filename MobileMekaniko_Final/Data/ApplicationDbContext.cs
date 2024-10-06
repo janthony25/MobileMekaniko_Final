@@ -59,6 +59,20 @@ namespace MobileMekaniko_Final.Data
                 .HasForeignKey(ii => ii.InvoiceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // One to Many Car-Quotation
+            builder.Entity<Car>()
+                .HasMany(car => car.Quotation)
+                .WithOne(q => q.Car)
+                .HasForeignKey(q => q.CarId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // One to Many Quotation-Quotation Item
+            builder.Entity<Quotation>()
+                .HasMany(q => q.QuotationItem)
+                .WithOne(qi => qi.Quotation)
+                .HasForeignKey(qi => qi.QuotationId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
         }
     }   
 }

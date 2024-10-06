@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository;
@@ -6,6 +7,7 @@ using MobileMekaniko_Final.Repository.IRepository;
 
 namespace MobileMekaniko_Final.Controllers
 {
+    [Authorize]
     public class CarController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -68,7 +70,7 @@ namespace MobileMekaniko_Final.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCar(CarDetailsDto dto)
-        {
+         {
             try
             {
                 _logger.LogInformation("Request to update car.");

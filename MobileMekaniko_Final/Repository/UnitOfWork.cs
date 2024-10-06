@@ -15,11 +15,13 @@ namespace MobileMekaniko_Final.Repository
             Customer = new CustomerRepository(_data, _loggerFactory);
             Car = new CarRepository(_data, _loggerFactory);
             Invoice = new InvoiceRepository(_data, _loggerFactory);
+            Quotation = new QuotationRepository(_data, _loggerFactory);
         }
         public ICustomerRepository Customer { get; private set; }
 
         public ICarRepository Car { get; private set; }
 
         public IInvoiceRepository Invoice { get; private set; }
+        public IQuotationRepository Quotation { get; private set; }
     }
 }

@@ -5,5 +5,6 @@
         ICustomerRepository Customer { get; }
         ICarRepository Car { get; }
         IInvoiceRepository Invoice { get; }
+        IQuotationRepository Quotation { get; } 
     }
 }

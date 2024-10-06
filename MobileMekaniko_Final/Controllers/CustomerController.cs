@@ -1,5 +1,6 @@
 ﻿
 using Azure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Execution;
 using MobileMekaniko_Final.Models.Dto;
@@ -7,6 +8,7 @@ using MobileMekaniko_Final.Repository.IRepository;
 
 namespace MobileMekaniko_Final.Controllers
 {
+    [Authorize]
     public class CustomerController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

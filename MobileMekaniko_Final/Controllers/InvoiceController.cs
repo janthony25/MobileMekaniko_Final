@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
@@ -8,6 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace MobileMekaniko_Final.Controllers
 {
+    [Authorize]
     public class InvoiceController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

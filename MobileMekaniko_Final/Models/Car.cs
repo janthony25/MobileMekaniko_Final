@@ -29,6 +29,9 @@ namespace MobileMekaniko_Final.Models
         // One to Many Car-Invoice
         public ICollection<Invoice> Invoice { get; set; }
 
+        // One to Many Car-Quotation
+        public ICollection<Quotation> Quotation { get; set; }   
+
 
         // FK to Customer
         public int CustomerId { get; set; }
