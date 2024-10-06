@@ -51,6 +51,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 
+// Register EmailPdfService to handle sending invoices with PDF attachments
+builder.Services.AddTransient<EmailPdfService>();
+
 builder.Logging.AddConsole();
 
 // Repository and logging

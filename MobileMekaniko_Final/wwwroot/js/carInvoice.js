@@ -103,6 +103,13 @@
         console.log('Trying to download pdf..');
     });
 
+    // Send PDF to Email
+    $(document).on('click', '.send-invoice-email', function () {
+        const invoiceId = $(this).data('invoice-id');
+        SendInvoiceEmail(invoiceId);
+        console.log('sending invoice to email...', invoiceId);
+    });
+
 });
 
 // Function to update invoice totals
@@ -639,4 +646,33 @@ function downloadPdf(invoiceId) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+}
+
+// Send Invoice PDF to Email
+function SendInvoiceEmail(invoiceId) {
+    const token = $('input[name="__RequestVerificationToken"]').val();
+
+    console.log('sending invoice to email...', invoiceId); // Debugging log
+
+    $.ajax({
+        url: '/invoice/SendInvoiceEmail',
+        type: 'POST',
+        dataType: 'json',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        data: {
+            invoiceId: invoiceId  // Use the same data format as DeleteInvoice
+        },
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);
+            } else {
+                alert('Error: ' + response.message);
+            }
+        },
+        error: function () {
+            alert('An error occurred while sending the invoice email.');
+        }
+    });
 }

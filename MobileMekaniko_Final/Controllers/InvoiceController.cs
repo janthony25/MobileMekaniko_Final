@@ -13,12 +13,14 @@ namespace MobileMekaniko_Final.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<InvoiceController> _logger;    
         private readonly IInvoicePdfService _invoicePdfService;
+        private readonly EmailPdfService _emailPdfService;
 
-        public InvoiceController(IUnitOfWork unitOfWork, ILogger<InvoiceController> logger, IInvoicePdfService invoicePdfService)
+        public InvoiceController(IUnitOfWork unitOfWork, ILogger<InvoiceController> logger, IInvoicePdfService invoicePdfService, EmailPdfService emailPdfService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _invoicePdfService = invoicePdfService;
+            _emailPdfService = emailPdfService;
         }
         
 
@@ -182,6 +184,49 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError(ex, $"An error occurred while generating PDF for invoice {id}");
                 return StatusCode(500, "An error occurred while generating the PDF.");
+            }
+        }
+
+        // POST : Send Invoice PDF to Email
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendInvoiceEmail(int invoiceId)
+        {
+            try
+            {
+                _logger.LogInformation($"Request to send invoice email for invoice with id {invoiceId}");
+
+                if (invoiceId <= 0)
+                {
+                    _logger.LogWarning("Invalid invoice ID received.");
+                    return Json(new { success = false, message = "Invalid invoice ID." });
+                }
+
+                var invoice = await _unitOfWork.Invoice.GetInvoiceDetailsAsync(invoiceId);
+                if (invoice == null)
+                {
+                    _logger.LogWarning($"Invoice not found with id {invoiceId}");
+                    return Json(new { success = false, message = "Invoice not found." });
+                }
+
+                // Create the PDF from invoice details
+                var pdfBytes = _invoicePdfService.CreateInvoicePdf(invoice);
+
+                // Prepare email details
+                var subject = $"Invoice #{invoice.InvoiceId} from Mobile Mekaniko";
+                var body = $"Dear {invoice.CustomerName},\n\nPlease find attached your invoice #{invoice.InvoiceId}.\n\nThank you,\nMobile Mekaniko";
+                var email = invoice.CustomerEmail;
+
+                // Use EmailPdfService to send the invoice email with the PDF attachment
+                await _emailPdfService.SendInvoiceEmailAsync(email, subject, body, pdfBytes, $"Invoice_{invoice.InvoiceId}.pdf");
+
+                _logger.LogInformation($"Invoice email successfully sent to {email} for invoice with id {invoiceId}");
+                return Json(new { success = true, message = "Invoice email successfully sent." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while sending invoice email for invoice with id {invoiceId}");
+                return Json(new { success = false, message = "An error occurred while sending the invoice email." });
             }
         }
     }
