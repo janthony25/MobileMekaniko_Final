@@ -53,11 +53,11 @@
                         <a href="#" class="btnUpdateInvoice" data-invoice-id="@invoice.InvoiceId" data-action="UpdateInvoice">@invoice.InvoiceId</a>
                     </td>
                     <td class="text-center">@invoice.IssueName</td>
-                    <td class="text-center">@invoice.DateAdded</td>
-                    <td class="text-center">@invoice.DueDate</td>
+                    <td class="text-center">@(invoice.DateAdded?.ToString("MM/dd/yyy"))</td>
+                    <td class="text-center">@(invoice.DueDate?.ToString("MM/dd/yyy"))</td>
                     <td class="text-center">@invoice.TotalAmount</td>
                     <td class="text-center">@invoice.AmountPaid</td>
-                    <td class="text-center">@invoice.isPaid</td>
+                    <td class="text-center">@((invoice.isPaid.HasValue && invoice.isPaid.Value) ? "Paid" : "Not Paid")</td>
                     <td class="text-center">
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary dropdown-toggle btn-sm" type="button" id="actionDropdown_@invoice.InvoiceId" data-bs-toggle="dropdown" aria-expanded="false">
