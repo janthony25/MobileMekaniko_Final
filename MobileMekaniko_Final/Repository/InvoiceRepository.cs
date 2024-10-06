@@ -184,6 +184,7 @@ namespace MobileMekaniko_Final.Repository
                     
         }
 
+      
         public async Task UpdateInvoiceAsync(UpdateInvoiceDto dto)
         {
             try
@@ -216,6 +217,30 @@ namespace MobileMekaniko_Final.Repository
             catch(Exception ex)
             {
                 _logger.LogError(ex, $"An error occurred while updating invoice with id {dto.InvoiceId}");
+                throw;
+            }
+        }
+
+        public async Task UpdateIsEmailSentAsync(int id, bool isEmailSent)
+        {
+            try
+            {
+                // Find Invoice by id
+                var invoice = await _data.Invoices.FindAsync(id);
+                if(invoice == null)
+                {
+                    _logger.LogWarning($"No invoice found with id {id}");
+                    throw new KeyNotFoundException($"Invoice with id {id} not found.");
+                }
+
+                invoice.IsEmailSent = isEmailSent;
+
+                await _data.SaveChangesAsync();
+                _logger.LogInformation($"IsEmailSent updated to {isEmailSent} for invoice with id {id}");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while updating IsEmailSent for invoice with id {id}");
                 throw;
             }
         }

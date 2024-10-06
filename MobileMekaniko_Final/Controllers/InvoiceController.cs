@@ -220,6 +220,8 @@ namespace MobileMekaniko_Final.Controllers
                 // Use EmailPdfService to send the invoice email with the PDF attachment
                 await _emailPdfService.SendInvoiceEmailAsync(email, subject, body, pdfBytes, $"Invoice_{invoice.InvoiceId}.pdf");
 
+                await _unitOfWork.Invoice.UpdateIsEmailSentAsync(invoiceId, true);
+
                 _logger.LogInformation($"Invoice email successfully sent to {email} for invoice with id {invoiceId}");
                 return Json(new { success = true, message = "Invoice email successfully sent." });
             }
