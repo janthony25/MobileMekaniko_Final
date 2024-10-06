@@ -184,7 +184,31 @@ namespace MobileMekaniko_Final.Repository
                     
         }
 
-      
+        public async Task MarkAsPaidAsync(int id, bool IsPaid)
+        {
+            try
+            {
+                // Find invoice by id
+                var invoice = await _data.Invoices.FindAsync(id);
+
+                if(invoice == null)
+                {
+                    _logger.LogWarning($"No invoice found with id {id}");
+                    throw new KeyNotFoundException("No invoice found.");
+                }
+
+                invoice.IsPaid = IsPaid;
+
+                await _data.SaveChangesAsync();
+                _logger.LogInformation($"Invoice with id {id} marked as paid successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while marking the invoice with id {id} as paid");
+                throw;
+            }
+        }
+
         public async Task UpdateInvoiceAsync(UpdateInvoiceDto dto)
         {
             try

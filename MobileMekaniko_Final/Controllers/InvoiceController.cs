@@ -231,5 +231,26 @@ namespace MobileMekaniko_Final.Controllers
                 return Json(new { success = false, message = "An error occurred while sending the invoice email." });
             }
         }
+
+        // POST : Mark Invoice as Paid
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkInvoiceAsPaid(int id)
+        {
+            try
+            {
+                _logger.LogInformation($"Request to mark invoice with id {id} as paid");
+
+                await _unitOfWork.Invoice.MarkAsPaidAsync(id, true);
+
+                _logger.LogInformation($"Invoice with id {id} successfully marked as paid.");
+                return Json(new { success = true, message = "Invoice successfully marked as paid." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while marking the invoice with id {id} as paid.");
+                return Json(new { success = false, message = "An error occurred while marking the invoice as paid." });
+            }
+        }
     }
 }

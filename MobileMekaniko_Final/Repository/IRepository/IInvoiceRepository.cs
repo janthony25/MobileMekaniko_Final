@@ -10,5 +10,6 @@ namespace MobileMekaniko_Final.Repository.IRepository
         Task UpdateInvoiceAsync(UpdateInvoiceDto dto);
         Task DeleteInvoiceAsync(int id);
         Task UpdateIsEmailSentAsync(int id, bool isEmailSent);
+        Task MarkAsPaidAsync(int id, bool IsPaid);
     }
 }

@@ -110,6 +110,13 @@
         console.log('sending invoice to email...', invoiceId);
     });
 
+    $(document).on('click', '.mark-as-paid', function () {
+        const invoiceId = $(this).data('invoice-id');
+        console.log('marking invoice id as paid: ', invoiceId);
+
+        MarkInvoiceAsPaid(invoiceId);
+    });
+
 });
 
 // Function to update invoice totals
@@ -673,6 +680,31 @@ function SendInvoiceEmail(invoiceId) {
         },
         error: function () {
             alert('An error occurred while sending the invoice email.');
+        }
+    });
+}
+
+// Mark invoice as paid
+function MarkInvoiceAsPaid(invoiceId) {
+    const token = $('input[name="__RequestVerificationToken"]').val();
+
+    console.log('Marking invoice as paid InvoiceId:', invoiceId);
+
+    $.ajax({
+        url: '/invoice/MarkInvoiceAsPaid',
+        type: 'POST',
+        dataType: 'json',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        data: {
+            id: invoiceId
+        },
+        success: function (response) {
+                alert(response.message);
+        },
+        error: function () {
+            alert('An error occurred while marking invoice as paid.');
         }
     });
 }
