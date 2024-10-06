@@ -1,0 +1,51 @@
+﻿@model MobileMekaniko_Final.Models.Dto.CarQuotationSummaryDto
+
+<h5 class="fw-bold mt-5">CUSTOMER DETAILS</h5>
+
+<div class="d-flex justify-content-between align-items-center">
+    <div class="car-invoice-left">
+        <p>Customer ID: @Model.CustomerId</p>
+        <p>Customer Name: @Model.CustomerName</p>
+        <p>Email Address: @Model.CustomerEmail</p>
+        <p>Contact #: @Model.CustomerNumber</p>
+    </div>
+    <div class="car-invoice-right">
+        <p>Car Id: @Model.CarId</p>
+        <p>Rego #: @Model.CarRego</p>
+        <p>Make: @Model.MakeName</p>
+        <p>Model: @Model.CarModel</p>
+        <p>Year: @Model.CarYear</p>
+    </div>
+</div>
+
+<h5 class="fw-bold mt-5">QUOTATIONS</h5>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Quotation ID</th>
+            <th>Issue</th>
+            <th>Date Added</th>
+            <th>Total Amount</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(!@Model.Quotations.Any())
+        {
+            <tr>
+                <td class="text-center" colspan="5">No Quotations Yet</td>
+            </tr>
+        }
+        @foreach(var quote in Model.Quotations)
+        {
+            <tr>
+                <td>@quote.QuotationId</td>
+                <td>@quote.IssueName</td>
+                <td>@(quote.DateAdded.ToString("MM/dd/yyyy"))</td>
+                <td>@quote.TotalAmount</td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>
