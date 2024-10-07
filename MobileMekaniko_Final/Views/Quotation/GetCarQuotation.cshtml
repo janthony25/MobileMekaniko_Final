@@ -18,6 +18,11 @@
     </div>
 </div>
 
+<div class="text-end mt-5">
+    <button class="btn btn-warning btnAddQuotation" data-car-id="@Model.CarId" data-action="AddQuotation"><i class="bi bi-plus-square-fill"></i> Quotation</button>
+</div>
+
+
 <h5 class="fw-bold mt-5">QUOTATIONS</h5>
 
 <table class="table table-striped">
@@ -49,3 +54,8 @@
         }
     </tbody>
 </table>
+
+<partial name="_CarQuotationModal" model="new MobileMekaniko_Final.Models.Dto.QuotationDetailsDto()" />
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/carquotation.js"></script>

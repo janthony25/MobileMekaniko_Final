@@ -173,7 +173,7 @@ namespace MobileMekaniko_Final.Repository
                     return invoice;
                 }
 
-                _logger.LogInformation($"Success fully found invoice details for invoice with id {id}");
+                _logger.LogInformation($"Successfully found invoice details for invoice with id {id}");
                 return invoice;
             }
             catch (Exception ex)

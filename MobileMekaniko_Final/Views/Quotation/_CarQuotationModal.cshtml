@@ -1,0 +1,93 @@
+﻿@model MobileMekaniko_Final.Models.Dto.QuotationDetailsDto
+
+
+<!-- Car  Invoice Modals -->
+<div class="modal fade" id="carQuotationModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="carQuotationModalTitle"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @Html.AntiForgeryToken()
+                <div class="customer-car-details container">
+                    <div class="invoice-customer-container d-flex justify-content-between align-items-center ">
+                        <div>
+                            <label asp-for="CustomerName"></label><br />
+                            <input id="CustomerName" asp-for="CustomerName" class="form-control" />
+                        </div>
+                        <input id="CarId" asp-for="CarId" type="hidden" />
+                        <div>
+                            <label asp-for="CarRego"></label><br />
+                            <input id="CarRego" asp-for="CarRego" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item-list-container container mt-5">
+                    <h4>ITEM LIST</h4>
+
+                    <div id="invoiceItems">
+
+                    </div>
+
+                    <button id="addItemButton" class="btn btn-primary">Add Item</button>
+                </div>
+
+                <input id="QuotationId" asp-for="QuotationId" type="hidden" />
+                <div class="invoice-details d-flex justify-content-between align-items-center mt-5">
+                    <div class="invoice-details-left">
+                        <div class="mb-2 date-added-container">
+                            <label asp-for="@Model.DateAdded"></label> <br />
+                            <input type="date" id="DateAdded" asp-for="DateAdded" class="form-control" />
+                            <span id="DateAddedError" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label asp-for="@Model.IssueName"></label> <br />
+                            <input name="IssueName" id="IssueName" asp-for="IssueName" class="form-control" />
+                            <span id="IssueNameError" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label asp-for="@Model.Notes"></label> <br />
+                            <input id="Notes" asp-for="Notes" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="invoice-details-right d-flex justify-content-between align-items-center">
+                        <div class="invoice-details-right-1">
+                            <div class="mb-2">
+
+                                <div class="mb-2">
+                                    <label asp-for="@Model.SubTotal"></label> <br />
+                                    <input id="SubTotal" asp-for="SubTotal" class="form-control" readonly />
+                                </div>
+                                <label asp-for="@Model.LaborPrice"></label> <br />
+                                <input id="LabourPrice" asp-for="LaborPrice" class="form-control" />
+                            </div>
+                            <div class="mb-2">
+                                <label asp-for="@Model.Discount"></label> <br />
+                                <input id="Discount" asp-for="Discount" class="form-control" />
+                            </div>
+                            <div class="mb-2">
+                                <label asp-for="@Model.ShippingFee"></label> <br />
+                                <input id="ShippingFee" asp-for="ShippingFee" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="invoice-details-right-2">
+                            <div class="mb-2">
+                                <label asp-for="@Model.TotalAmount"></label> <br />
+                                <input id="TotalAmount" asp-for="TotalAmount" class="form-control" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="addInvoice">Add Invoice</button>
+                <button type="button" class="btn btn-warning" id="updateInvoice">Update Invoice</button>
+                <button type="button" class="btn btn-danger" id="deleteInvoice">Delete Invoice</button>
+            </div>
+        </div>
+    </div>
+</div>

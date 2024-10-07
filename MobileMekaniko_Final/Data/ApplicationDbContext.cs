@@ -16,11 +16,17 @@ namespace MobileMekaniko_Final.Data
         public DbSet<Make> Makes { get; set; }
         public DbSet<CarMake> CarMakes { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
-        public DbSet<InvoiceItem> InvoiceItems { get; set; }    
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
+        public DbSet<Quotation> Quotations { get; set; }
+        public DbSet<QuotationItem> QuotationItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // Configure table names to match DbSet names
+            builder.Entity<Quotation>().ToTable("Quotations");
+            builder.Entity<QuotationItem>().ToTable("QuotationItems");
 
             // One to Many Customer-Car
             builder.Entity<Customer>()
