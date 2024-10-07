@@ -85,7 +85,7 @@ namespace MobileMekaniko_Final.Repository
                         CarYear = c.CarYear,
                         Quotations = c.Quotation.Select(q => new QuotationSummaryDto
                         {
-                            QuotationId = q.CarId,
+                            QuotationId = q.QuotationId,
                             IssueName = q.IssueName,
                             DateAdded = q.DateAdded,
                             TotalAmount = q.TotalAmount
