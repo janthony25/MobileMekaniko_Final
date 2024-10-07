@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MobileMekaniko_Final.Data;
+using MobileMekaniko_Final.Models;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
 
@@ -13,6 +14,51 @@ namespace MobileMekaniko_Final.Repository
         {
             _data = data;
             _logger = loggerFactory.CreateLogger<QuotationRepository>();
+        }
+
+        public async Task AddQuotationAsync(AddQuotationDto dto)
+        {
+            try
+            {
+                // Find Car by dto.CarId
+                var car = await _data.Cars.FindAsync(dto.CarId);
+
+                var quotation = new Quotation
+                {
+                    IssueName = dto.IssueName,
+                    Notes = dto.Notes,
+                    LaborPrice = dto.LaborPrice,
+                    Discount = dto.Discount,
+                    ShippingFee = dto.ShippingFee,
+                    SubTotal = dto.SubTotal,
+                    TotalAmount = dto.TotalAmount,
+                    CarId = dto.CarId
+                };
+
+                _data.Quotations.Add(quotation);
+                _logger.LogInformation($"Successfully added quotation to car with id {dto.CarId}");
+
+                await _data.SaveChangesAsync();
+
+                var quotationItem = dto.QuotationItems.Select(qi => new QuotationItem
+                {
+                    ItemName = qi.ItemName,
+                    Quantity = qi.Quantity,
+                    ItemPrice = qi.ItemPrice,
+                    ItemTotal = qi.ItemTotal,
+                    QuotationId = quotation.QuotationId
+                }).ToList();
+
+                _data.QuotationItems.AddRange(quotationItem);
+                _logger.LogInformation($"Successfully added items to quotation with id {quotation.QuotationId}");
+
+                await _data.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while adding quotation to car with id {dto.CarId}");
+                throw;
+            }
         }
 
         public async Task<CarQuotationSummaryDto> GetCarQuotationSummaryAsync(int id)

@@ -6,5 +6,6 @@ namespace MobileMekaniko_Final.Repository.IRepository
     {
         Task<CarQuotationSummaryDto> GetCarQuotationSummaryAsync(int id);
         Task<QuotationDetailsDto> GetQuotationDetailsAsync(int id);
+        Task AddQuotationAsync(AddQuotationDto dto);
     }
 }

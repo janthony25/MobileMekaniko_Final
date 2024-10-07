@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
 
 namespace MobileMekaniko_Final.Controllers
@@ -34,6 +35,33 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError(ex, $"An error occurred while fetching car details for car with id {id}");
                 return StatusCode(500, "An error occurred while fetching car details");
+            }
+        }
+
+        // POST : Add Quotation
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddQuotation([FromBody] AddQuotationDto dto)
+        {
+            try
+            {
+                _logger.LogInformation($"Received DTO: {System.Text.Json.JsonSerializer.Serialize(dto)}");
+                _logger.LogInformation($"Request to add quotation to car with id {dto.CarId}");
+
+                if (ModelState.IsValid)
+                {
+                    await _unitOfWork.Quotation.AddQuotationAsync(dto);
+                    _logger.LogInformation($"Successfully added quotation to car with id {dto.CarId}");
+                    return Json(new { success = true, message = "Successfully added new quotation" });
+                }
+
+                _logger.LogWarning($"Invalid data provided.");
+                return Json(new {success=false,message="Invalid data provided."});
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while trying to add quotation to car with id {dto.CarId}");
+                return Json(new { success = false, message = "An error occurred while trying to add new quotation" });
             }
         }
     }
