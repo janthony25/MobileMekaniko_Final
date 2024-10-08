@@ -13,13 +13,19 @@ namespace MobileMekaniko_Final.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<QuotationController> _logger;
         private readonly IQuotationPdfService _quotationPdfService;
+        private readonly EmailPdfService _emailPdfService;
 
-        public QuotationController(IUnitOfWork unitOfWork, ILogger<QuotationController> logger, IQuotationPdfService quotationPdfService)
-        {
-            _unitOfWork = unitOfWork;
-            _logger = logger;
-            _quotationPdfService = quotationPdfService;
-        }
+        public QuotationController(
+                IUnitOfWork unitOfWork,
+                ILogger<QuotationController> logger,
+                IQuotationPdfService quotationPdfService,
+                EmailPdfService emailPdfService)
+            {
+                _unitOfWork = unitOfWork;
+                _logger = logger;
+                _quotationPdfService = quotationPdfService;
+                _emailPdfService = emailPdfService;
+            }
 
         // GET : Car Quotation
         public async Task<IActionResult> GetCarQuotation(int id)
@@ -190,6 +196,49 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError(ex, $"An error occurred while generating PDF for quotation {id}");
                 return StatusCode(500, "An error occurred while generating the PDF.");
+            }
+        }
+
+        // POST : Send Quotation PDF to Email
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendQuotationEmail(int quotationId)
+        {
+            try
+            {
+                _logger.LogInformation($"Request to send quotation email for quotation with id {quotationId}");
+
+                if (quotationId <= 0)
+                {
+                    _logger.LogWarning("Invalid quotation ID received.");
+                    return Json(new { success = false, message = "Invalid quotation ID." });
+                }
+
+                var quotation = await _unitOfWork.Quotation.GetQuotationDetailsAsync(quotationId);
+                if (quotation == null)
+                {
+                    _logger.LogWarning($"Quotation not found with id {quotationId}");
+                    return Json(new { success = false, message = "Quotation not found." });
+                }
+
+                // Create the PDF from quotation details
+                var pdfBytes = _quotationPdfService.CreateQuotationPdf(quotation);
+
+                // Prepare email details
+                var subject = $"Quotation #{quotation.QuotationId} from Mobile Mekaniko";
+                var body = $"Dear {quotation.CustomerName},\n\nPlease find attached your quotation #{quotation.QuotationId}.\n\nThank you,\nMobile Mekaniko";
+                var email = quotation.CustomerEmail;
+
+                // Use EmailPdfService to send the quotation email with the PDF attachment
+                await _emailPdfService.SendInvoiceEmailAsync(email, subject, body, pdfBytes, $"Quotation_{quotation.QuotationId}.pdf");
+
+                _logger.LogInformation($"Quotation email successfully sent to {email} for quotation with id {quotationId}");
+                return Json(new { success = true, message = "Quotation email successfully sent." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while sending quotation email for quotation with id {quotationId}");
+                return Json(new { success = false, message = "An error occurred while sending the quotation email." });
             }
         }
     }

@@ -62,6 +62,12 @@
         DownloadPdf(quotationId);
     });
 
+    // Send PDF to Email
+    $(document).on('click', '.send-quotation-email', function () {
+        const quotationId = $(this).data('quotation-id');
+        SendQuotationEmail(quotationId);
+    });
+
     $('#addItemButton').on('click', function () {
         var newItem = $(`
         <div class="row quotation-item d-flex justify-content-between align-items-center mb-2">
@@ -564,4 +570,33 @@ function DownloadPdf(quotationId) {
     $('body').append(link);
     link[0].click();  // jQuery object needs to be accessed as a DOM element
     link.remove();
+}
+
+// Send Quotation PDF to Email
+function SendQuotationEmail(quotationId) {
+    const token = $('input[name="__RequestVerificationToken"]').val();
+
+    console.log('sending quotation to email...', quotationId);
+
+    $.ajax({
+        url: '/quotation/SendQuotationEmail',
+        type: 'POST',
+        dataType: 'json',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        data: {
+            quotationId: quotationId
+        },
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);
+            } else {
+                alert('Error: ' + response.message);
+            }
+        },
+        error: function () {
+            alert('An error occurred while sending the quotation email.');
+        }
+    });
 }
