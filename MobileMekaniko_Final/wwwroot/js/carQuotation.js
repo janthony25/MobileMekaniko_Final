@@ -54,6 +54,14 @@
         ViewPdf(quotationId);
     });
 
+    // Download Quotation PDF
+    $(document).on('click', '.download-pdf', function (e) {
+        e.preventDefault();
+
+        const quotationId = $(this).data('quotation-id');
+        DownloadPdf(quotationId);
+    });
+
     $('#addItemButton').on('click', function () {
         var newItem = $(`
         <div class="row quotation-item d-flex justify-content-between align-items-center mb-2">
@@ -540,4 +548,20 @@ function ViewPdf(quotationId) {
     // Add the modal to the body and show it
     $('body').append(modal);
     modal.modal('show');
+}
+
+// Download Quotation PDF
+function DownloadPdf(quotationId) {
+    console.log('Downloading PDF for quotation:', quotationId);
+
+    // Create a temporary anchor element
+    var link = $('<a>', {
+        href: `/Quotation/DownloadPdf/${quotationId}`,
+        download: ''
+    });
+
+    // Append to body, click programmatically, and remove
+    $('body').append(link);
+    link[0].click();  // jQuery object needs to be accessed as a DOM element
+    link.remove();
 }

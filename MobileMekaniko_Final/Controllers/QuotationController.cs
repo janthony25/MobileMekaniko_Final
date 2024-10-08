@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
 using MobileMekaniko_Final.Services;
+using PdfSharp.Quality;
+using System.Text.RegularExpressions;
 
 namespace MobileMekaniko_Final.Controllers
 {
@@ -159,6 +161,35 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError(ex, $"An error occurred while generating PDF for quotation with id {id}");
                 return StatusCode(500, "An error occurred while generating the PDF");
+            }
+        }
+
+        // GET : Download Quotation PDF
+        public async Task<IActionResult> DownloadPdf(int id)
+        {
+            _logger.LogInformation($"Request to download PDF for quotation with id {id}");
+            try
+            {
+                var quotation = await _unitOfWork.Quotation.GetQuotationDetailsAsync(id);
+                if (quotation == null)
+                {
+                    _logger.LogWarning($"Quotation not fond for ID {id}");
+                    return NotFound();
+                }
+
+                _logger.LogInformation($"Generating PDF for quotation ID {id}");
+                var pdfBytes = _quotationPdfService.CreateQuotationPdf(quotation);
+
+                string safeCarRego = Regex.Replace(quotation.CarRego, @"[^\w\-]", "_");
+                string fileName = $"{safeCarRego}_Quotation_{id}.pdf";
+
+                _logger.LogInformation($"Returning PDF file: {fileName}");
+                return File(pdfBytes, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while generating PDF for quotation {id}");
+                return StatusCode(500, "An error occurred while generating the PDF.");
             }
         }
     }
