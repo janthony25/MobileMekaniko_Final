@@ -254,5 +254,24 @@ namespace MobileMekaniko_Final.Controllers
                 return Json(new { success = false, message = "An error occurred while marking the invoice as paid." });
             }
         }
+
+        // GET : Invoice List
+        public async Task<IActionResult> GetInvoiceList()
+        {
+            try
+            {
+                _logger.LogInformation("Request to fetch invoice list.");
+
+                var invoice = await _unitOfWork.Invoice.GetInvoiceListAsync();
+
+                _logger.LogInformation($"Fetched {invoice.Count} numbers of invoice.");
+                return View(invoice);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to fetch invoice list.");
+                return StatusCode(500, "An error occurred while trying to fetch invoice list.");
+            }
+        }
     }
 }

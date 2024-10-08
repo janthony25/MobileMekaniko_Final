@@ -20,3 +20,13 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Show the dropdown menu on hover */
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Ensure the dropdown doesn't disappear when hovered */
+.nav-item.dropdown .dropdown-menu {
+    display: none;
+}

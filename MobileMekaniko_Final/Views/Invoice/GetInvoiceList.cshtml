@@ -1,0 +1,41 @@
+﻿@model List<MobileMekaniko_Final.Models.Dto.InvoiceListDto>
+
+<h5 class="text-center fw-bold mt-5">INVOICES</h5>
+
+<table class="table table-striped mt-5">
+    <thead>
+        <tr>
+            <th class="text-center">ID</th>
+            <th class="text-center">Name</th>
+            <th class="text-center">Rego #</th>
+            <th class="text-center">Issue</th>
+            <th class="text-center">Due Date</th>
+            <th class="text-center">Total Amount</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td class="text-center" colspan="10">No Invoices Available</td>
+            </tr>
+        }
+        else{
+            @foreach(var invoice in Model)
+            {
+                <tr>
+                    <td class="text-center">@invoice.InvoiceId</td>
+                    <td class="text-center">@invoice.CustomerName</td>
+                    <td class="text-center">@invoice.CarRego</td>
+                    <td class="text-center">@invoice.IssueName</td>
+                    <td class="text-center">@(invoice.DueDate?.ToString("MM/dd/yyyy"))</td>
+                    <td class="text-center">@invoice.TotalAmount</td>
+                    <td class="text-center">@((bool)invoice.IsPaid ? "Paid" : "Not Paid")</td>
+                    <td class="text-center"></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
