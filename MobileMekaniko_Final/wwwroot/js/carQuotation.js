@@ -8,6 +8,7 @@
     // Open Add Quotation Modal
     $(document).on('click', '.btnAddQuotation', function () {
         const carId = $(this).data('car-id');
+        console.log('opening add quote modal');
         AddQuotationModal(carId);
     });
 
@@ -129,6 +130,9 @@ function AddQuotationModal(carId) {
 
             // show add quotation button
             $('#addQuotation').show();
+
+            // show Add item button
+            $('#addItemButton').show();
 
             // Hide update delete button
             $('#updateQuotation').hide();
