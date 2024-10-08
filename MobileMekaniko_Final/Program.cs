@@ -60,6 +60,7 @@ builder.Logging.AddConsole();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IInvoicePdfService, InvoicePdfService>();
+builder.Services.AddScoped<IQuotationPdfService, QuotationPdfService>();    
 builder.Services.AddLogging();
 
 // Razor Runtime Compilation

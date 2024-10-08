@@ -48,6 +48,12 @@
         DeleteQuotation();
     });
 
+    // View Quotation PDF
+    $(document).on('click', '.view-pdf', function () {
+        const quotationId = $(this).data('quotation-id');
+        ViewPdf(quotationId);
+    });
+
     $('#addItemButton').on('click', function () {
         var newItem = $(`
         <div class="row quotation-item d-flex justify-content-between align-items-center mb-2">
@@ -512,4 +518,26 @@ function Validate() {
     }
 
     return isValid;
+}
+
+// View Quotation PDF
+function ViewPdf(quotationId) {
+    // Create a modal to display the PDF
+    const modal = $('<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">')
+        .append($('<div class="modal-dialog modal-xl" style="max-width: 90%; width: 90%; height: 90vh;">')
+            .append($('<div class="modal-content h-100">')
+                .append($('<div class="modal-header">')
+                    .append($('<h5 class="modal-title">').text('View Quotation PDF'))
+                    .append($('<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">')))
+                .append($('<div class="modal-body p-0" style="height: calc(100% - 56px);">')
+                    .append($('<iframe>')
+                        .attr('src', `/Quotation/ViewPdf/${quotationId}`)
+                        .attr('width', '100%')
+                        .attr('height', '100%')
+                        .attr('frameborder', '0')
+                        .attr('style', 'overflow: hidden;')))));
+
+    // Add the modal to the body and show it
+    $('body').append(modal);
+    modal.modal('show');
 }

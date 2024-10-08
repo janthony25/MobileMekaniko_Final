@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
+using MobileMekaniko_Final.Services;
 
 namespace MobileMekaniko_Final.Controllers
 {
@@ -9,11 +10,13 @@ namespace MobileMekaniko_Final.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<QuotationController> _logger;
+        private readonly IQuotationPdfService _quotationPdfService;
 
-        public QuotationController(IUnitOfWork unitOfWork, ILogger<QuotationController> logger)
+        public QuotationController(IUnitOfWork unitOfWork, ILogger<QuotationController> logger, IQuotationPdfService quotationPdfService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _quotationPdfService = quotationPdfService;
         }
 
         // GET : Car Quotation
@@ -134,6 +137,28 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError(ex, $"An error occurred while trying to delete quote with id {id}");
                 return Json(new { success = false, message = "An error occurred while trying to delete quote." });
+            }
+        }
+
+        // GET : Convert Quotation to PDF
+        public async Task<IActionResult> ViewPdf(int id)
+        {
+            try
+            {
+                var quotation = await _unitOfWork.Quotation.GetQuotationDetailsAsync(id);
+
+                if(quotation == null)
+                {
+                    return NotFound();
+                }
+
+                var pdfBytes = _quotationPdfService.CreateQuotationPdf(quotation);
+                return File(pdfBytes, "application/pdf");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while generating PDF for quotation with id {id}");
+                return StatusCode(500, "An error occurred while generating the PDF");
             }
         }
     }
