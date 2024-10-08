@@ -232,6 +232,8 @@ namespace MobileMekaniko_Final.Controllers
                 // Use EmailPdfService to send the quotation email with the PDF attachment
                 await _emailPdfService.SendInvoiceEmailAsync(email, subject, body, pdfBytes, $"Quotation_{quotation.QuotationId}.pdf");
 
+                await _unitOfWork.Quotation.UpdateIsEmailSendAsync(quotationId, true);
+                
                 _logger.LogInformation($"Quotation email successfully sent to {email} for quotation with id {quotationId}");
                 return Json(new { success = true, message = "Quotation email successfully sent." });
             }

@@ -187,6 +187,31 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task UpdateIsEmailSendAsync(int id, bool emailSent)
+        {
+            try
+            {
+                // Find quotation by id
+                var quotation = await _data.Quotations.FindAsync(id);
+
+                if (quotation == null)
+                {
+                    _logger.LogWarning($"Quotation with id {id} not found.");
+                    throw new KeyNotFoundException("Quotation not found");
+                }
+
+                quotation.IsEmailSent = emailSent;
+
+                await _data.SaveChangesAsync();
+                _logger.LogInformation($"Email has successfully sent for quotation with id {id}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while sending email to quotation with id {id}");
+                throw;
+            }
+        }
+
         public async Task UpdateQuotationAsync(UpdateQuotationDto dto)
         {
             try
