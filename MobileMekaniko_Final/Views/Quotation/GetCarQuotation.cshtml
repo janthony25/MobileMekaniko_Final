@@ -45,7 +45,7 @@
         @foreach(var quote in Model.Quotations)
         {
             <tr>
-                <td class="text-center">@quote.QuotationId</td>
+                <td class="text-center"><a href="#" class="btnUpdateInvoice" data-quotation-id="@quote.QuotationId" data-action="UpdateQuotation">@quote.QuotationId</a></td>
                 <td class="text-center">@quote.IssueName</td>
                 <td class="text-center">@(quote.DateAdded.ToString("MM/dd/yyyy"))</td>
                 <td class="text-center">@quote.TotalAmount</td>

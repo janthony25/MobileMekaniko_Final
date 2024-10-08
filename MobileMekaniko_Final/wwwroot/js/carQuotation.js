@@ -4,6 +4,8 @@
         HideModal();
     });
 
+
+    // Open Add Quotation Modal
     $(document).on('click', '.btnAddQuotation', function () {
         const carId = $(this).data('car-id');
         AddQuotationModal(carId);
@@ -13,6 +15,22 @@
     $('#addQuotation').on('click', function () {
         console.log('Adding new quotation');
         AddQuotation();
+    });
+
+    // Open Update Quoatation Modal 
+    $(document).on('click', '.btnUpdateInvoice', function () {
+        const quotationId = $(this).data('quotation-id');
+        const action = $(this).data('action');
+
+        console.log(quotationId, action);
+        UpdateDeleteQuotationModal(quotationId, action);
+
+    });
+
+    // Update quotation to DB
+    $('#updateQuotation').on('click', function () {
+        console.log('updating quote..');
+        UpdateQuotation();
     });
 
     $('#addItemButton').on('click', function () {
@@ -95,6 +113,7 @@ function updateTotals() {
     $('#isPaidDisplay').val(paymentStatusDisplay);
 }
 
+// Add Quotation Modal
 function AddQuotationModal(carId) {
     $.ajax({
         url: '/invoice/GetCustomerCarDetails',
@@ -127,7 +146,95 @@ function AddQuotationModal(carId) {
 }
 
 
+// Update/Delete Quotation Modal
+function UpdateDeleteQuotationModal(quotationId, action) {
+    $.ajax({
+        url: '/quotation/GetQuotationDetails',
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        data: {
+            id: quotationId
+        },  
+        success: function (response) {
+            if (action === 'UpdateQuotation') {
+                $('#carQuotationModal').modal('show');
+                $('#carQuotationModalTitle').text('Update Quotation');
 
+                $('#CustomerName').val(response.customerName).prop('disabled', true);
+                $('#CarRego').val(response.carRego).prop('disabled', true);
+
+                $('#QuotationId').val(response.quotationId);
+                $('#IssueName').val(response.issueName);
+                $('#Notes').val(response.notes);
+                $('#SubTotal').val(response.subTotal);
+                $('#LaborPrice').val(response.laborPrice);
+                $('#Discount').val(response.discount);
+                $('#ShippingFee').val(response.shippingFee);
+                $('#TotalAmount').val(response.totalAmount);
+
+                let dateAdded = response.dateAdded ? response.dateAdded.split('T')[0] : '';
+                $('#DateAdded').val(dateAdded).prop('readonly', true);
+
+                // HIde Add item button
+                $('#addItemButton').hide();
+
+                // Hide Add and Delete button
+                $('#addQuotation').hide();
+                $('#deleteQuotation').hide();
+
+                // Shoiw update button 
+                $('#updateQuotation').show();
+
+
+                // clear the existing items
+                $('#quotationItems').empty();
+
+                // Populate item list from response
+                if (response.quotationItemDto && response.quotationItemDto.length > 0) {
+                    // Add headers dynamically before adding items
+                    let headers = `
+                        <div class="row invoice-item-header d-flex justify-content-between align-items-center mb-2">
+                            <div class="col-4"><strong>Item Name</strong></div>
+                            <div class="col-2"><strong>Quantity</strong></div>
+                            <div class="col-3"><strong>Price</strong></div>
+                            <div class="col-3"><strong>Total Price</strong></div>
+                        </div>
+                    `;
+                    $('#quotationItems').append(headers);
+
+                    // Append each item
+                    $.each(response.quotationItemDto, function (index, item) {
+                        let newItem = $(`
+                        <div class="row invoice-item d-flex justify-content-between align-items-center mb-2">
+                            <div class="col-4">
+                                <input type="text" class="form-control item-name" placeholder="Item Name" value="${item.itemName}" readonly>
+                            </div>
+                            <div class="col-2">
+                                <input type="number" class="form-control item-quantity" placeholder="Quantity" value="${item.quantity}" readonly>
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="form-control item-price" placeholder="Price" value="${item.itemPrice}" readonly>
+                            </div>
+                            <div class="col-3 d-flex">
+                                <input type="number" class="form-control item-total me-2" placeholder="Total" value="${item.itemTotal}" readonly>
+                            </div>
+                        </div>
+                        `);
+                        $('#quotationItems').append(newItem);
+                    });
+                }
+                updateTotals();
+
+            }
+        },
+        error: function () {
+            alert('An error occurred while fetching quotation details.');
+        }
+    });
+}
+
+// Add Quotation to database
 function AddQuotation() {
 
     let result = Validate();
@@ -180,6 +287,55 @@ function AddQuotation() {
         },
         error: function () {
             alert('An error occured while adding new quotation');
+        }
+    });
+}
+
+
+// Update Quotation from database
+function UpdateQuotation() {
+    let result = Validate();
+
+    if (result === false) {
+        return false;
+    }
+
+    const token = $('input[name="__RequestVerificationToken"]').val();
+
+    let formData = {
+        issueName: $('#IssueName').val(),
+        notes: $('#Notes').val(),
+        laborPrice: parseFloat($('#LaborPrice').val()) || 0,
+        discount: parseFloat($('#Discount').val()) || 0,
+        shippingFee: parseFloat($('#ShippingFee').val()) || 0,
+        subTotal: parseFloat($('#SubTotal').val()) || 0,
+        totalAmount: parseFloat($('#TotalAmount').val()) || 0,
+        quotationId: $('#QuotationId').val()
+    };
+
+    console.log('formdata = ', formData);
+
+    $.ajax({
+        url: '/quotation/UpdateQuotation',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        data: JSON.stringify(formData),
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);
+                HideModal();
+                location.reload();
+            }
+            else {
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert('An error occurred while updating quotation.')
         }
     });
 }

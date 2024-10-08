@@ -118,7 +118,7 @@ namespace MobileMekaniko_Final.Repository
                     .Select(q => new QuotationDetailsDto
                     {
                         CustomerId = q.Car.Customer.CustomerId,
-                        CustomerName = q.Car.Customer.CustomerAddress,
+                        CustomerName = q.Car.Customer.CustomerName,
                         CustomerEmail = q.Car.Customer.CustomerEmail,
                         CustomerNumber = q.Car.Customer.CustomerNumber,
                         CarId = q.Car.CarId,
@@ -159,6 +159,38 @@ namespace MobileMekaniko_Final.Repository
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occurred while fetching quotation details for quotation with id {id}");
+                throw;
+            }
+        }
+
+        public async Task UpdateQuotationAsync(UpdateQuotationDto dto)
+        {
+            try
+            {
+                // Find Quotation by id
+                var quotation = await _data.Quotations.FindAsync(dto.QuotationId);
+
+                if(quotation == null)
+                {
+                    _logger.LogWarning($"No details found for quotation with {dto.QuotationId}");
+                    throw new KeyNotFoundException($"No details found for quotation with id {dto.QuotationId}");
+                }
+
+                quotation.IssueName = dto.IssueName;
+                quotation.Notes = dto.Notes;
+                quotation.LaborPrice = dto.LaborPrice;
+                quotation.Discount = dto.Discount;
+                quotation.ShippingFee = dto.ShippingFee;
+                quotation.SubTotal = dto.SubTotal;
+                quotation.TotalAmount = dto.TotalAmount;
+                quotation.DateEdited = DateTime.Now;
+
+                await _data.SaveChangesAsync();
+                _logger.LogInformation($"Successfully updated quotation with id {dto.QuotationId}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while trying to update quotation with id {dto.QuotationId}");
                 throw;
             }
         }

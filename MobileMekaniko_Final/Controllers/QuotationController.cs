@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
 
@@ -62,6 +63,56 @@ namespace MobileMekaniko_Final.Controllers
             {
                 _logger.LogError(ex, $"An error occurred while trying to add quotation to car with id {dto.CarId}");
                 return Json(new { success = false, message = "An error occurred while trying to add new quotation" });
+            }
+        }
+
+        // GET : Quotation Details
+        public async Task<IActionResult> GetQuotationDetails(int id)
+        {
+            try
+            {
+                _logger.LogInformation($"Getting details for quotation with id {id}");
+                var quotation = await _unitOfWork.Quotation.GetQuotationDetailsAsync(id);
+
+                if (quotation == null)
+                {
+                    _logger.LogWarning($"No data found for quotation with id {id}");
+                    return Json(new { success = false, message = "No data found" });
+                }
+
+                _logger.LogInformation($"Successfully fetched quotation details for quotation with id {id}");
+                return Json(quotation);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while fetching details for quotation with id {id}");
+                return Json(new { success = false, message = "An error occurred while fetching quotation details" });
+            }
+        }
+
+        // POST : Update Quotation
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateQuotation([FromBody] UpdateQuotationDto dto)
+        {
+            try
+            {
+                _logger.LogInformation($"Request to update quotation with id {dto.QuotationId}");
+
+                if (ModelState.IsValid)
+                {
+                    await _unitOfWork.Quotation.UpdateQuotationAsync(dto);
+                    _logger.LogInformation($"Successfully updated quotation with id {dto.QuotationId}");
+                    return Json(new { success = true, message = "Quotation successfully edited." });
+                }
+
+                _logger.LogWarning($"Invalid modelstate");
+                return Json(new { success = false, message = "Invalid data provided" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while updating quotation with id {dto.QuotationId}");
+                return Json(new { success = false, message="An error occurred while updating quotation" });
             }
         }
     }
