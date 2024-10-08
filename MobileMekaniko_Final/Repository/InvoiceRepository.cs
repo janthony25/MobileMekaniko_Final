@@ -198,6 +198,8 @@ namespace MobileMekaniko_Final.Repository
                 }
 
                 invoice.IsPaid = IsPaid;
+                invoice.AmountPaid = invoice.TotalAmount;
+                invoice.DateEdited = DateTime.Now;
 
                 await _data.SaveChangesAsync();
                 _logger.LogInformation($"Invoice with id {id} marked as paid successfully.");
