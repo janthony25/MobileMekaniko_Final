@@ -3,13 +3,13 @@
 <h5 class="fw-bold mt-5">CUSTOMER DETAILS</h5>
 
 <div class="d-flex justify-content-between align-items-center">
-    <div class="car-invoice-left">
+    <div class="car-quote-left">
         <p>Customer ID: @Model.CustomerId</p>
         <p>Customer Name: @Model.CustomerName</p>
         <p>Email Address: @Model.CustomerEmail</p>
         <p>Contact #: @Model.CustomerNumber</p>
     </div>
-    <div class="car-invoice-right">
+    <div class="car-quote-right">
         <p>Car Id: @Model.CarId</p>
         <p>Rego #: @Model.CarRego</p>
         <p>Make: @Model.MakeName</p>
@@ -45,11 +45,45 @@
         @foreach(var quote in Model.Quotations)
         {
             <tr>
-                <td class="text-center"><a href="#" class="btnUpdateInvoice" data-quotation-id="@quote.QuotationId" data-action="UpdateQuotation">@quote.QuotationId</a></td>
+                <td class="text-center"><a href="#" class="btnUpdateQuotation" data-quotation-id="@quote.QuotationId" data-action="UpdateQuotation">@quote.QuotationId</a></td>
                 <td class="text-center">@quote.IssueName</td>
                 <td class="text-center">@(quote.DateAdded.ToString("MM/dd/yyyy"))</td>
                 <td class="text-center">@quote.TotalAmount</td>
-                    <td class="text-center"></td>
+                <td class="text-center">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle btn-sm" type="button" id="actionDropdown_@quote.QuotationId" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="actionDropdown_@quote.QuotationId">
+                            <li>
+                                <button class="dropdown-item mark-as-paid" data-quotation-id="@quote.QuotationId">
+                                    <i class="bi bi-check-lg"></i> Mark as Paid
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item view-pdf" data-quotation-id="@quote.QuotationId">
+                                    <i class="bi bi-file-pdf"></i> View PDF
+                                </button>
+                            </li>
+                            <li>
+                                <a href="#" class="dropdown-item download-pdf" data-quotation-id="@quote.QuotationId">
+                                    <i class="bi bi-download"></i> Download PDF
+                                </a>
+                            </li>
+                            <li>
+                                <button class="dropdown-item send-quotation-email" data-quotation-id="@quote.QuotationId">
+                                    <i class="bi bi-envelope-paper"></i> Send Email
+                                </button>
+                            </li>
+                            <li>
+                                <a href="#" class="dropdown-item delete-quotation-btn"
+                                   data-quotation-id="@quote.QuotationId" data-action="DeleteQuotation">
+                                    <i class="bi bi-trash3-fill"></i> Delete Quote
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>   
             </tr>
         }
     </tbody>

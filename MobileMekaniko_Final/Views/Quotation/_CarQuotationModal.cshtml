@@ -1,7 +1,7 @@
 ﻿@model MobileMekaniko_Final.Models.Dto.QuotationDetailsDto
 
 
-<!-- Car  Invoice Modals -->
+<!-- Car  Quotation Modals -->
 <div class="modal fade" id="carQuotationModal">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -12,7 +12,7 @@
             <div class="modal-body">
                 @Html.AntiForgeryToken()
                 <div class="customer-car-details container">
-                    <div class="invoice-customer-container d-flex justify-content-between align-items-center ">
+                    <div class="quotation-customer-container d-flex justify-content-between align-items-center ">
                         <div>
                             <label asp-for="CustomerName"></label><br />
                             <input id="CustomerName" asp-for="CustomerName" class="form-control" />
@@ -36,8 +36,8 @@
                 </div>
 
                 <input id="QuotationId" asp-for="QuotationId" type="hidden" />
-                <div class="invoice-details d-flex justify-content-between align-items-center mt-5">
-                    <div class="invoice-details-left">
+                <div class="quotation-details d-flex justify-content-between align-items-center mt-5">
+                    <div class="quotation-details-left">
                         <div class="mb-2 date-added-container">
                             <label asp-for="@Model.DateAdded"></label> <br />
                             <input type="date" id="DateAdded" asp-for="DateAdded" class="form-control" />
@@ -54,8 +54,8 @@
                         </div>
                     </div>
 
-                    <div class="invoice-details-right d-flex justify-content-between align-items-center">
-                        <div class="invoice-details-right-1">
+                    <div class="quotation-details-right d-flex justify-content-between align-items-center">
+                        <div class="quotation-details-right-1">
                             <div class="mb-2">
 
                                 <div class="mb-2">
@@ -74,7 +74,7 @@
                                 <input id="ShippingFee" asp-for="ShippingFee" class="form-control" />
                             </div>
                         </div>
-                        <div class="invoice-details-right-2">
+                        <div class="quotation-details-right-2">
                             <div class="mb-2">
                                 <label asp-for="@Model.TotalAmount"></label> <br />
                                 <input id="TotalAmount" asp-for="TotalAmount" class="form-control" readonly />
@@ -84,9 +84,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="addQuotation">Add Invoice</button>
-                <button type="button" class="btn btn-warning" id="updateQuotation">Update Invoice</button>
-                <button type="button" class="btn btn-danger" id="deleteQuotation">Delete Invoice</button>
+                <button type="button" class="btn btn-primary" id="addQuotation">Add Quotation</button>
+                <button type="button" class="btn btn-warning" id="updateQuotation">Update Quotation</button>
+                <button type="button" class="btn btn-danger" id="deleteQuotation">Delete Quotation</button>
             </div>
         </div>
     </div>

@@ -61,6 +61,30 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task DeleteQuotationAsync(int id)
+        {
+            try
+            {
+                // Find quotation by id
+                var quotation = await _data.Quotations.FindAsync(id);
+
+                if (quotation == null)
+                {
+                    _logger.LogWarning($"No quotation found with id {id}");
+                    throw new KeyNotFoundException("No quotation found.");
+                }
+
+                _data.Quotations.Remove(quotation);
+                _logger.LogInformation($"Successfully removed quotation with id {id} from database.");
+                await _data.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while trying to delete quotation with id {id}");
+                throw;
+            }
+        }
+
         public async Task<CarQuotationSummaryDto> GetCarQuotationSummaryAsync(int id)
         {
             try

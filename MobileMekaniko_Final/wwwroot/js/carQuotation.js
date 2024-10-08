@@ -19,7 +19,7 @@
     });
 
     // Open Update Quoatation Modal 
-    $(document).on('click', '.btnUpdateInvoice', function () {
+    $(document).on('click', '.btnUpdateQuotation', function () {
         const quotationId = $(this).data('quotation-id');
         const action = $(this).data('action');
 
@@ -32,6 +32,20 @@
     $('#updateQuotation').on('click', function () {
         console.log('updating quote..');
         UpdateQuotation();
+    });
+
+    // Open Delete Quotation Modal
+    $(document).on('click', '.delete-quotation-btn', function () {
+        const quotationId = $(this).data('quotation-id');
+        const action = $(this).data('action');
+
+        UpdateDeleteQuotationModal(quotationId, action);
+    });
+
+    // Delete Quotation from DB
+    $('#deleteQuotation').on('click', function () {
+        console.log('Trying to delete quotation...');
+        DeleteQuotation();
     });
 
     $('#addItemButton').on('click', function () {
@@ -140,8 +154,17 @@ function AddQuotationModal(carId) {
 
             $('#CustomerName').val(response.customerName);
             $('#CarRego').val(response.carRego);
-            $('#DateAdded').val('');
+            $('#DateAdded').val('').prop('readonly', false);
             $('#CarId').val(response.carId);
+
+
+            $('#IssueName').val(response.issueName).prop('readonly', false);
+            $('#Notes').val(response.notes).prop('readonly', false);
+            $('#SubTotal').val(response.subTotal).prop('readonly', true);
+            $('#LaborPrice').val(response.laborPrice).prop('readonly', false);
+            $('#Discount').val(response.discount).prop('readonly', false);
+            $('#ShippingFee').val(response.shippingFee).prop('readonly', false);
+            $('#TotalAmount').val(response.totalAmount).prop('readonly', true);
         },
         error: function () {
             alert('An error occurred while fetching customer car details.');
@@ -168,14 +191,15 @@ function UpdateDeleteQuotationModal(quotationId, action) {
                 $('#CustomerName').val(response.customerName).prop('disabled', true);
                 $('#CarRego').val(response.carRego).prop('disabled', true);
 
-                $('#QuotationId').val(response.quotationId);
-                $('#IssueName').val(response.issueName);
-                $('#Notes').val(response.notes);
-                $('#SubTotal').val(response.subTotal);
-                $('#LaborPrice').val(response.laborPrice);
-                $('#Discount').val(response.discount);
-                $('#ShippingFee').val(response.shippingFee);
-                $('#TotalAmount').val(response.totalAmount);
+                $('#QuotationId').val(response.quotationId).prop('readonly', true);
+                $('#IssueName').val(response.issueName).prop('readonly', false);
+                $('#Notes').val(response.notes).prop('readonly', false);
+                $('#SubTotal').val(response.subTotal).prop('readonly', true);
+                $('#LaborPrice').val(response.laborPrice).prop('readonly', false);
+                console.log('labor price = ', response.laborPrice);
+                $('#Discount').val(response.discount).prop('readonly', false);
+                $('#ShippingFee').val(response.shippingFee).prop('readonly', false);
+                $('#TotalAmount').val(response.totalAmount).prop('readonly', true);
 
                 let dateAdded = response.dateAdded ? response.dateAdded.split('T')[0] : '';
                 $('#DateAdded').val(dateAdded).prop('readonly', true);
@@ -231,6 +255,76 @@ function UpdateDeleteQuotationModal(quotationId, action) {
                 updateTotals();
 
             }
+
+            if (action === 'DeleteQuotation') {
+                $('#carQuotationModal').modal('show');
+                $('#carQuotationModalTitle').text('Delete Quotation');
+
+                $('#CustomerName').val(response.customerName).prop('disabled', true);
+                $('#CarRego').val(response.carRego).prop('disabled', true);
+
+                $('#QuotationId').val(response.quotationId).prop('readonly', true);
+                $('#IssueName').val(response.issueName).prop('readonly', true);
+                $('#Notes').val(response.notes).prop('readonly', true);
+                $('#SubTotal').val(response.subTotal).prop('readonly', true);
+                $('#LaborPrice').val(response.laborPrice).prop('readonly', true);
+                $('#Discount').val(response.discount).prop('readonly', true);
+                $('#ShippingFee').val(response.shippingFee).prop('readonly', true);
+                $('#TotalAmount').val(response.totalAmount).prop('readonly', true);
+
+                let dateAdded = response.dateAdded ? response.dateAdded.split('T')[0] : '';
+                $('#DateAdded').val(dateAdded).prop('readonly', true);
+
+                // HIde Add item button
+                $('#addItemButton').hide();
+
+                // Hide Add and Update button
+                $('#addQuotation').hide();
+                $('#updateQuotation').hide();
+
+                // Show Delete button 
+                $('#deleteQuotation').show();
+
+
+                // clear the existing items
+                $('#quotationItems').empty();
+
+                // Populate item list from response
+                if (response.quotationItemDto && response.quotationItemDto.length > 0) {
+                    // Add headers dynamically before adding items
+                    let headers = `
+                        <div class="row invoice-item-header d-flex justify-content-between align-items-center mb-2">
+                            <div class="col-4"><strong>Item Name</strong></div>
+                            <div class="col-2"><strong>Quantity</strong></div>
+                            <div class="col-3"><strong>Price</strong></div>
+                            <div class="col-3"><strong>Total Price</strong></div>
+                        </div>
+                    `;
+                    $('#quotationItems').append(headers);
+
+                    // Append each item
+                    $.each(response.quotationItemDto, function (index, item) {
+                        let newItem = $(`
+                        <div class="row invoice-item d-flex justify-content-between align-items-center mb-2">
+                            <div class="col-4">
+                                <input type="text" class="form-control item-name" placeholder="Item Name" value="${item.itemName}" readonly>
+                            </div>
+                            <div class="col-2">
+                                <input type="number" class="form-control item-quantity" placeholder="Quantity" value="${item.quantity}" readonly>
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="form-control item-price" placeholder="Price" value="${item.itemPrice}" readonly>
+                            </div>
+                            <div class="col-3 d-flex">
+                                <input type="number" class="form-control item-total me-2" placeholder="Total" value="${item.itemTotal}" readonly>
+                            </div>
+                        </div>
+                        `);
+                        $('#quotationItems').append(newItem);
+                    });
+                }
+                updateTotals();
+            }
         },
         error: function () {
             alert('An error occurred while fetching quotation details.');
@@ -252,7 +346,7 @@ function AddQuotation() {
     let formData = {
         IssueName: $('#IssueName').val(),
         Notes: $('#Notes').val(),
-        laborPrice: parseFloat($('#LabourPrice').val()) || 0,
+        laborPrice: parseFloat($('#LaborPrice').val()) || 0,
         discount: parseFloat($('#Discount').val()) || 0,
         shippingFee: parseFloat($('#ShippingFee').val()) || 0,
         subTotal: parseFloat($('#SubTotal').val()) || 0,
@@ -342,6 +436,34 @@ function UpdateQuotation() {
             alert('An error occurred while updating quotation.')
         }
     });
+}
+
+function DeleteQuotation() {
+    const token = $('input[name="__RequestVerificationToken"]').val();
+    const quotationId = $('#QuotationId').val();
+
+    console.log(quotationId);
+
+    $.ajax({
+        url: '/quotation/DeleteQuotation',
+        type: 'POST',
+        dataType: 'json',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        data: {
+            id: quotationId
+        },
+        success: function (response) {
+            alert(response.message);
+            HideModal();
+            location.reload();
+        }, 
+        error: function () {
+            alert('An error occurred while trying to delete quotation.');
+        }
+    });
+
 }
 
 function HideModal() {

@@ -115,5 +115,26 @@ namespace MobileMekaniko_Final.Controllers
                 return Json(new { success = false, message="An error occurred while updating quotation" });
             }
         }
+
+        // POST : Delete Quotation
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteQuotation(int id)
+        {
+            try
+            {
+                _logger.LogInformation($"Request to delete quotation with id {id}");
+
+                await _unitOfWork.Quotation.DeleteQuotationAsync(id);
+
+                _logger.LogInformation($"Successfully deleted quotation with id {id}");
+                return Json(new { success = true, message = "Quote successfully deleted." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while trying to delete quote with id {id}");
+                return Json(new { success = false, message = "An error occurred while trying to delete quote." });
+            }
+        }
     }
 }
