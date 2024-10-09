@@ -27,7 +27,9 @@
             @foreach(var invoice in Model)
             {
                 <tr>
-                    <td class="text-center">@invoice.InvoiceId</td>
+                    <td class="text-center">
+                        <a href="#" class="btnUpdateInvoice" data-invoice-id="@invoice.InvoiceId" data-action="UpdateInvoice">@invoice.InvoiceId</a>
+                    </td>
                     <td class="text-center">@((bool)invoice.IsPaid ? "Paid" : "Not Paid")</td>
                     <td class="text-center">@invoice.IssueName</td>
                     <td class="text-center">@invoice.CustomerName</td>
@@ -40,10 +42,48 @@
                             <i class="bi bi-check2"></i>
                         }
                     </td>
-                    <td class="text-center"></td>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle btn-sm" type="button" id="actionDropdown_@invoice.InvoiceId" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="actionDropdown_@invoice.InvoiceId">
+                                <li>
+                                    <button class="dropdown-item mark-as-paid" data-invoice-id="@invoice.InvoiceId">
+                                        <i class="bi bi-check-lg"></i> Mark as Paid
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item view-pdf" data-invoice-id="@invoice.InvoiceId">
+                                        <i class="bi bi-file-pdf"></i> View PDF
+                                    </button>
+                                </li>
+                                <li>
+                                    <a href="#" class="dropdown-item download-pdf" data-invoice-id="@invoice.InvoiceId">
+                                        <i class="bi bi-download"></i> Download PDF
+                                    </a>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item send-invoice-email" data-invoice-id="@invoice.InvoiceId">
+                                        <i class="bi bi-envelope-paper"></i> Send Email
+                                    </button>
+                                </li>
+                                <li>
+                                    <a href="#" class="dropdown-item delete-invoice-btn"
+                                       data-invoice-id="@invoice.InvoiceId" data-action="deleteInvoice">
+                                        <i class="bi bi-trash3-fill"></i> Delete Invoice
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
                 </tr>
             }
         }
     </tbody>
 </table>
 
+<partial name="_CarInvoiceModals" model="new MobileMekaniko_Final.Models.Dto.InvoiceDetailsDto()" />
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/carinvoice.js"></script>

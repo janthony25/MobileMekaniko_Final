@@ -674,6 +674,7 @@ function SendInvoiceEmail(invoiceId) {
         success: function (response) {
             if (response.success) {
                 alert(response.message);
+                location.reload();
             } else {
                 alert('Error: ' + response.message);
             }
@@ -701,7 +702,8 @@ function MarkInvoiceAsPaid(invoiceId) {
             id: invoiceId
         },
         success: function (response) {
-                alert(response.message);
+            alert(response.message);
+            location.reload();
         },
         error: function () {
             alert('An error occurred while marking invoice as paid.');
