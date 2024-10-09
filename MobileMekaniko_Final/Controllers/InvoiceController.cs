@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
+using MobileMekaniko_Final.Models;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
 using MobileMekaniko_Final.Services;
 using NuGet.Protocol.Plugins;
+using System.Security.Permissions;
 using System.Text.RegularExpressions;
 
 namespace MobileMekaniko_Final.Controllers
@@ -293,6 +295,69 @@ namespace MobileMekaniko_Final.Controllers
                 TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
 
                 return RedirectToAction("GetInvoiceList"); 
+            }
+        }
+
+        // GET : Paid Invoices
+        public async Task<IActionResult> GetPaidInvoices()
+        {
+            try
+            {
+                _logger.LogInformation("Request to fetch paid invoices");
+
+                var invoices = await _unitOfWork.Invoice.FilterPaidInvoicesAsync();
+
+
+                _logger.LogInformation($"{invoices.Count} paid invoice.");
+                return View("GetInvoiceList", invoices);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching paid invoices");
+                TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
+                return RedirectToAction("GetInvoiceList");
+            }
+        }
+
+        // GET : Unpaid Invoices
+        public async Task<IActionResult> GetUnpaidInvoices()
+        {
+            try
+            {
+                _logger.LogInformation("Request to fetch unpaid invoices");
+
+                var invoices = await _unitOfWork.Invoice.FilterUnpaidInvoicesAsync();
+
+
+                _logger.LogInformation($"{invoices.Count} unpaid invoice.");
+                return View("GetInvoiceList", invoices);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching unpaid invoices");
+                TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
+                return RedirectToAction("GetInvoiceList");
+            }
+        }
+
+        // GET : Unpaid Invoices
+        public async Task<IActionResult> GetUnsentEmail()
+        {
+            try
+            {
+                _logger.LogInformation("Request to fetch unsent emails");
+
+                var invoices = await _unitOfWork.Invoice.FilterUnsentEmailAsync();
+
+
+                _logger.LogInformation($"{invoices.Count} unsent emails.");
+                return View("GetInvoiceList", invoices);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching unsent emails");
+                TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
+                return RedirectToAction("GetInvoiceList");
             }
         }
     }

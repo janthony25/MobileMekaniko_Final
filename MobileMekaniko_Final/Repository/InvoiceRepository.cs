@@ -97,6 +97,114 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task<List<InvoiceListDto>> FilterPaidInvoicesAsync()
+        {
+            try
+            {
+                var invoices = await _data.Invoices
+                    .Include(i => i.Car)
+                        .ThenInclude(car => car.Customer)
+                    .Where(i => i.IsPaid == true)
+                    .OrderByDescending(i => i.DueDate)
+                    .Select(i => new InvoiceListDto
+                    {
+                        InvoiceId = i.InvoiceId,
+                        IsPaid = i.IsPaid,
+                        IssueName = i.IssueName,
+                        CustomerName = i.Car.Customer.CustomerName,
+                        CarRego = i.Car.CarRego,
+                        DueDate = i.DueDate,
+                        TotalAmount = i.TotalAmount,
+                        IsEmailSent = i.IsEmailSent
+                    }).ToListAsync();
+
+                if(invoices == null || invoices.Count == 0)
+                {
+                    return await GetInvoiceListAsync();
+                }
+
+                _logger.LogInformation($"Successfully fetched {invoices.Count} paid invoice.");
+                return invoices;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching paid invoices");
+                throw;
+            }
+        }
+
+        public async Task<List<InvoiceListDto>> FilterUnpaidInvoicesAsync()
+        {
+            try
+            {
+                var invoices = await _data.Invoices
+                    .Include(i => i.Car)
+                        .ThenInclude(car => car.Customer)
+                    .Where(i => i.IsPaid == false)
+                    .OrderByDescending(i => i.DueDate)
+                    .Select(i => new InvoiceListDto
+                    {
+                        InvoiceId = i.InvoiceId,
+                        IsPaid = i.IsPaid,
+                        IssueName = i.IssueName,
+                        CustomerName = i.Car.Customer.CustomerName,
+                        CarRego = i.Car.CarRego,
+                        DueDate = i.DueDate,
+                        TotalAmount = i.TotalAmount,
+                        IsEmailSent = i.IsEmailSent
+                    }).ToListAsync();
+
+                if (invoices == null || invoices.Count == 0)
+                {
+                    return await GetInvoiceListAsync();
+                }
+
+                _logger.LogInformation($"Successfully fetched {invoices.Count} unpaid invoice.");
+                return invoices;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching unpaid invoices");
+                throw;
+            }
+        }
+
+        public async Task<List<InvoiceListDto>> FilterUnsentEmailAsync()
+        {
+            try
+            {
+                var invoices = await _data.Invoices
+                    .Include(i => i.Car)
+                        .ThenInclude(car => car.Customer)
+                    .Where(i => i.IsEmailSent == false)
+                    .OrderByDescending(i => i.DueDate)
+                    .Select(i => new InvoiceListDto
+                    {
+                        InvoiceId = i.InvoiceId,
+                        IsPaid = i.IsPaid,
+                        IssueName = i.IssueName,
+                        CustomerName = i.Car.Customer.CustomerName,
+                        CarRego = i.Car.CarRego,
+                        DueDate = i.DueDate,
+                        TotalAmount = i.TotalAmount,
+                        IsEmailSent = i.IsEmailSent
+                    }).ToListAsync();
+
+                if (invoices == null || invoices.Count == 0)
+                {
+                    return await GetInvoiceListAsync();
+                }
+
+                _logger.LogInformation($"Successfully fetched {invoices.Count} unsent email.");
+                return invoices;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching paid invoices");
+                throw;
+            }
+        }
+
         public async Task<InvoiceCustomerCarDetailsDto> GetCustomerCarDetailsAsync(int id)
         {
             try
