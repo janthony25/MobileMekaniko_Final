@@ -243,6 +243,42 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task<List<InvoiceListDto>> SerachInvoiceByRegoAsync(string rego)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(rego))
+                {
+                    return await GetInvoiceListAsync();
+                }
+
+                // Fetching invoices by rego
+                var invoice = await _data.Invoices
+                    .Include(i => i.Car)
+                        .ThenInclude(car => car.Customer)
+                    .Where(i => i.Car.CarRego.Contains(rego))
+                    .Select(i => new InvoiceListDto
+                    {
+                        InvoiceId = i.InvoiceId,
+                        IsPaid = i.IsPaid,
+                        IssueName = i.IssueName,
+                        CustomerName = i.Car.Customer.CustomerName,
+                        CarRego = i.Car.CarRego,
+                        DueDate = i.DueDate,
+                        TotalAmount = i.TotalAmount,
+                        IsEmailSent = i.IsEmailSent
+                    }).ToListAsync();
+
+                _logger.LogInformation($"Fetched {invoice.Count} invoices with rego {rego}");
+                return invoice;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while fetching invoices with rego {rego}");
+                throw;
+            }
+        }
+
         public async Task UpdateInvoiceAsync(UpdateInvoiceDto dto)
         {
             try

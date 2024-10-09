@@ -273,5 +273,27 @@ namespace MobileMekaniko_Final.Controllers
                 return StatusCode(500, "An error occurred while trying to fetch invoice list.");
             }
         }
+
+        // GET : Search invoice by rego
+        public async Task<IActionResult> SearchInvoiceByRego(string rego)
+        {
+            try
+            {
+                _logger.LogInformation($"Request to fetch invoices with rego {rego}");
+
+                var invoice = await _unitOfWork.Invoice.SerachInvoiceByRegoAsync(rego);
+
+                _logger.LogInformation($"Success fully fetched invoice details, returning invoice");
+                return View("GetInvoiceList", invoice);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occured while fetching invoices with rego # {rego}");
+
+                TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
+
+                return RedirectToAction("GetInvoiceList"); 
+            }
+        }
     }
 }

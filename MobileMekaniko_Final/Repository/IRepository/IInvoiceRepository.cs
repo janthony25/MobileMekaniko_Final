@@ -12,5 +12,6 @@ namespace MobileMekaniko_Final.Repository.IRepository
         Task UpdateIsEmailSentAsync(int id, bool isEmailSent);
         Task MarkAsPaidAsync(int id, bool IsPaid);
         Task<List<InvoiceListDto>> GetInvoiceListAsync();
+        Task<List<InvoiceListDto>> SerachInvoiceByRegoAsync(string rego);
     }
 }
