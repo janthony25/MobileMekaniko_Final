@@ -16,8 +16,8 @@
         public decimal? TaxAmount { get; set; }
         public decimal? TotalAmount { get; set; }
         public decimal? AmountPaid { get; set; }
-        public bool? IsEmailSent { get; set; } 
-        public bool? IsPaid { get; set; }
+        public bool? IsEmailSent { get; set; } = false;
+        public bool IsPaid { get; set; } = false;
 
         // FK to Car
         public int CarId { get; set; }

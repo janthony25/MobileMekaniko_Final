@@ -10,6 +10,7 @@
         public DateTime? DueDate { get; set; }
         public decimal? TotalAmount { get; set; }
         public decimal? AmountPaid { get; set; }
+        public bool? IsEmailSent { get; set; }  
         public bool? IsPaid { get; set; }    
 
     }

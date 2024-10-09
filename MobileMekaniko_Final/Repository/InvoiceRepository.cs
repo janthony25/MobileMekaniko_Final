@@ -38,7 +38,6 @@ namespace MobileMekaniko_Final.Repository
                     SubTotal = dto.SubTotal,
                     TotalAmount = dto.TotalAmount,
                     AmountPaid = dto.AmountPaid,
-                    IsPaid = dto.IsPaid,
                     CarId = car.CarId
                 };
 
@@ -203,6 +202,7 @@ namespace MobileMekaniko_Final.Repository
                         DueDate = i.DueDate,
                         TotalAmount = i.TotalAmount,
                         AmountPaid = i.AmountPaid,
+                        IsEmailSent = i.IsEmailSent,
                         IsPaid = i.IsPaid
                     }).ToListAsync();
 

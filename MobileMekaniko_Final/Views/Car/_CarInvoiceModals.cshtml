@@ -64,6 +64,11 @@
 
                     <div class="invoice-details-right d-flex justify-content-between align-items-center">
                         <div class="invoice-details-right-1">
+
+                            <div class="mb-2">
+                                <label asp-for="@Model.SubTotal"></label> <br />
+                                <input id="SubTotal" asp-for="SubTotal" class="form-control" readonly />
+                            </div>
                             <div class="mb-2">
                                 <label asp-for="@Model.LabourPrice"></label> <br />
                                 <input id="LabourPrice" asp-for="LabourPrice" class="form-control" />
@@ -75,10 +80,6 @@
                             <div class="mb-2">
                                 <label asp-for="@Model.ShippingFee"></label> <br />
                                 <input id="ShippingFee" asp-for="ShippingFee" class="form-control" />
-                            </div>
-                            <div class="mb-2">
-                                <label asp-for="@Model.SubTotal"></label> <br />
-                                <input id="SubTotal" asp-for="SubTotal" class="form-control" readonly />
                             </div>
                         </div>
                         <div class="invoice-details-right-2">
