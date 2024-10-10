@@ -85,6 +85,42 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task<List<QuotationListDto>> FilterUnsentEmail()
+        {
+            try
+            {
+                var unsentEmails = await _data.Quotations
+                    .Include(q => q.Car)
+                        .ThenInclude(car => car.Customer)
+                    .OrderByDescending(q => q.DateAdded)
+                    .Where(q => q.IsEmailSent == false)
+                    .Select(q => new QuotationListDto
+                    {
+                        QuotationId = q.QuotationId,
+                        IssueName = q.IssueName,
+                        CustomerName = q.Car.Customer.CustomerName,
+                        CarRego = q.Car.CarRego,
+                        DateAdded = q.DateAdded,
+                        TotalAmount = q.TotalAmount,
+                        IsEmailSent = q.IsEmailSent
+                    }).ToListAsync();
+
+                if (unsentEmails == null || unsentEmails.Count == 0)
+                {
+                    _logger.LogInformation("All emails has been sent already. Returning Quotation List.");
+                    return await GetQuotationListAsync();
+                }
+
+                _logger.LogInformation($"Successfully fetched {unsentEmails.Count} unsent emails.");
+                return unsentEmails;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while fetching unsent quotation emails.");
+                throw;
+            }
+        }
+
         public async Task<CarQuotationSummaryDto> GetCarQuotationSummaryAsync(int id)
         {
             try

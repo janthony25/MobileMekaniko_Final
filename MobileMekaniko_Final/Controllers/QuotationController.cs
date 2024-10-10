@@ -283,5 +283,25 @@ namespace MobileMekaniko_Final.Controllers
                 return RedirectToAction("GetQuotationList");
             }
         }
+
+        // GET : Filtered Unsent Quotation Emails
+        public async Task<IActionResult> FilteredUnsentEmails()
+        {
+            try
+            {
+                _logger.LogInformation("Request to fetch unsent quotation email list.");
+
+                var unsentEmails = await _unitOfWork.Quotation.FilterUnsentEmail();
+                _logger.LogInformation("Successfully fetched list.");
+                return View("GetQuotationList", unsentEmails);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching unsent quotation emails.");
+
+                TempData["ErrorMessage"] = "An error occurred while processing your request.";
+                return RedirectToAction("GetQuotationList");
+            }
+        }
     }
 }
