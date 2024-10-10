@@ -6,5 +6,6 @@
         ICarRepository Car { get; }
         IInvoiceRepository Invoice { get; }
         IQuotationRepository Quotation { get; } 
+        IMakeRepository Make { get; }
     }
 }
