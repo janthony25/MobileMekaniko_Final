@@ -216,6 +216,42 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task<List<QuotationListDto>> SearchQuotationByRego(string rego)
+        {
+            try
+            {
+                // Return all quotes if no rego is being searched
+                if (string.IsNullOrEmpty(rego))
+                {
+                    return await GetQuotationListAsync();
+                }
+
+                var filteredQuotations = await _data.Quotations
+                    .Include(q => q.Car)
+                        .ThenInclude(car => car.Customer)
+                    .OrderByDescending(q => q.DateAdded)
+                    .Where(q => q.Car.CarRego.Contains(rego))
+                    .Select(q => new QuotationListDto
+                    {
+                        QuotationId = q.QuotationId,
+                        IssueName = q.IssueName,
+                        CustomerName = q.Car.Customer.CustomerName,
+                        CarRego = q.Car.CarRego,
+                        DateAdded = q.DateAdded,
+                        TotalAmount = q.TotalAmount,
+                        IsEmailSent = q.IsEmailSent
+                    }).ToListAsync();
+
+                _logger.LogInformation($"Fetched {filteredQuotations.Count} quotations with Rego # {rego}");
+                return filteredQuotations;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while trying to fetch quotations with Rego # {rego}");
+                throw;
+            }
+        }
+
         public async Task UpdateIsEmailSendAsync(int id, bool emailSent)
         {
             try

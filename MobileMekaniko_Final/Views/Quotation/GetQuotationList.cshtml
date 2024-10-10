@@ -2,6 +2,15 @@
 
 <h5 class="text-center fw-bold mt-5 mb-5">QUOTATIONS</h5>
 
+<div class="d-flex justify-content-end align-items-center mb-5">
+    <form method="get" asp-controller="Quotation" asp-action="FilteredQuotationsByRego" class="d-flex">
+        <input type="text" name="rego" placeholder="Search Rego #" />
+        <button type="Submit" class="btn btn-primary ms-1 btn-sm">
+            <i class="bi bi-search"></i>
+        </button>
+    </form>
+</div>
+
 <table class="table table-striped">
     <thead>
         <tr>

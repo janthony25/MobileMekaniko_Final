@@ -262,5 +262,26 @@ namespace MobileMekaniko_Final.Controllers
                 return StatusCode(500, "An error occurred while trying to fetch quotaion list.");
             }
         }
+
+        // GET : Filtered Quotations by Car Rego
+        public async Task<IActionResult> FilteredQuotationsByRego(string rego)
+        {
+            try
+            {
+                _logger.LogInformation($"Request to fetch quotations under car with Rego # {rego}");
+
+                var filteredQuoations = await _unitOfWork.Quotation.SearchQuotationByRego(rego);
+
+                _logger.LogInformation("Successfully filtered quoatations.");
+                return View("GetQuotationList", filteredQuoations);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while trying to fetch quotations under car with Rego # {rego}");
+
+                TempData["ErrorMessage"] = "An error occurred while processing your request.";
+                return RedirectToAction("GetQuotationList");
+            }
+        }
     }
 }
