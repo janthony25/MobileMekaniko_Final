@@ -591,6 +591,7 @@ function SendQuotationEmail(quotationId) {
         success: function (response) {
             if (response.success) {
                 alert(response.message);
+                location.reload();
             } else {
                 alert('Error: ' + response.message);
             }

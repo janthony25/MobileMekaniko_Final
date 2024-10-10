@@ -10,5 +10,6 @@ namespace MobileMekaniko_Final.Repository.IRepository
         Task UpdateQuotationAsync(UpdateQuotationDto dto);
         Task DeleteQuotationAsync(int id);
         Task UpdateIsEmailSendAsync(int id, bool emailSent);
+        Task<List<QuotationListDto>> GetQuotationListAsync();
     }
 }

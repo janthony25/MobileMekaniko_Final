@@ -187,6 +187,35 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task<List<QuotationListDto>> GetQuotationListAsync()
+        {
+            try
+            {
+                var quoataions = await _data.Quotations
+                    .Include(q => q.Car)
+                        .ThenInclude(car => car.Customer)
+                    .OrderByDescending(q => q.DateAdded)
+                    .Select(q => new QuotationListDto
+                    {
+                        QuotationId = q.QuotationId,
+                        CustomerName = q.Car.Customer.CustomerName,
+                        CarRego = q.Car.CarRego,
+                        IssueName = q.IssueName,
+                        DateAdded = q.DateAdded,
+                        TotalAmount = q.TotalAmount,
+                        IsEmailSent = q.IsEmailSent
+                    }).ToListAsync();
+
+                _logger.LogInformation($"Fetched {quoataions.Count} Quotations.");
+                return quoataions;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while fetching quotation list.");
+                throw;
+            }
+        }
+
         public async Task UpdateIsEmailSendAsync(int id, bool emailSent)
         {
             try

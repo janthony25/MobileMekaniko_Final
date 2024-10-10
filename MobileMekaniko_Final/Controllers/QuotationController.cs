@@ -243,5 +243,24 @@ namespace MobileMekaniko_Final.Controllers
                 return Json(new { success = false, message = "An error occurred while sending the quotation email." });
             }
         }
+
+        // GET : Quoataion List
+        public async Task<IActionResult> GetQuotationList()
+        {
+            try
+            {
+                _logger.LogInformation($"Request to fetch quotation list.");
+
+                var quotations = await _unitOfWork.Quotation.GetQuotationListAsync();
+
+                _logger.LogInformation($"quotation list fetched successfully.");
+                return View(quotations);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while fetching quotation list.");
+                return StatusCode(500, "An error occurred while trying to fetch quotaion list.");
+            }
+        }
     }
 }
