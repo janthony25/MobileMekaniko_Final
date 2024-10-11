@@ -7,5 +7,6 @@
         IInvoiceRepository Invoice { get; }
         IQuotationRepository Quotation { get; } 
         IMakeRepository Make { get; }
+        IDashboardRepository Dashboard { get; }
     }
 }

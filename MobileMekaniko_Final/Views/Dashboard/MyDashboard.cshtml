@@ -1,0 +1,49 @@
+﻿@model MobileMekaniko_Final.Models.Dto.DashboardDto
+
+@if(ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
+<h4 class="fw-bold">DASHBOARD</h4>
+
+<div class="customer-car-invoice-count d-flex">
+    <div class="customer-count-box d-flex justify-content-center align-items-center">
+        <div class="customer-count-left">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="customer-count-right ms-5">
+            <h5 class="mb-0">Customers</h5>
+            <h4>@Model.TotalCustomers</h4>
+        </div>
+    </div>
+    <div class="car-count-box d-flex justify-content-center align-items-center">
+        <div class="car-count-left">
+            <i class="bi bi-car-front"></i>
+        </div>
+        <div class="car-count-right ms-5">
+            <h5 class="mb-0">Cars</h5>
+            <h4>@Model.TotalCars</h4>
+        </div>
+    </div>
+    <div class="invoice-count-box d-flex justify-content-center align-items-center">
+        <div class="invoice-count-left">
+            <i class="bi bi-receipt-cutoff"></i>
+        </div>
+        <div class="invoice-count-right ms-5">
+            <h5 class="mb-0">Invoices</h5>
+            <h4>@Model.TotalInvoices</h4>
+        </div>
+    </div>
+    <div class="quotation-count-box d-flex justify-content-center align-items-center">
+        <div class="quotation-count-left">
+            <i class="bi bi-receipt"></i>
+        </div>
+        <div class="quotation-count-right ms-5">
+            <h5 class="mb-0">Quotations</h5>
+            <h4>@Model.TotalQuotations</h4>
+        </div>
+    </div>
+</div>

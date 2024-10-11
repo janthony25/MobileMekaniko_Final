@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
@@ -6,6 +7,7 @@ using SQLitePCL;
 
 namespace MobileMekaniko_Final.Controllers
 {
+    [Authorize]
     public class MakeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

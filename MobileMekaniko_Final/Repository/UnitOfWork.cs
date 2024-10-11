@@ -16,7 +16,8 @@ namespace MobileMekaniko_Final.Repository
             Car = new CarRepository(_data, _loggerFactory);
             Invoice = new InvoiceRepository(_data, _loggerFactory);
             Quotation = new QuotationRepository(_data, _loggerFactory);
-            Make = new MakeRepository(_data, loggerFactory);
+            Make = new MakeRepository(_data, _loggerFactory);
+            Dashboard = new DashboardRepository(_data, _loggerFactory);
         }
         public ICustomerRepository Customer { get; private set; }
 
@@ -25,5 +26,6 @@ namespace MobileMekaniko_Final.Repository
         public IInvoiceRepository Invoice { get; private set; }
         public IQuotationRepository Quotation { get; private set; }
         public IMakeRepository Make { get; private set; }
+        public IDashboardRepository Dashboard { get; private set; }
     }
 }
