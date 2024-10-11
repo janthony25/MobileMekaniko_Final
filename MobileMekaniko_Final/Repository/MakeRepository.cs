@@ -21,6 +21,17 @@ namespace MobileMekaniko_Final.Repository
         {
             try
             {
+                // Check if the make already exists
+                var existingMake = await _data.Makes
+                    .FirstOrDefaultAsync(m => m.MakeName.ToLower() == dto.MakeName.ToLower());
+
+                if (existingMake != null)
+                {
+                    _logger.LogWarning($"Make {dto.MakeName} already exists in the database");
+                    throw new InvalidOperationException("Car make already exists");
+                }
+
+                // Proceed with adding the new make if it doesn't exist
                 var make = new Make
                 {
                     MakeName = dto.MakeName
@@ -29,6 +40,11 @@ namespace MobileMekaniko_Final.Repository
                 _data.Makes.Add(make);
                 _logger.LogInformation($"Successfully added {dto.MakeName} to the database.");
                 await _data.SaveChangesAsync();
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
             catch(Exception ex)
             {

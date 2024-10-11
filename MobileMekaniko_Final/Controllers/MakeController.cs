@@ -55,7 +55,13 @@ namespace MobileMekaniko_Final.Controllers
 
                 _logger.LogInformation("Invalid data provided.");
                 TempData["InvalidDataMessage"] = "Please submit a valid Car Make.";
-                return View(dto);
+                return RedirectToAction("AddRemoveMake", dto);
+            }
+            catch (InvalidOperationException)
+            {
+                _logger.LogInformation("Invalid data provided.");
+                TempData["MakeExists"] = "Car make already exists.";
+                return RedirectToAction("AddRemoveMake", dto);
             }
             catch (Exception ex)
             {
@@ -85,7 +91,7 @@ namespace MobileMekaniko_Final.Controllers
                 _logger.LogError(ex, $"An error occurred while trying to delete car make with id {id}");
                 TempData["ErrorMessage"] = "An error occurred while processing your request.";
 
-                return View();
+                return RedirectToAction("AddRemoveMake");
             }
         }
     }

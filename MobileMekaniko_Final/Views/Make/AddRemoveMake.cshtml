@@ -29,6 +29,13 @@
     </div>
 }
 
+@if (TempData["MakeExists"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["MakeExists"]
+    </div>
+}
+
 <div class="forms-container d-flex justify-content-between align-items-center">
     <div class="left">
         <h3>Add Car Make</h3>
