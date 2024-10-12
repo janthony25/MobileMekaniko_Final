@@ -87,10 +87,18 @@ function initializeBarChart() {
         dataType: 'json',
         success: function (data) {
             let ctx = document.getElementById('monthlyFinancialOverviewChart').getContext('2d');
+
+            // Format the date names
+            const formattedLabels = data.months.map(dateString => {
+                const [month, year] = dateString.split('-');
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return `${monthNames[parseInt(month, 10) - 1]}-${year}`;
+            });
+
             let myBarChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: data.months,  // e.g., ['January', 'February', ...]
+                    labels: formattedLabels,  // Use the formatted labels here
                     datasets: [{
                         label: 'Total Invoiced Amount',
                         data: data.totalInvoicedAmounts,
