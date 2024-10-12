@@ -13,7 +13,8 @@ namespace MobileMekaniko_Final.Models.Dto
         public string MakeName { get; set; }
         public string? CarModel { get; set; }
         public int? CarYear { get; set; }
-        public int? InvoiceId { get; set; } 
+        public int? InvoiceId { get; set; }
+        public bool IsPaid { get; set; }    
 
         public List<InvoiceSummaryDto> Invoices { get; set; }
     }

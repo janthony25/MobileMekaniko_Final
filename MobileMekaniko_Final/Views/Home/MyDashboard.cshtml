@@ -118,7 +118,14 @@
                             <td class="text-center">@invoice.DueDate?.ToString("MM/dd/yyyy")</td>
                             <td class="text-center">@invoice.TotalAmount</td>
                             <td class="text-center payment-status-column">
-                                <p class="payment-status-not-paid">@(invoice.IsPaid == true ? "Paid" : "Not Paid")</p>
+                                @if (invoice.IsPaid == false)
+                                {
+                                    <p class="payment-status-not-paid">Not Paid</p>
+                                }
+                                else
+                                {
+                                    <p class="payment-status-paid">Paid</p>
+                                }
                             </td>
                             <td class="text-center">
                                 <div class="dropdown">

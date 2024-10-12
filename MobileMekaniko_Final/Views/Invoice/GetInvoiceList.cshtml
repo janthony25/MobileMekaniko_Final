@@ -90,9 +90,13 @@
                     <td class="text-center">@(invoice.DueDate?.ToString("MM/dd/yyyy"))</td>
                     <td class="text-center">@invoice.TotalAmount</td>
                     <td class="text-center">
-                        @if (invoice.IsEmailSent == true)
+                        @if (invoice.IsPaid == false)
                         {
-                            <i class="bi bi-check2"></i>
+                            <p class="payment-status-not-paid">Not Paid</p>
+                        }
+                        else
+                        {
+                            <p class="payment-status-paid">Paid</p>
                         }
                     </td>
                     <td class="text-center">

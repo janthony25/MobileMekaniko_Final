@@ -57,7 +57,16 @@
                     <td class="text-center">@(invoice.DueDate?.ToString("MM/dd/yyy"))</td>
                     <td class="text-center">@invoice.TotalAmount</td>
                     <td class="text-center">@invoice.AmountPaid</td>
-                    <td class="text-center">@((invoice.isPaid.HasValue && invoice.isPaid.Value) ? "Paid" : "Not Paid")</td>
+                    <td class="text-center">
+                        @if (invoice.isPaid == false)
+                                {
+                                    <p class="payment-status-not-paid">Not Paid</p>
+                                }
+                                else
+                                {
+                                    <p class="payment-status-paid">Paid</p>
+                                }
+                    </td>
                     <td class="text-center">
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary dropdown-toggle btn-sm" type="button" id="actionDropdown_@invoice.InvoiceId" data-bs-toggle="dropdown" aria-expanded="false">

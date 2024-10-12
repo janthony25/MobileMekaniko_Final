@@ -1,6 +1,10 @@
 ﻿body {
 }
 
+p{
+    margin: 0;
+}
+
 
 /*********************************************** */
 /************************ DROPDOWN HOVER *********************** */
@@ -72,3 +76,28 @@
 #monthlyFinancialOverviewChart {
     height: 400px !important;
 }
+
+
+
+
+/*********************************************** */
+/************************ PAID NOT PAID  *********************** */
+
+.payment-status-not-paid {
+    background-color: rgba(255, 99, 132, 1);
+    border-radius: 40px;
+    padding: 3px;
+    color: white;
+}
+
+.payment-status-paid {
+    background-color: rgba(75, 192, 192, 0.8);
+    border-radius: 40px;
+    padding: 3px;
+    color: white;
+}
+
+
+
+/*********************************************** */
+/*********************************************** */
