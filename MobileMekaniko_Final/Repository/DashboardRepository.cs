@@ -145,7 +145,7 @@ namespace MobileMekaniko_Final.Repository
                     {
                         MonthName = g.Key.Month.ToString("00") + "-" + g.Key.Year,  // e.g., '01-2024'
                         TotalInvoicedAmount = g.Sum(i => i.TotalAmount ?? 0),
-                        TotalPaidAmount = g.Sum(i => i.IsPaid ? i.AmountPaid ?? 0 : 0)
+                        TotalPaidAmount = g.Sum(i => i.AmountPaid ?? 0 )
                     })
                     .ToListAsync();
 
