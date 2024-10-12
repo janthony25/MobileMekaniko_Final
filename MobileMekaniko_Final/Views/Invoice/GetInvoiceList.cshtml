@@ -83,12 +83,6 @@
                     <td class="text-center">
                         <a href="#" class="btnUpdateInvoice" data-invoice-id="@invoice.InvoiceId" data-action="UpdateInvoice">@invoice.InvoiceId</a>
                     </td>
-                    <td class="text-center">@((bool)invoice.IsPaid ? "Paid" : "Not Paid")</td>
-                    <td class="text-center">@invoice.IssueName</td>
-                    <td class="text-center">@invoice.CustomerName</td>
-                    <td class="text-center">@invoice.CarRego</td>
-                    <td class="text-center">@(invoice.DueDate?.ToString("MM/dd/yyyy"))</td>
-                    <td class="text-center">@invoice.TotalAmount</td>
                     <td class="text-center">
                         @if (invoice.IsPaid == false)
                         {
@@ -97,6 +91,17 @@
                         else
                         {
                             <p class="payment-status-paid">Paid</p>
+                        }
+                    </td>
+                    <td class="text-center">@invoice.IssueName</td>
+                    <td class="text-center">@invoice.CustomerName</td>
+                    <td class="text-center">@invoice.CarRego</td>
+                    <td class="text-center">@(invoice.DueDate?.ToString("MM/dd/yyyy"))</td>
+                    <td class="text-center">@invoice.TotalAmount</td>
+                    <td class="text-center">
+                        @if(invoice.IsEmailSent == true)
+                        {
+                            <i class="bi bi-check-lg"></i>
                         }
                     </td>
                     <td class="text-center">
