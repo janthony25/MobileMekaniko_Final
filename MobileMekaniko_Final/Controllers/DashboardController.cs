@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository;
 using MobileMekaniko_Final.Repository.IRepository;
@@ -28,13 +29,21 @@ namespace MobileMekaniko_Final.Controllers
                 var totalCars = await _unitOfWork.Dashboard.GetTotalCarsAsync();
                 var totalInvoices = await _unitOfWork.Dashboard.GetTotalInvoicesAsync();
                 var totalQuotations = await _unitOfWork.Dashboard.GetTotalQuotationsAsync();
+
+                var unpaidInvoices = (await _unitOfWork.Invoice.FilterUnpaidInvoicesAsync())
+                            .Where(i => i.DueDate.HasValue)
+                            .OrderBy(i => i.DueDate)
+                            .Take(5)
+                            .ToList();
+
                 // Create a view model to hold dashboard datas.
                 var dashboardDto = new DashboardDto
                 {
                     TotalCustomers = totalCustomers,
                     TotalCars = totalCars,
                     TotalInvoices = totalInvoices,
-                    TotalQuotations = totalQuotations
+                    TotalQuotations = totalQuotations,
+                    UnpaidInvoices = unpaidInvoices
                 };
 
                 _logger.LogInformation("Successfully fetched dashboard data.");
