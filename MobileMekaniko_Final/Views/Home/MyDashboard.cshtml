@@ -1,0 +1,171 @@
+﻿@model MobileMekaniko_Final.Models.Dto.DashboardDto
+
+@if(ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
+<h4 class="fw-bold mb-5 mt-5">DASHBOARD</h4>
+
+@*Total numbers of customer, cars, invoices, quotations*@
+<div class="customer-car-invoice-count d-flex">
+    <div class="customer-count-box d-flex justify-content-center align-items-center">
+        <div class="customer-count-left">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="customer-count-right ms-5">
+            <h5 class="mb-0">Customers</h5>
+            <h4 class="mb-0">@Model.TotalCustomers</h4>
+        </div>
+    </div>
+    <div class="car-count-box d-flex justify-content-center align-items-center">
+        <div class="car-count-left">
+            <i class="bi bi-car-front"></i>
+        </div>
+        <div class="car-count-right ms-5">
+            <h5 class="mb-0">Cars</h5>
+            <h4 class="mb-0">@Model.TotalCars</h4>
+        </div>
+    </div>
+    <div class="invoice-count-box d-flex justify-content-center align-items-center">
+        <div class="invoice-count-left">
+            <i class="bi bi-receipt-cutoff"></i>
+        </div>
+        <div class="invoice-count-right ms-5">
+            <h5 class="mb-0">Invoices</h5>
+            <h4 class="mb-0">@Model.TotalInvoices</h4>
+        </div>
+    </div>
+    <div class="quotation-count-box d-flex justify-content-center align-items-center">
+        <div class="quotation-count-left">
+            <i class="bi bi-receipt"></i>
+        </div>
+        <div class="quotation-count-right ms-5">
+            <h5 class="mb-0">Quotations</h5>
+            <h4 class="mb-0">@Model.TotalQuotations</h4>
+        </div>
+    </div>
+</div>
+
+<hr class="mb-5 mt-5" />
+
+<div class="financial-overviews d-flex justify-content-between align-items-start container mt-5">
+    <!-- PIE CHART (40%) -->
+    <div class="row mt-5" style="flex: 0 0 40%;">
+        <div class="col-md-12">
+            <h4 class="mb-4">Financial Overview</h4>
+            <div>
+                <canvas id="financialOverviewChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- BAR CHART (60%) -->
+    <div class="row mt-5" style="flex: 0 0 60%;">
+        <div class="col-md-12">
+            <h4 class="mb-3">Monthly Financial Overview</h4>
+            <div style="height: 400px;">
+                <canvas id="monthlyFinancialOverviewChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="mb-5 mt-5" />
+
+<div class="payment-summary-container d-flex justify-content-between align-items-center mt-5">
+
+    <div class="unpaid-invoice-table-container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h4>Unpaid Invoices</h4>
+            </div>
+            <div>
+                <a asp-action="GetUnpaidInvoices" asp-controller="Invoice">View All</a>
+            </div>
+        </div>
+        <table class="table" style="width: 600px">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width:10px">#</th>
+                    <th class="text-center" style="width:150px">Rego #</th>
+                    <th class="text-center" style="width:250px">Issue</th>
+                    <th class="text-center" style="width:120px">Due Date</th>
+                    <th class="text-center" style="width:100px">Amount</th>
+                    <th class="text-center" style="width:170px">Status</th>
+                    <th class="text-center" style="width:10px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.UnpaidInvoices.Any())
+                {
+                    <tr>
+                        <td class="text-center" colspan="7">No Unpaid Invoices</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var invoice in Model.UnpaidInvoices)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <a href="#" class="btnUpdateInvoice" data-invoice-id="@invoice.InvoiceId" data-action="UpdateInvoice">@invoice.InvoiceId</a>
+                            </td>
+                            <td class="text-center">@invoice.CarRego</td>
+                            <td class="text-center">@invoice.IssueName</td>
+                            <td class="text-center">@invoice.DueDate?.ToString("MM/dd/yyyy")</td>
+                            <td class="text-center">@invoice.TotalAmount</td>
+                            <td class="text-center payment-status-column">
+                                <p class="payment-status-not-paid">@(invoice.IsPaid == true ? "Paid" : "Not Paid")</p>
+                            </td>
+                            <td class="text-center">
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle btn-sm" type="button" id="actionDropdown_@invoice.InvoiceId" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="visually-hidden">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="actionDropdown_@invoice.InvoiceId">
+                                        <li>
+                                            <button class="dropdown-item mark-as-paid" data-invoice-id="@invoice.InvoiceId">
+                                                <i class="bi bi-check-lg"></i> Mark as Paid
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item view-pdf" data-invoice-id="@invoice.InvoiceId">
+                                                <i class="bi bi-file-pdf"></i> View PDF
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="dropdown-item download-pdf" data-invoice-id="@invoice.InvoiceId">
+                                                <i class="bi bi-download"></i> Download PDF
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item send-invoice-email" data-invoice-id="@invoice.InvoiceId">
+                                                <i class="bi bi-envelope-paper"></i> Send Email
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="dropdown-item delete-invoice-btn"
+                                               data-invoice-id="@invoice.InvoiceId" data-action="deleteInvoice">
+                                                <i class="bi bi-trash3-fill"></i> Delete Invoice
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<partial name="_CarInvoiceModals" model="new MobileMekaniko_Final.Models.Dto.InvoiceDetailsDto()" />
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/dashboard.js"></script>
+<script src="~/js/carinvoice.js"></script>
