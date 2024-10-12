@@ -99,19 +99,27 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var invoice in Model.UnpaidInvoices)
+                @if (!Model.UnpaidInvoices.Any())
                 {
+                    <tr>
+                        <td class="text-center" colspan="7">No Unpaid Invoices</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var invoice in Model.UnpaidInvoices)
+                    {
                         <tr>
                             <td class="text-center">
-                            <a href="#" class="btnUpdateInvoice" data-invoice-id="@invoice.InvoiceId" data-action="UpdateInvoice">@invoice.InvoiceId</a>
+                                <a href="#" class="btnUpdateInvoice" data-invoice-id="@invoice.InvoiceId" data-action="UpdateInvoice">@invoice.InvoiceId</a>
                             </td>
                             <td class="text-center">@invoice.CarRego</td>
                             <td class="text-center">@invoice.IssueName</td>
                             <td class="text-center">@invoice.DueDate?.ToString("MM/dd/yyyy")</td>
                             <td class="text-center">@invoice.TotalAmount</td>
                             <td class="text-center payment-status-column">
-                            <p class="payment-status-not-paid">@(invoice.IsPaid == true ? "Paid" : "Not Paid")</p>
-                                </td>
+                                <p class="payment-status-not-paid">@(invoice.IsPaid == true ? "Paid" : "Not Paid")</p>
+                            </td>
                             <td class="text-center">
                                 <div class="dropdown">
                                     <button class="btn btn-outline-secondary dropdown-toggle btn-sm" type="button" id="actionDropdown_@invoice.InvoiceId" data-bs-toggle="dropdown" aria-expanded="false">
@@ -148,7 +156,9 @@
                                 </div>
                             </td>
                         </tr>
+                    }
                 }
+                
             </tbody>
         </table>
     </div>

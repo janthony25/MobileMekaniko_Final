@@ -158,5 +158,37 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task<List<InvoiceListDto>> FilterUnpaidInvoicesAsync()
+        {
+            try
+            {
+                var invoices = await _data.Invoices
+                    .Include(i => i.Car)
+                        .ThenInclude(car => car.Customer)
+                    .Where(i => i.IsPaid == false)
+                    .OrderByDescending(i => i.DueDate)
+                    .Take(5)
+                    .Select(i => new InvoiceListDto
+                    {
+                        InvoiceId = i.InvoiceId,
+                        IsPaid = i.IsPaid,
+                        IssueName = i.IssueName,
+                        CustomerName = i.Car.Customer.CustomerName,
+                        CarRego = i.Car.CarRego,
+                        DueDate = i.DueDate,
+                        TotalAmount = i.TotalAmount,
+                        IsEmailSent = i.IsEmailSent
+                    }).ToListAsync();
+
+
+                _logger.LogInformation($"Successfully fetched {invoices.Count} unpaid invoice.");
+                return invoices;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching unpaid invoices");
+                throw;
+            }
+        }
     }
 }

@@ -689,24 +689,33 @@ function SendInvoiceEmail(invoiceId) {
 function MarkInvoiceAsPaid(invoiceId) {
     const token = $('input[name="__RequestVerificationToken"]').val();
 
-    console.log('Marking invoice as paid InvoiceId:', invoiceId);
+    // Use the correct confirmation prompt
+    const isConfirmed = confirm('Are you sure you want to mark this invoice as paid?');
 
-    $.ajax({
-        url: '/invoice/MarkInvoiceAsPaid',
-        type: 'POST',
-        dataType: 'json',
-        headers: {
-            'RequestVerificationToken': token
-        },
-        data: {
-            id: invoiceId
-        },
-        success: function (response) {
-            alert(response.message);
-            location.reload();
-        },
-        error: function () {
-            alert('An error occurred while marking invoice as paid.');
-        }
-    });
+    // Check if the user confirmed the action
+    if (isConfirmed) {
+        console.log('Marking invoice as paid InvoiceId:', invoiceId);
+
+        $.ajax({
+            url: '/invoice/MarkInvoiceAsPaid',
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'RequestVerificationToken': token
+            },
+            data: {
+                id: invoiceId
+            },
+            success: function (response) {
+                alert(response.message);  // Show the success message after confirmation
+                location.reload();        // Reload the page to reflect the changes
+            },
+            error: function () {
+                alert('An error occurred while marking the invoice as paid.');
+            }
+        });
+    } else {
+        console.log('User cancelled marking the invoice as paid.');  // Log if the action is canceled
+        // No action is taken if the user cancels
+    }
 }

@@ -30,11 +30,7 @@ namespace MobileMekaniko_Final.Controllers
                 var totalInvoices = await _unitOfWork.Dashboard.GetTotalInvoicesAsync();
                 var totalQuotations = await _unitOfWork.Dashboard.GetTotalQuotationsAsync();
 
-                var unpaidInvoices = (await _unitOfWork.Invoice.FilterUnpaidInvoicesAsync())
-                            .Where(i => i.DueDate.HasValue)
-                            .OrderBy(i => i.DueDate)
-                            .Take(5)
-                            .ToList();
+                var unpaidInvoices = await _unitOfWork.Dashboard.FilterUnpaidInvoicesAsync();
 
                 // Create a view model to hold dashboard datas.
                 var dashboardDto = new DashboardDto
