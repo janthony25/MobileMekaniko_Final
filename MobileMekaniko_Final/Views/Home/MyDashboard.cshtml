@@ -11,7 +11,7 @@
 
 @*Total numbers of customer, cars, invoices, quotations*@
 <div class="customer-car-invoice-count d-flex">
-    <div class="customer-count-box d-flex justify-content-center align-items-center">
+    <div class="dashboard-card customer-count-box d-flex justify-content-center align-items-center" style="margin-bottom: 100px;">
         <div class="customer-count-left">
             <i class="bi bi-people-fill"></i>
         </div>
@@ -20,7 +20,7 @@
             <h4 class="mb-0">@Model.TotalCustomers</h4>
         </div>
     </div>
-    <div class="car-count-box d-flex justify-content-center align-items-center">
+    <div class="dashboard-card car-count-box d-flex justify-content-center align-items-center">
         <div class="car-count-left">
             <i class="bi bi-car-front"></i>
         </div>
@@ -29,7 +29,7 @@
             <h4 class="mb-0">@Model.TotalCars</h4>
         </div>
     </div>
-    <div class="invoice-count-box d-flex justify-content-center align-items-center">
+    <div class="dashboard-card invoice-count-box d-flex justify-content-center align-items-center">
         <div class="invoice-count-left">
             <i class="bi bi-receipt-cutoff"></i>
         </div>
@@ -38,7 +38,7 @@
             <h4 class="mb-0">@Model.TotalInvoices</h4>
         </div>
     </div>
-    <div class="quotation-count-box d-flex justify-content-center align-items-center">
+    <div class="dashboard-card quotation-count-box d-flex justify-content-center align-items-center">
         <div class="quotation-count-left">
             <i class="bi bi-receipt"></i>
         </div>
@@ -49,9 +49,8 @@
     </div>
 </div>
 
-<hr class="mb-5 mt-5" />
 
-<div class="financial-overviews d-flex justify-content-between align-items-start container mt-5">
+<div class="financial-overviews d-flex justify-content-between align-items-start container" style="margin-bottom: 100px;">
     <!-- PIE CHART (40%) -->
     <div class="row mt-5" style="flex: 0 0 40%;">
         <div class="col-md-12">
@@ -73,9 +72,8 @@
     </div>
 </div>
 
-<hr class="mb-5 mt-5" />
 
-<div class="payment-summary-container d-flex justify-content-between align-items-center mt-5">
+<div class="payment-summary-container d-flex justify-content-between align-items-center ">
 
     <div class="unpaid-invoice-table-container">
         <div class="d-flex justify-content-between align-items-center">
