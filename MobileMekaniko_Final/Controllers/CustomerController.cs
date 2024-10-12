@@ -134,6 +134,7 @@ namespace MobileMekaniko_Final.Controllers
         }
 
         // GET : Search Customer
+        [HttpGet]
         public async Task<IActionResult> SearchCustomers(string customerName)
         {
             try

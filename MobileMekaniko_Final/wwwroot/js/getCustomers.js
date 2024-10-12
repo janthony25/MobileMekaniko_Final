@@ -3,7 +3,14 @@
 
     $('#customerModal').on('hidden.bs.modal', function () {
         HideModal();
-    })
+    });
+
+    $('#btnSearchCustomer').on('click', function () {
+        let searchCustomerVal = $('#searchCustomerValue').val();
+        console.log(searchCustomerVal);
+
+        SearchCustomer(searchCustomerVal);
+    });
 
     //$(document).on('click', '.btn-add-customer', function () {
     //    customerId = $(this).data('customer-id');
@@ -304,27 +311,25 @@ function DeleteCustomer() {
 }
 
 
-function SearchCustomer() {
-    const searchCustomer = $('#searchCustomer').val();
+function SearchCustomer(searchCustomerVal) {
+    //const searchCustomer = $('#searchCustomer').val();
+    //console.log(searchCustomer);
 
     $.ajax({
-        url: 'customer/SearchCustomers',
+        url: 'SearchCustomers',
         type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
         data: {
-            customerName: searchCustomer
+            customerName: searchCustomerVal
         },
         success: function (response) {
-            if (response.success) {
-                // populate customer table or handle the search results
-                console.log(response.customer);
-                $('#searchCustomer').val('');
-                UpdateCustomerTable(response.customers);
-            } else {
-                alert(response.message);
-            }
+            console.log(response);
+            UpdateCustomerTable(response.customers);
+            $('#searchCustomerValue').val('');
         },
         error: function () {
-            alert('An errror occurred while searching for customer.');
+            alert('An error occurred while searching customer.');
         }
     });
 
