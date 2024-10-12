@@ -10,7 +10,85 @@ p{
 .drop-down .dropdown-menu {
     z-index: 1000;
 }
+
+
+
 /*********************************************** */
+/*********************************************** */
+
+
+/************************ LOGIN PAGE *********************** */
+/*********************************************** */
+
+
+/************************ LOGIN PAGE *********************** */
+.login-body {
+    background-color: rgb(37, 36, 36);
+}
+
+.login-section {
+    position: relative;
+    height: 80vh;
+}
+
+.login-image img {
+    width: 22rem;
+    height: 30rem;
+}
+
+.login-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(254, 120, 0, 0.8);
+    width: 800px;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: rgb(20, 20, 20);
+    color: white;
+}
+
+.login-form span {
+    color: rgba(254, 120, 0, 0.8);
+}
+
+.login-form {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+    .login-form h1 {
+        position: absolute;
+        bottom: 150px;
+        left: 15%;
+    }
+
+.login-input input {
+    width: 300px;
+    height: 40px
+}
+
+.user-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+}
+
+    .user-form button {
+        background-color: rgba(254, 120, 0, 0.8);
+        width: 90px;
+    }
+
+
+
+/*********************************************** */
+/*********************************************** */
+
+
+
 /************************ DROPDOWN HOVER *********************** */
 /* Show the dropdown menu on hover */
 .nav-item.dropdown:hover .dropdown-menu {
