@@ -1,4 +1,6 @@
-﻿namespace MobileMekaniko_Final.Repository.IRepository
+﻿using MobileMekaniko_Final.Models.Dto;
+
+namespace MobileMekaniko_Final.Repository.IRepository
 {
     public interface IDashboardRepository
     {
@@ -9,6 +11,7 @@
         Task<decimal> GetTotalInvoicedAmountAsync();
         Task<decimal> GetTotalPaidAmountAsync();
         Task<decimal> GetRemainingBalanceAsync();
+        Task<List<MonthlyFinancialDataDto>> GetMonthlyFinancialDataAsync();
     }
 }
     

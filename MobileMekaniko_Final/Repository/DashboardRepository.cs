@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using MobileMekaniko_Final.Data;
+using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
 
 namespace MobileMekaniko_Final.Repository
@@ -131,5 +132,31 @@ namespace MobileMekaniko_Final.Repository
                 throw;
             }
         }
+
+        public async Task<List<MonthlyFinancialDataDto>> GetMonthlyFinancialDataAsync()
+        {
+            try
+            {
+                // Group by month and calculate totals
+                var monthlyFinancialData = await _data.Invoices
+                    .Where(i => i.DateAdded.HasValue) // Ensure that DateAdded is not null
+                    .GroupBy(i => new { Year = i.DateAdded.Value.Year, Month = i.DateAdded.Value.Month })
+                    .Select(g => new MonthlyFinancialDataDto
+                    {
+                        MonthName = g.Key.Month.ToString("00") + "-" + g.Key.Year,  // e.g., '01-2024'
+                        TotalInvoicedAmount = g.Sum(i => i.TotalAmount ?? 0),
+                        TotalPaidAmount = g.Sum(i => i.IsPaid ? i.AmountPaid ?? 0 : 0)
+                    })
+                    .ToListAsync();
+
+                return monthlyFinancialData;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching monthly financial data.");
+                throw;
+            }
+        }
+
     }
 }

@@ -72,5 +72,29 @@ namespace MobileMekaniko_Final.Controllers
                 return StatusCode(500, "An error occurred while processing financial data.");
             }
         }
+
+        public async Task<IActionResult> GetMonthlyFinancialData()
+        {
+            try
+            {
+                // Fetch monthly data for total invoiced amount and total paid amount
+                var monthlyData = await _unitOfWork.Dashboard.GetMonthlyFinancialDataAsync();
+
+                // Prepare data for the chart
+                var data = new
+                {
+                    months = monthlyData.Select(d => d.MonthName).ToList(),  // ['January', 'February', ...]
+                    totalInvoicedAmounts = monthlyData.Select(d => d.TotalInvoicedAmount).ToList(),
+                    totalPaidAmounts = monthlyData.Select(d => d.TotalPaidAmount).ToList()
+                };
+
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching monthly financial data.");
+                return StatusCode(500, "An error occurred while processing financial data.");
+            }
+        }
     }
 }

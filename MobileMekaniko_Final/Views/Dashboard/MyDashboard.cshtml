@@ -50,12 +50,25 @@
 </div>
 
 
-<div class="row mt-5">
-    <div class="col-md-8">
-        <h5>Financial Overview</h5>
-        <div style="height: 500px;">
-            <!-- Increased height to accommodate the legend -->
-            <canvas id="financialOverviewChart"></canvas>
+
+<div class="financial-overviews d-flex justify-content-between align-items-start container">
+    <!-- PIE CHART (40%) -->
+    <div class="row mt-5" style="flex: 0 0 40%;">
+        <div class="col-md-12">
+            <h4 class="mb-4">Financial Overview</h4>
+            <div>
+                <canvas id="financialOverviewChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- BAR CHART (60%) -->
+    <div class="row mt-5" style="flex: 0 0 60%;">
+        <div class="col-md-12">
+            <h4 class="mb-3">Monthly Financial Overview</h4>
+            <div style="height: 400px;">
+                <canvas id="monthlyFinancialOverviewChart"></canvas>
+            </div>
         </div>
     </div>
 </div>

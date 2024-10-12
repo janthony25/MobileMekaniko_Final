@@ -62,3 +62,13 @@
 
 /*********************************************** */
 /*********************************************** */
+
+#financialOverviewChart {
+    width: 380px !important;
+    height: 350px !important;
+    padding-top: 0 !important;
+}
+
+#monthlyFinancialOverviewChart {
+    height: 400px !important;
+}
