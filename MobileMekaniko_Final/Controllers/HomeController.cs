@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
 using MobileMekaniko_Final.Models;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
@@ -44,7 +45,7 @@ namespace MobileMekaniko_Final.Controllers
                 var totalCars = await _unitOfWork.Dashboard.GetTotalCarsAsync();
                 var totalInvoices = await _unitOfWork.Dashboard.GetTotalInvoicesAsync();
                 var totalQuotations = await _unitOfWork.Dashboard.GetTotalQuotationsAsync();
-
+                var recentInvoices = await _unitOfWork.Dashboard.RecentInvoicesAsync();
                 var unpaidInvoices = await _unitOfWork.Dashboard.FilterUnpaidInvoicesAsync();
 
                 // Create a view model to hold dashboard datas.
@@ -54,7 +55,8 @@ namespace MobileMekaniko_Final.Controllers
                     TotalCars = totalCars,
                     TotalInvoices = totalInvoices,
                     TotalQuotations = totalQuotations,
-                    UnpaidInvoices = unpaidInvoices
+                    UnpaidInvoices = unpaidInvoices,
+                    RecentInvoices = recentInvoices
                 };
 
                 _logger.LogInformation("Successfully fetched dashboard data.");
@@ -116,5 +118,7 @@ namespace MobileMekaniko_Final.Controllers
                 return StatusCode(500, "An error occurred while processing financial data.");
             }
         }
+
+        
     }
 }

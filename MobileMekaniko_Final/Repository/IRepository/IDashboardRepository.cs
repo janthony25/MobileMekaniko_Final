@@ -13,6 +13,7 @@ namespace MobileMekaniko_Final.Repository.IRepository
         Task<decimal> GetRemainingBalanceAsync();
         Task<List<MonthlyFinancialDataDto>> GetMonthlyFinancialDataAsync();
         Task<List<InvoiceListDto>> FilterUnpaidInvoicesAsync();
+        Task<List<InvoiceListDto>> RecentInvoicesAsync();
     }
 }
     

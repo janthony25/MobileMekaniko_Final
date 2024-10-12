@@ -190,5 +190,36 @@ namespace MobileMekaniko_Final.Repository
                 throw;
             }
         }
+
+        public async Task<List<InvoiceListDto>> RecentInvoicesAsync()
+        {
+            try
+            {
+                var recentInvoices = await _data.Invoices
+                        .Include(i => i.Car)
+                            .ThenInclude(car => car.Customer)
+                            .OrderByDescending(i => i.DateAdded)
+                            .Take(5)
+                            .Select(i => new InvoiceListDto
+                            {
+                                InvoiceId = i.InvoiceId,
+                                IsPaid = i.IsPaid,
+                                IssueName = i.IssueName,
+                                CustomerName = i.Car.Customer.CustomerName,
+                                CarRego = i.Car.CarRego,
+                                DueDate = i.DueDate,
+                                TotalAmount = i.TotalAmount,
+                                IsEmailSent = i.IsEmailSent
+                            }).ToListAsync();
+
+                _logger.LogInformation($"Successfully fetched recent invoices");
+                return recentInvoices;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching recent invoices.");
+                throw;
+            }
+        }
     }
 }
