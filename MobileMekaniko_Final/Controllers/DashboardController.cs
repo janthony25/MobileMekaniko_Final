@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MobileMekaniko_Final.Models.Dto;
+using MobileMekaniko_Final.Repository;
 using MobileMekaniko_Final.Repository.IRepository;
 using SQLitePCL;
 using System.Drawing.Printing;
@@ -27,7 +28,6 @@ namespace MobileMekaniko_Final.Controllers
                 var totalCars = await _unitOfWork.Dashboard.GetTotalCarsAsync();
                 var totalInvoices = await _unitOfWork.Dashboard.GetTotalInvoicesAsync();
                 var totalQuotations = await _unitOfWork.Dashboard.GetTotalQuotationsAsync();
-
                 // Create a view model to hold dashboard datas.
                 var dashboardDto = new DashboardDto
                 {
@@ -45,6 +45,31 @@ namespace MobileMekaniko_Final.Controllers
                 _logger.LogError(ex, "An error occurred while fetching dashboard data.");
                 TempData["ErrorMessage"] = "An error occurred while processing dashboard data.";
                 return View();
+            }
+        }
+
+        // GET : Pie Chart 
+        public async Task<IActionResult> GetFinancialData()
+        {
+            try
+            {
+                var totalInvoicedAmount = await _unitOfWork.Dashboard.GetTotalInvoicedAmountAsync();
+                var totalPaidAmount = await _unitOfWork.Dashboard.GetTotalPaidAmountAsync();
+                var remainingBalance = await _unitOfWork.Dashboard.GetRemainingBalanceAsync();
+
+                var data = new
+                {
+                    totalInvoiceAmount = totalInvoicedAmount,
+                    totalPaidAmount = totalPaidAmount,
+                    remainingBalance = remainingBalance
+                };
+
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching financial data.");
+                return StatusCode(500, "An error occurred while processing financial data.");
             }
         }
     }

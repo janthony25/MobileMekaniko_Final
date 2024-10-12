@@ -16,6 +16,24 @@ namespace MobileMekaniko_Final.Repository
             _logger = loggerFactory.CreateLogger<DashboardRepository>();
         }
 
+        public async Task<decimal> GetRemainingBalanceAsync()
+        {
+            try
+            {
+                var totalInvoicedAmount = await GetTotalInvoicedAmountAsync();
+                var totalPaidAmount = await GetTotalPaidAmountAsync();
+                var remainingBalance = totalInvoicedAmount - totalPaidAmount;
+
+                _logger.LogInformation($"Successfully calculated remaining balance: {remainingBalance}");
+                return remainingBalance;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while calculating remaining balance.");
+                throw;
+            }
+        }
+
         public async Task<int> GetTotalCarsAsync()
         {
             try
@@ -50,6 +68,21 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
+        public async Task<decimal> GetTotalInvoicedAmountAsync()
+        {
+            try
+            {
+                var totalInvoicedAmount = await _data.Invoices.SumAsync(i => i.TotalAmount ?? 0);
+                _logger.LogInformation($"Successfully calculated total invoiced amount: {totalInvoicedAmount}");
+                return totalInvoicedAmount;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while calculating total invoiced amount");
+                throw;
+            }
+        }
+
         public async Task<int> GetTotalInvoicesAsync()
         {
             try
@@ -63,6 +96,21 @@ namespace MobileMekaniko_Final.Repository
             catch(Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while fetching total number of invoices.");
+                throw;
+            }
+        }
+
+        public async Task<decimal> GetTotalPaidAmountAsync()
+        {
+            try
+            {
+                var totalPaidAmount = await _data.Invoices.Where(i => i.IsPaid).SumAsync(i => i.AmountPaid ?? 0);
+                _logger.LogInformation($"Successfully calculated total paid amount: {totalPaidAmount}");
+                return totalPaidAmount;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while calculating total paid amount.");
                 throw;
             }
         }
