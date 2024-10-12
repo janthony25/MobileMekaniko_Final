@@ -22,6 +22,11 @@ namespace MobileMekaniko_Final.Controllers
 
         public IActionResult Index()
         {
+            // Redirect to Dashboard if the user is authenticated
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("MyDashboard");
+            }
             return View();
         }
 
