@@ -75,15 +75,15 @@
 
 <div class="payment-summary-container d-flex justify-content-between align-items-start ">
     <div class="recent-invoice-table-container">
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex  align-items-center">
             <div>
                 <h4>Recent Invoices</h4>
             </div>
-            <div>
+            <div style="margin-left: 390px;">
                 <a asp-action="GetInvoiceList" asp-controller="Invoice">View All</a>
             </div>
         </div>
-        <table class="table table-striped" style="width: 600px">
+        <table class="table table-striped recent-invoice-table" style="width: 600px">
             <thead>
                 <tr>
                     <th class="text-center" style="width:10px">#</th>
@@ -167,15 +167,15 @@
     </div>
 
     <div class="unpaid-invoice-table-container">
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
             <div>
                 <h4>Unpaid Invoices</h4>
             </div>
-            <div>
+            <div style="margin-left: 387px;">
                 <a asp-action="GetUnpaidInvoices" asp-controller="Invoice">View All</a>
             </div>
         </div>
-        <table class="table table-striped" style="width: 600px">
+        <table class="table table-striped unpaid-invoice-table" style="width: 600px">
             <thead>
                 <tr>
                     <th class="text-center" style="width:10px">#</th>
