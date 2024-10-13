@@ -350,11 +350,11 @@ function UpdateCustomerTable(customers) {
                 <tr>
                     <td class="text-center">${customer.customerId}</td>
                     <td class="text-center">${customer.customerName}</td>
-                    <td class="text-center">${customer.customerEmail}</td>
-                    <td class="text-center">${customer.customerNumber}</td>
+                    <td class="text-center">${customer.customerEmail ? customer.customerEmail : ''}</td>
+                    <td class="text-center">${customer.customerNumber ? customer.customerNumber : ''}</td>
                     <td class="text-center">
                         <a href="/customer/GetCustomerCars/${customer.customerId}" class="btn btn-primary btn-sm"><i class="bi bi-car-front" id="viewCar"></i> View</a>
-                        <button class="btn btn-sm btn-secondary" onclick="DeleteCustomer(${customer.customerId})">Delete</button>
+                        <button class="btn btn-sm btn-secondary" onclick="DeleteCustomer(${customer.customerId})"><i class="bi bi-trash3"></i></a></button>
                     </td>
                 </tr>`;
         });
