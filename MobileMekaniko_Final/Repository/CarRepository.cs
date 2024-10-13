@@ -185,6 +185,7 @@ namespace MobileMekaniko_Final.Repository
             {
                 // Fetching Car Makes
                 var makes = await _data.Makes
+                    .OrderBy(m => m.MakeName)
                     .Select(m => new MakeDto
                     {
                         MakeId = m.MakeId,
