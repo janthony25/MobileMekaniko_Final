@@ -166,6 +166,7 @@ namespace MobileMekaniko_Final.Services
             AddTableRowWithLabelAndValue(table, "Labor Price: ", invoice.LabourPrice?.ToString("C") ?? "N/A");
             AddTableRowWithLabelAndValue(table, "Discount: ", invoice.Discount?.ToString("C") ?? "N/A");
             AddTableRowWithLabelAndValue(table, "Shipping Fee: ", invoice.ShippingFee?.ToString("C") ?? "N/A");
+            AddTableRowWithLabelAndValue(table, "GST: ", invoice.TaxAmount?.ToString("C") ?? "N/A");
             AddTableRowWithLabelAndValue(table, "Total Amount: ", invoice.TotalAmount?.ToString("C") ?? "N/A");
             AddTableRowWithLabelAndValue(table, "Amount Paid: ", invoice.AmountPaid?.ToString("C") ?? "N/A");
             AddTableRowWithLabelAndValue(table, "Payment Term: ", invoice.PaymentTerm ?? "N/A");
