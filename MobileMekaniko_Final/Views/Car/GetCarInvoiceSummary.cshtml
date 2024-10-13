@@ -1,8 +1,10 @@
 ﻿@model MobileMekaniko_Final.Models.Dto.CarInvoiceSummaryDto
 
-<div class="customer-car-container  align-items-center mt-5">
 
-<h4 class="fw-bold mb-5">CUSTOMER DETAILS</h4>
+<a class="btn btn-primary btn-sm btn-back" asp-controller="Customer" asp-action="GetCustomerCars" asp-route-id="@Model.CustomerId">Back</a>
+
+<div class="customer-car-container  align-items-center mt-5">
+    <h4 class="fw-bold mb-5">CUSTOMER DETAILS</h4>
     <div class="d-flex justify-content-between">
             <div class="car-invoice-left">
                 <p>Customer ID: <b>@Model.CustomerId</b></p>
