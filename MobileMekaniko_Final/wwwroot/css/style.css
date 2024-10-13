@@ -114,8 +114,15 @@ p{
     margin-right: 30px;
     padding: 10px;
     border-radius: 7px;
-    box-shadow: 25px 10px 43px -7px rgba(0,0,0,0.12);
+    box-shadow: 15px 10px 10px -7px rgba(0,0,0,0.12);
+    transition: all 0.3s;
 }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 15px 10px 10px -7px rgba(0,0,0,0.12);
+        cursor: pointer;
+    }
 
 .customer-count-left i,
 .car-count-left i,
