@@ -5,22 +5,38 @@ body {
 
 p{
     margin: 0;
+    color: #333;
 }
 
 .drop-down .dropdown-menu {
     z-index: 1000;
 }
 
+.customer-car-container,
+.customer-details {
+    padding: 20px 50px 20px 50px;
+    background-color: white;
+    width: 800px;
+    box-shadow: 15px 10px 10px -7px rgba(0,0,0,0.12);
+    border-radius: 10px;
+}
 
+.customer-details {
+    width: 500px !important;
+}
 
+.modal-body {
+    padding: 10px 30px 10px 30px;
+}
+
+.invoice-details-right-2,
+.quotation-details-right-2 {
+    margin-left: 30px;
+}
 /*********************************************** */
 /*********************************************** */
-
-
 /************************ LOGIN PAGE *********************** */
 /*********************************************** */
-
-
 /************************ LOGIN PAGE *********************** */
 .login-body {
     background-color: rgb(37, 36, 36);
