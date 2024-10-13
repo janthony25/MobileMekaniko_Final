@@ -31,6 +31,7 @@ namespace MobileMekaniko_Final.Repository
                     Discount = dto.Discount,
                     ShippingFee = dto.ShippingFee,
                     SubTotal = dto.SubTotal,
+                    TaxAmount = dto.TaxAmount,
                     TotalAmount = dto.TotalAmount,
                     CarId = dto.CarId
                 };
@@ -195,6 +196,7 @@ namespace MobileMekaniko_Final.Repository
                         Discount = q.Discount,
                         ShippingFee = q.ShippingFee,
                         SubTotal = q.SubTotal,
+                        TaxAmount = q.TaxAmount,
                         TotalAmount = q.TotalAmount,
                         IsEmailSent = q.IsEmailSent,
                         QuotationItemDto = q.QuotationItem.Select(qi => new QuotationItemDto
@@ -332,6 +334,7 @@ namespace MobileMekaniko_Final.Repository
                 quotation.Discount = dto.Discount;
                 quotation.ShippingFee = dto.ShippingFee;
                 quotation.SubTotal = dto.SubTotal;
+                quotation.TaxAmount = dto.TaxAmount;
                 quotation.TotalAmount = dto.TotalAmount;
                 quotation.DateEdited = DateTime.Now;
 

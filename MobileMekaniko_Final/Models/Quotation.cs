@@ -14,6 +14,7 @@ namespace MobileMekaniko_Final.Models
         public decimal? Discount { get; set; }
         public decimal? ShippingFee { get; set; }
         public decimal? SubTotal { get; set; }
+        public decimal? TaxAmount { get; set; }     
         public decimal? TotalAmount { get; set; }
         public bool? IsEmailSent { get; set; } // will mark the email as sent
 

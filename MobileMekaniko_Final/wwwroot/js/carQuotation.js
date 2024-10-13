@@ -126,17 +126,24 @@ function updateTotals() {
     var discount = parseFloat($('#Discount').val()) || 0;
     var shippingFee = parseFloat($('#ShippingFee').val()) || 0;
 
-    // Calculate the total amount
-    var totalAmount = subTotal + laborPrice - discount + shippingFee;
+    // Calculate the taxable amount
+    var taxableAmount = (subTotal + laborPrice + shippingFee) - discount;
+
+    // Calculate 15% GST (TaxAmount) based on the taxable amount
+    var gst = taxableAmount * 0.15;
+
+    // Calculate the total amount by adding GST to the taxable amount
+    var totalAmount = taxableAmount + gst;
 
     // Ensure that the total amount is not negative
     if (totalAmount < 0) {
         totalAmount = 0;
     }
 
-    // Update subtotal and total amount fields
+    // Update subtotal, tax amount, and total amount fields
     $('#SubTotal').val(subTotal.toFixed(2));
-    $('#TotalAmount').val(totalAmount.toFixed(2));
+    $('#TaxAmount').val(gst.toFixed(2)); // Update the GST field
+    $('#TotalAmount').val(totalAmount.toFixed(2)); // Update the total amount field
 
     // Determine and update payment status
     var amountPaid = parseFloat($('#AmountPaid').val()) || 0;
@@ -219,6 +226,7 @@ function UpdateDeleteQuotationModal(quotationId, action) {
                 console.log('labor price = ', response.laborPrice);
                 $('#Discount').val(response.discount).prop('readonly', false);
                 $('#ShippingFee').val(response.shippingFee).prop('readonly', false);
+                $('#TaxAmount').val(response.taxAmount).prop('readonly', true);
                 $('#TotalAmount').val(response.totalAmount).prop('readonly', true);
 
                 let dateAdded = response.dateAdded ? response.dateAdded.split('T')[0] : '';
@@ -290,6 +298,7 @@ function UpdateDeleteQuotationModal(quotationId, action) {
                 $('#LaborPrice').val(response.laborPrice).prop('readonly', true);
                 $('#Discount').val(response.discount).prop('readonly', true);
                 $('#ShippingFee').val(response.shippingFee).prop('readonly', true);
+                $('#TaxAmount').val(response.taxAmount).prop('readonly', true);
                 $('#TotalAmount').val(response.totalAmount).prop('readonly', true);
 
                 let dateAdded = response.dateAdded ? response.dateAdded.split('T')[0] : '';
@@ -370,6 +379,7 @@ function AddQuotation() {
         discount: parseFloat($('#Discount').val()) || 0,
         shippingFee: parseFloat($('#ShippingFee').val()) || 0,
         subTotal: parseFloat($('#SubTotal').val()) || 0,
+        taxAmount: parseFloat($('#TaxAmount').val()) || 0,
         totalAmount: parseFloat($('#TotalAmount').val()) || 0,
         quotationItems: [],
         CarId: $('#CarId').val()
@@ -427,6 +437,7 @@ function UpdateQuotation() {
         discount: parseFloat($('#Discount').val()) || 0,
         shippingFee: parseFloat($('#ShippingFee').val()) || 0,
         subTotal: parseFloat($('#SubTotal').val()) || 0,
+        taxAmount: parseFloat($('#TaxAmount').val()) || 0,
         totalAmount: parseFloat($('#TotalAmount').val()) || 0,
         quotationId: $('#QuotationId').val()
     };

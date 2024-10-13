@@ -151,6 +151,7 @@ namespace MobileMekaniko_Final.Services
             AddTableRowWithLabelAndValue(table, "Labor Price: ", quotation.LaborPrice?.ToString("C") ?? "N/A");
             AddTableRowWithLabelAndValue(table, "Discount: ", quotation.Discount?.ToString("C") ?? "N/A");
             AddTableRowWithLabelAndValue(table, "Shipping Fee: ", quotation.ShippingFee?.ToString("C") ?? "N/A");
+            AddTableRowWithLabelAndValue(table, "GST: ", quotation.TaxAmount?.ToString("C") ?? "N/A");
             AddTableRowWithLabelAndValue(table, "Total Amount: ", quotation.TotalAmount?.ToString("C") ?? "N/A");
 
             section.AddParagraph().Format.SpaceAfter = 20;
