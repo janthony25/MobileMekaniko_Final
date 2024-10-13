@@ -133,17 +133,24 @@ function updateTotals() {
     var discount = parseFloat($('#Discount').val()) || 0;
     var shippingFee = parseFloat($('#ShippingFee').val()) || 0;
 
-    // Calculate the total amount
-    var totalAmount = subTotal + laborPrice - discount + shippingFee;
+    // Calculate the taxable amount
+    var taxableAmount = (subTotal + laborPrice + shippingFee) - discount;
+
+    // Calculate 15% GST (TaxAmount) based on the taxable amount
+    var gst = taxableAmount * 0.15;
+
+    // Calculate the total amount by adding GST to the taxable amount
+    var totalAmount = taxableAmount + gst;
 
     // Ensure that the total amount is not negative
     if (totalAmount < 0) {
         totalAmount = 0;
     }
 
-    // Update subtotal and total amount fields
+    // Update subtotal, tax amount, and total amount fields
     $('#SubTotal').val(subTotal.toFixed(2));
-    $('#TotalAmount').val(totalAmount.toFixed(2));
+    $('#TaxAmount').val(gst.toFixed(2)); // Update the GST field
+    $('#TotalAmount').val(totalAmount.toFixed(2)); // Update the total amount field
 
     // Determine and update payment status
     var amountPaid = parseFloat($('#AmountPaid').val()) || 0;
@@ -154,6 +161,8 @@ function updateTotals() {
     var paymentStatusDisplay = isPaid ? 'Paid' : 'Not Paid';
     $('#isPaidDisplay').val(paymentStatusDisplay);
 }
+
+
 function UpdateDeleteInvoiceModal(invoiceId, action) {
     $.ajax({
         url: '/invoice/GetInvoiceDetails',
@@ -186,8 +195,9 @@ function UpdateDeleteInvoiceModal(invoiceId, action) {
                 $('#LabourPrice').val(response.labourPrice).prop('readonly', false);
                 $('#Discount').val(response.discount).prop('readonly', false);
                 $('#ShippingFee').val(response.shippingFee).prop('readonly', false);
-                $('#SubTotal').val(response.subTotal).prop('readonly', false);
-                $('#TotalAmount').val(response.totalAmount).prop('readonly', false);
+                $('#SubTotal').val(response.subTotal).prop('readonly', true);
+                $('#TaxAmount').val(response.taxAmount).prop('readonly', true);
+                $('#TotalAmount').val(response.totalAmount).prop('readonly', true);
                 $('#AmountPaid').val(response.amountPaid).prop('readonly', false);
 
                 // Hide Date Added
@@ -266,6 +276,7 @@ function UpdateDeleteInvoiceModal(invoiceId, action) {
                 $('#Discount').val(response.discount).prop('readonly', true);
                 $('#ShippingFee').val(response.shippingFee).prop('readonly', true);
                 $('#SubTotal').val(response.subTotal).prop('readonly', true);
+                $('#TaxAmount').val(response.taxAmount).prop('readonly', true);
                 $('#TotalAmount').val(response.totalAmount).prop('readonly', true);
                 $('#AmountPaid').val(response.amountPaid).prop('readonly', true);
 
@@ -402,6 +413,7 @@ function AddInvoice() {
         subTotal: parseFloat($('#SubTotal').val()) || 0,
         totalAmount: parseFloat($('#TotalAmount').val()) || 0,
         amountPaid: parseFloat($('#AmountPaid').val()) || 0,
+        taxAmount: parseFloat($('#TaxAmount').val()) || 0,
         isPaid: $('#isPaid').val() === 'true',
         invoiceItems: []
     };
@@ -462,6 +474,7 @@ function UpdateInvoice() {
         discount: parseFloat($('#Discount').val()) || 0,
         shippingFee: parseFloat($('#ShippingFee').val()) || 0,
         subTotal: parseFloat($('#SubTotal').val()) || 0,
+        taxAmount: parseFloat($('#TaxAmount').val()) || 0,
         totalAmount: parseFloat($('#TotalAmount').val()) || 0,
         amountPaid: parseFloat($('#AmountPaid').val()) || 0,
         isPaid: $('#isPaid').val() === 'true'

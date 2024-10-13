@@ -36,6 +36,7 @@ namespace MobileMekaniko_Final.Repository
                     Discount = dto.Discount,
                     ShippingFee = dto.ShippingFee,
                     SubTotal = dto.SubTotal,
+                    TaxAmount = dto.TaxAmount,
                     TotalAmount = dto.TotalAmount,
                     AmountPaid = dto.AmountPaid,
                     CarId = car.CarId
@@ -261,6 +262,7 @@ namespace MobileMekaniko_Final.Repository
                         Discount = i.Discount,
                         ShippingFee = i.ShippingFee,
                         SubTotal = i.SubTotal,
+                        TaxAmount = i.TaxAmount,
                         TotalAmount = i.TotalAmount,
                         AmountPaid = i.AmountPaid,
                         isPaid = i.IsPaid,
@@ -408,6 +410,7 @@ namespace MobileMekaniko_Final.Repository
                 invoice.Discount = dto.Discount;
                 invoice.ShippingFee = dto.ShippingFee;
                 invoice.SubTotal = dto.SubTotal;
+                invoice.TaxAmount = dto.TaxAmount;
                 invoice.TotalAmount = dto.TotalAmount;
                 invoice.AmountPaid = dto.AmountPaid;
                 invoice.IsPaid = dto.IsPaid;
