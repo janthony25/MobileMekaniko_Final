@@ -33,6 +33,7 @@ namespace MobileMekaniko_Final.Repository
                     SubTotal = dto.SubTotal,
                     TaxAmount = dto.TaxAmount,
                     TotalAmount = dto.TotalAmount,
+                    IsEmailSent = false,
                     CarId = dto.CarId
                 };
 

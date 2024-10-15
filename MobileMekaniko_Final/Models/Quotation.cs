@@ -16,7 +16,7 @@ namespace MobileMekaniko_Final.Models
         public decimal? SubTotal { get; set; }
         public decimal? TaxAmount { get; set; }     
         public decimal? TotalAmount { get; set; }
-        public bool? IsEmailSent { get; set; } // will mark the email as sent
+        public bool? IsEmailSent { get; set; }
 
         // One to Many Quotation-Quotation Item
         public ICollection<QuotationItem> QuotationItem { get; set; }  
