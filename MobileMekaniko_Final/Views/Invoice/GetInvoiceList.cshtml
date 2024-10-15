@@ -26,6 +26,14 @@
         @*Filter button*@
         <ul class="dropdown-menu" aria-labelledby="filterDropdown">
             <li>
+                <form method="get" asp-controller="Invoice" asp-action="GetInvoiceList" class="mb-0">
+                    <input type="hidden" name="status" value="Paid" />
+                    <button type="submit" class="dropdown-item">
+                        Show All
+                    </button>
+                </form>
+            </li>
+            <li>
                 <form method="get" asp-controller="Invoice" asp-action="GetPaidInvoices" class="mb-0">
                     <input type="hidden" name="status" value="Paid" />
                     <button type="submit" class="dropdown-item">
