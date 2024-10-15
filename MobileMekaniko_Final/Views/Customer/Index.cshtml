@@ -9,13 +9,32 @@
 
 <div class="container d-flex justify-content-between align-items-center mb-2" style="padding:0;">
     <div class="">
-        <button id="btnAddCustomer" class="btn btn-primary btn-add-customer" @* data-customer-id="0" data-action="addCustomer" *@ onclick="CustomerModal(0, 'addCustomer')"><i class="bi bi-plus-lg"></i> Customer</button>
+        <button id="btnAddCustomer" class="btn btn-sm btn-primary btn-add-customer" @* data-customer-id="0" data-action="addCustomer" *@ onclick="CustomerModal(0, 'addCustomer')"><i class="bi bi-plus-lg"></i> Customer</button>
     </div>
 
-    <div class="">
-        <input id="searchCustomerValue" placeholder="Search Customer" />
-        <button id="btnSearchCustomer" class="btn btn-primary btn-sm ms-1" @* onclick="SearchCustomer();" *@><i class="bi bi-search "></i></button>
+    <div class="d-flex align-items-center">
+        <div>
+            <input id="searchCustomerValue" placeholder="Search Customer" />
+            <button id="btnSearchCustomer" class="btn btn-primary btn-sm ms-1" @* onclick="SearchCustomer();" *@><i class="bi bi-search "></i></button>
+        </div>
+       
 
+        <div class="dropdown ms-1">
+            <button class="btn btn-secondary invoice-status-filter btn-sm dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-funnel"></i>
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+
+            @*Filter button*@
+            <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                <li>
+                        <input type="hidden" name="status" value="unknown" />
+                        <button type="submit" class="dropdown-item btn-sm" onclick="GetCustomers();">
+                            Show all
+                        </button>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 
