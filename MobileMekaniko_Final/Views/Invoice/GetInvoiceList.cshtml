@@ -68,9 +68,9 @@
         <tr>
             <th class="text-center">ID</th>
             <th class="text-center">Status</th>
+            <th class="text-center">Rego #</th>
             <th class="text-center">Issue</th>
             <th class="text-center">Name</th>
-            <th class="text-center">Rego #</th>
             <th class="text-center">Due Date</th>
             <th class="text-center">Total</th>
             <th class="text-center">Sent</th>
@@ -101,9 +101,9 @@
                             <p class="payment-status-paid">Paid</p>
                         }
                     </td>
+                    <td class="text-center">@invoice.CarRego</td>
                     <td class="text-center">@invoice.IssueName</td>
                     <td class="text-center">@invoice.CustomerName</td>
-                    <td class="text-center">@invoice.CarRego</td>
                     <td class="text-center">@(invoice.DueDate?.ToString("MM/dd/yyyy"))</td>
                     <td class="text-center">@invoice.TotalAmount</td>
                     <td class="text-center">
