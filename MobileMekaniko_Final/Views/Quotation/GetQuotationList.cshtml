@@ -49,9 +49,9 @@
     <thead>
         <tr>
             <th class="text-center">ID</t>
+            <th class="text-center">Rego #</th>
             <th class="text-center">Issue</th>
             <th class="text-center">Name</th>
-            <th class="text-center">Rego #</th>
             <th class="text-center">Date</th>
             <th class="text-center">Total</th>
             <th class="text-center">Sent</th>
@@ -73,9 +73,9 @@
                     <td class="text-center">
                         <a href="#" class="btnUpdateQuotation" data-quotation-id="@quote.QuotationId" data-action="UpdateQuotation">@quote.QuotationId</a>
                     </td>
+                    <td class="text-center">@quote.CarRego</td>
                     <td class="text-center">@quote.IssueName</td>
                     <td class="text-center">@quote.CustomerName</td>
-                    <td class="text-center">@quote.CarRego</td>
                     <td class="text-center">@(quote.DateAdded.ToString("MM/dd/yyyy"))</td>
                     <td class="text-center">@quote.TotalAmount</td>
                     <td class="text-center">
