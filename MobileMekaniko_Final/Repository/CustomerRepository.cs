@@ -91,7 +91,9 @@ namespace MobileMekaniko_Final.Repository
                          CustomerAddress = c.CustomerAddress,
                          CustomerEmail = c.CustomerEmail,
                          CustomerNumber = c.CustomerNumber,
-                         CarDto = c.Car.Select(car => new CarDto
+                         CarDto = c.Car
+                         .OrderByDescending(car  => car.DateAdded)
+                         .Select(car => new CarDto
                          {
                              CarId = car.CarId,
                              CarRego = car.CarRego,
