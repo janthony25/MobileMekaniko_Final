@@ -39,6 +39,7 @@ namespace MobileMekaniko_Final.Repository
                     TaxAmount = dto.TaxAmount,
                     TotalAmount = dto.TotalAmount,
                     AmountPaid = dto.AmountPaid,
+                    IsPaid = dto.IsPaid,
                     CarId = car.CarId
                 };
 

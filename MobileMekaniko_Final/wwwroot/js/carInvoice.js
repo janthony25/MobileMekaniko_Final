@@ -42,7 +42,6 @@
             </div>
         </div>
     `);
-        console.log(newItem);
         $('#invoiceItems').append(newItem);
     });
 
@@ -371,6 +370,7 @@ function AddInvoiceModal(carId) {
             $('#TotalAmount').val(response.totalAmount).prop('disabled', false);
             $('#AmountPaid').val(response.amountPaid).prop('disabled', false);
 
+            $('#isPaid').val(response.isPaid);
 
             // show Date Added
             $('#DateAdded').closest('.date-added-container').show();
