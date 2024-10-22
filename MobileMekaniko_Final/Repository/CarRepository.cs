@@ -151,7 +151,9 @@ namespace MobileMekaniko_Final.Repository
                         MakeName = car.CarMake.FirstOrDefault().Make.MakeName,
                         CarModel = car.CarModel,
                         CarYear = car.CarYear,
-                        Invoices = car.Invoice.Select(i => new InvoiceSummaryDto
+                        Invoices = car.Invoice
+                        .OrderByDescending(i => i.DateAdded)
+                        .Select(i => new InvoiceSummaryDto
                         {
                             InvoiceId = i.InvoiceId,
                             IssueName = i.IssueName,
