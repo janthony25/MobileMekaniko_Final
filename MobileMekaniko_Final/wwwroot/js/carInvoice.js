@@ -42,6 +42,7 @@
             </div>
         </div>
     `);
+        console.log(newItem);
         $('#invoiceItems').append(newItem);
     });
 
