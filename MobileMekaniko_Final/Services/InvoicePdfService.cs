@@ -19,7 +19,7 @@ namespace MobileMekaniko_Final.Services
             section.PageSetup.LeftMargin = Unit.FromCentimeter(1.5);
             section.PageSetup.RightMargin = Unit.FromCentimeter(1.5);
 
-            AddHeader(section);
+            AddHeaderWithLogo(section);
             AddCustomerCarAndInvoiceDetails(section, invoice);
             AddCompanyDetails(section);
             AddInvoiceItemsTable(section, invoice);
@@ -37,14 +37,44 @@ namespace MobileMekaniko_Final.Services
             }
         }
 
-        private void AddHeader(Section section)
+        private void AddHeaderWithLogo(Section section)
         {
-            var header = section.AddParagraph("Mobile Mekaniko Invoice");
+            var headerTable = section.Headers.Primary.AddTable();
+
+            // Define columns for the logo, an empty spacer column, and the title
+            headerTable.AddColumn(Unit.FromCentimeter(3));  // Column for the logo
+            headerTable.AddColumn(Unit.FromCentimeter(2));  // Spacer column to adjust centering of title
+            headerTable.AddColumn(Unit.FromCentimeter(9));  // Column for the title
+
+            var row = headerTable.AddRow();
+
+            // Set row height to ensure both logo and title are aligned properly
+            row.Height = Unit.FromCentimeter(2.5);
+            row.HeightRule = RowHeightRule.AtLeast;
+
+            // Add the logo and ensure vertical alignment is set properly
+            var logoPath = "wwwroot/Images/MMLogo-png.png"; // Path to the logo
+            var logo = row.Cells[0].AddImage(logoPath);
+            logo.LockAspectRatio = true;
+            logo.Width = Unit.FromCentimeter(2.0);
+            row.Cells[0].VerticalAlignment = VerticalAlignment.Center; // Align logo to the center of the cell
+
+            // Add an empty paragraph in the spacer column to help center the title
+            var spacer = row.Cells[1].AddParagraph();
+            row.Cells[1].VerticalAlignment = VerticalAlignment.Center;
+
+            // Add the title
+            var header = row.Cells[2].AddParagraph("Mobile Mekaniko Invoice");
             header.Format.Font.Size = 20;
             header.Format.Font.Bold = true;
-            header.Format.Alignment = ParagraphAlignment.Center;
-            header.Format.SpaceAfter = 50;
+            header.Format.Alignment = ParagraphAlignment.Left; // Align title within its own column to the left
+            row.Cells[2].VerticalAlignment = VerticalAlignment.Center; // Align title to the center of the cell
+
+            // Add extra space after the header for clarity
+            var spacerParagraph = section.AddParagraph();
+            spacerParagraph.Format.SpaceAfter = 80; // Adds extra space below the header to separate it from the details
         }
+
 
         private void AddCustomerCarAndInvoiceDetails(Section section, InvoiceDetailsDto invoice)
         {
