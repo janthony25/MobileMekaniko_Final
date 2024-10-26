@@ -107,7 +107,12 @@ namespace MobileMekaniko_Final.Services
             dueDateParagraph.AddFormattedText("Due Date: ", TextFormat.Bold);
             dueDateParagraph.AddText(invoice.DueDate.HasValue ? invoice.DueDate.Value.ToString("dd/MM/yyyy") : "N/A");
 
-            dueDateParagraph.Format.SpaceAfter = 10; // Add space after Due Date
+            // Add "Due Date" on a separate line below "Date Issued"
+            var taxParagraph = rightCell.AddParagraph();
+            taxParagraph.AddFormattedText("Tax No: ", TextFormat.Bold);
+            taxParagraph.AddText("130-121-942" + "\n");
+
+            taxParagraph.Format.SpaceAfter = 10; // Add space after Due Date
         }
 
         private void AddCompanyDetails(Section section)
@@ -122,7 +127,7 @@ namespace MobileMekaniko_Final.Services
             paragraph = section.AddParagraph("\"027 266 6146\"");
             paragraph.Format.Alignment = ParagraphAlignment.Center;
 
-            paragraph = section.AddParagraph("\"00-0000-0000000-000\"");
+            paragraph = section.AddParagraph("\"06-0878-0905123-00\"");
             paragraph.Format.Alignment = ParagraphAlignment.Center;
 
             paragraph.Format.SpaceAfter = 10;
