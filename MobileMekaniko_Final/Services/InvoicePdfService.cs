@@ -43,7 +43,7 @@ namespace MobileMekaniko_Final.Services
 
             // Define columns for the logo, an empty spacer column, and the title
             headerTable.AddColumn(Unit.FromCentimeter(3));  // Column for the logo
-            headerTable.AddColumn(Unit.FromCentimeter(2));  // Spacer column to adjust centering of title
+            headerTable.AddColumn(Unit.FromCentimeter(2.3));  // Spacer column to adjust centering of title
             headerTable.AddColumn(Unit.FromCentimeter(9));  // Column for the title
 
             var row = headerTable.AddRow();
