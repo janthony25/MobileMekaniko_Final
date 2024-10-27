@@ -43,7 +43,7 @@ namespace MobileMekaniko_Final.Services
 
             // Define columns for the logo, an empty spacer column, and the title
             headerTable.AddColumn(Unit.FromCentimeter(3));  // Column for the logo
-            headerTable.AddColumn(Unit.FromCentimeter(2.3));  // Spacer column to adjust centering of title
+            headerTable.AddColumn(Unit.FromCentimeter(4));  // Spacer column to adjust centering of title
             headerTable.AddColumn(Unit.FromCentimeter(9));  // Column for the title
 
             var row = headerTable.AddRow();
@@ -64,7 +64,7 @@ namespace MobileMekaniko_Final.Services
             row.Cells[1].VerticalAlignment = VerticalAlignment.Center;
 
             // Add the title
-            var header = row.Cells[2].AddParagraph("Mobile Mekaniko Invoice");
+            var header = row.Cells[2].AddParagraph("Mobile Mekaniko");
             header.Format.Font.Size = 20;
             header.Format.Font.Bold = true;
             header.Format.Alignment = ParagraphAlignment.Left; // Align title within its own column to the left
@@ -125,6 +125,9 @@ namespace MobileMekaniko_Final.Services
             rightCell.VerticalAlignment = VerticalAlignment.Top;
             rightCell.Format.Alignment = ParagraphAlignment.Right;
 
+            var taxInvoice = rightCell.AddParagraph();
+            taxInvoice.AddFormattedText("TAX INVOICE", TextFormat.Bold);
+
             var invoiceParagraph = rightCell.AddParagraph();
             invoiceParagraph.AddFormattedText("Invoice #: ", TextFormat.Bold);
             invoiceParagraph.AddText(invoice.InvoiceId.ToString() + "\n");
@@ -139,7 +142,7 @@ namespace MobileMekaniko_Final.Services
 
             // Add "Due Date" on a separate line below "Date Issued"
             var taxParagraph = rightCell.AddParagraph();
-            taxParagraph.AddFormattedText("Tax No: ", TextFormat.Bold);
+            taxParagraph.AddFormattedText("GST No: ", TextFormat.Bold);
             taxParagraph.AddText("130-121-942" + "\n");
 
             taxParagraph.Format.SpaceAfter = 10; // Add space after Due Date
