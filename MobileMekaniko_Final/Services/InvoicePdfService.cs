@@ -183,8 +183,18 @@ namespace MobileMekaniko_Final.Services
                 var row = table.AddRow();
                 row.Cells[0].AddParagraph(item.ItemName);
                 row.Cells[1].AddParagraph(item.Quantity.ToString());
-                row.Cells[2].AddParagraph(item.ItemPrice.ToString("C"));
-                row.Cells[3].AddParagraph(item.ItemTotal.ToString("C"));
+
+                // Check if the item price is zero
+                if (item.ItemPrice == 0)
+                {
+                    row.Cells[2].AddParagraph("");  // Leave empty if price is zero
+                    row.Cells[3].AddParagraph("");  // Leave total empty as well
+                }
+                else
+                {
+                    row.Cells[2].AddParagraph(item.ItemPrice.ToString("C"));
+                    row.Cells[3].AddParagraph(item.ItemTotal.ToString("C"));
+                }
             }
 
             // Add space below the item table without adding a bordered row
