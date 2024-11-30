@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MobileMekaniko_Final.Data;
+using MobileMekaniko_Final.Helpers;
 using MobileMekaniko_Final.Models;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MobileMekaniko_Final.Repository
 {
@@ -99,7 +101,7 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
-        public async Task<List<InvoiceListDto>> FilterPaidInvoicesAsync()
+        public async Task<PaginatedList<InvoiceListDto>> FilterPaidInvoicesAsync()
         {
             try
             {
@@ -122,11 +124,15 @@ namespace MobileMekaniko_Final.Repository
 
                 if(invoices == null || invoices.Count == 0)
                 {
-                    return await GetInvoiceListAsync();
+                    return await GetInvoiceListAsync(1, 10, null);
                 }
 
                 _logger.LogInformation($"Successfully fetched {invoices.Count} paid invoice.");
-                return invoices;
+                return await PaginatedList<InvoiceListDto>.CreateAsync(
+                    invoices.AsQueryable(),
+                    1, 
+                    10 
+                );
             }
             catch(Exception ex)
             {
@@ -135,7 +141,7 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
-        public async Task<List<InvoiceListDto>> FilterUnpaidInvoicesAsync()
+        public async Task<PaginatedList<InvoiceListDto>> FilterUnpaidInvoicesAsync()
         {
             try
             {
@@ -158,11 +164,15 @@ namespace MobileMekaniko_Final.Repository
 
                 if (invoices == null || invoices.Count == 0)
                 {
-                    return await GetInvoiceListAsync();
+                    return await GetInvoiceListAsync(1, 10, null);
                 }
 
                 _logger.LogInformation($"Successfully fetched {invoices.Count} unpaid invoice.");
-                return invoices;
+                return await PaginatedList<InvoiceListDto>.CreateAsync(
+                    invoices.AsQueryable(),
+                    1,
+                    10
+                );
             }
             catch (Exception ex)
             {
@@ -171,7 +181,7 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
-        public async Task<List<InvoiceListDto>> FilterUnsentEmailAsync()
+        public async Task<PaginatedList<InvoiceListDto>> FilterUnsentEmailAsync()
         {
             try
             {
@@ -194,11 +204,15 @@ namespace MobileMekaniko_Final.Repository
 
                 if (invoices == null || invoices.Count == 0)
                 {
-                    return await GetInvoiceListAsync();
+                    return await GetInvoiceListAsync(1, 10, null);
                 }
 
                 _logger.LogInformation($"Successfully fetched {invoices.Count} unsent email.");
-                return invoices;
+                return await PaginatedList<InvoiceListDto>.CreateAsync(
+                   invoices.AsQueryable(),
+                   1,
+                   10
+               );
             }
             catch (Exception ex)
             {
@@ -294,31 +308,48 @@ namespace MobileMekaniko_Final.Repository
                     
         }
 
-        public async Task<List<InvoiceListDto>> GetInvoiceListAsync()
+        public async Task<PaginatedList<InvoiceListDto>> GetInvoiceListAsync(int pageNumber, int pageSize, string? searchTerm, string? filter = null)
         {
             try
             {
-                // Get invoice list
-                var invoice = await _data.Invoices
-                    .Include(i => i.Car)
-                        .ThenInclude(car => car.Customer)
-                    .OrderByDescending(i => i.DateAdded)
-                    .Select(i => new InvoiceListDto
-                    {
-                        CustomerName = i.Car.Customer.CustomerName,
-                        CarRego = i.Car.CarRego,
-                        InvoiceId = i.InvoiceId,
-                        IssueName = i.IssueName,
-                        DateAdded = i.DateAdded,
-                        DueDate = i.DueDate,
-                        TotalAmount = i.TotalAmount,
-                        AmountPaid = i.AmountPaid,
-                        IsEmailSent = i.IsEmailSent,
-                        IsPaid = i.IsPaid
-                    }).ToListAsync();
+                var query = _data.Invoices
+                            .Include(i => i.Car)
+                                .ThenInclude(car => car.Customer)
+                            .AsQueryable();
 
-                _logger.LogInformation($"Invoices fetched: {invoice.Count}");
-                return invoice;
+                // Apply search filter if searchTerm is provided
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    searchTerm = searchTerm.ToLower();
+                    query = query.Where(i => i.Car.CarRego.ToLower().Contains(searchTerm));
+                }
+
+                // Apply filters
+                query = filter?.ToLower() switch
+                {
+                    "paid" => query.Where(i => i.IsPaid == true),
+                    "unpaid" => query.Where(i => i.IsPaid == false),
+                    "unsent" => query.Where(i => i.IsEmailSent == false),
+                    _ => query
+                };
+
+                var finalQuery = query
+                                .OrderByDescending(i => i.DateAdded)
+                                .Select(i => new InvoiceListDto
+                {
+                    CustomerName = i.Car.Customer.CustomerName,
+                    CarRego = i.Car.CarRego,
+                    InvoiceId = i.InvoiceId,
+                    IssueName = i.IssueName,
+                    DateAdded = i.DateAdded,
+                    DueDate = i.DueDate,
+                    TotalAmount = i.TotalAmount,
+                    AmountPaid = i.AmountPaid,
+                    IsEmailSent = i.IsEmailSent,
+                    IsPaid = i.IsPaid
+                });
+
+                return await PaginatedList<InvoiceListDto>.CreateAsync(finalQuery, pageNumber, pageSize);
             }
             catch(Exception ex)
             {
@@ -354,17 +385,17 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
-        public async Task<List<InvoiceListDto>> SerachInvoiceByRegoAsync(string rego)
+        public async Task<PaginatedList<InvoiceListDto>> SerachInvoiceByRegoAsync(string rego)
         {
             try
             {
                 if (string.IsNullOrEmpty(rego))
                 {
-                    return await GetInvoiceListAsync();
+                    return await GetInvoiceListAsync(1, 10, null);
                 }
 
                 // Fetching invoices by rego
-                var invoice = await _data.Invoices
+                var query = _data.Invoices
                     .Include(i => i.Car)
                         .ThenInclude(car => car.Customer)
                     .Where(i => i.Car.CarRego.Contains(rego))
@@ -378,12 +409,14 @@ namespace MobileMekaniko_Final.Repository
                         DueDate = i.DueDate,
                         TotalAmount = i.TotalAmount,
                         IsEmailSent = i.IsEmailSent
-                    }).ToListAsync();
+                    });
 
-                _logger.LogInformation($"Fetched {invoice.Count} invoices with rego {rego}");
-                return invoice;
+                _logger.LogInformation($"Fetching invoices with rego {rego}");
+
+                // Convert to PaginatedList before returning
+                return await PaginatedList<InvoiceListDto>.CreateAsync(query, 1, 10);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occurred while fetching invoices with rego {rego}");
                 throw;

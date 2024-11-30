@@ -1,4 +1,5 @@
-﻿using MobileMekaniko_Final.Models.Dto;
+﻿using MobileMekaniko_Final.Helpers;
+using MobileMekaniko_Final.Models.Dto;
 
 namespace MobileMekaniko_Final.Repository.IRepository
 {
@@ -11,10 +12,10 @@ namespace MobileMekaniko_Final.Repository.IRepository
         Task DeleteInvoiceAsync(int id);
         Task UpdateIsEmailSentAsync(int id, bool isEmailSent);
         Task MarkAsPaidAsync(int id, bool IsPaid);
-        Task<List<InvoiceListDto>> GetInvoiceListAsync();
-        Task<List<InvoiceListDto>> SerachInvoiceByRegoAsync(string rego);
-        Task<List<InvoiceListDto>> FilterPaidInvoicesAsync();
-        Task<List<InvoiceListDto>> FilterUnpaidInvoicesAsync();
-        Task<List<InvoiceListDto>> FilterUnsentEmailAsync();
+        Task<PaginatedList<InvoiceListDto>> GetInvoiceListAsync(int pageNumber, int pageSize, string? searchTerm, string? filter = null);
+        Task<PaginatedList<InvoiceListDto>> SerachInvoiceByRegoAsync(string rego);
+        Task<PaginatedList<InvoiceListDto>> FilterPaidInvoicesAsync();
+        Task<PaginatedList<InvoiceListDto>> FilterUnpaidInvoicesAsync();
+        Task<PaginatedList<InvoiceListDto>> FilterUnsentEmailAsync();
     }
 }

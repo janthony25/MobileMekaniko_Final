@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata;
 using MobileMekaniko_Final.Models;
 using MobileMekaniko_Final.Models.Dto;
@@ -18,6 +19,7 @@ namespace MobileMekaniko_Final.Controllers
         private readonly ILogger<InvoiceController> _logger;    
         private readonly IInvoicePdfService _invoicePdfService;
         private readonly EmailPdfService _emailPdfService;
+        private const int pageSize = 10;
 
         public InvoiceController(IUnitOfWork unitOfWork, ILogger<InvoiceController> logger, IInvoicePdfService invoicePdfService, EmailPdfService emailPdfService)
         {
@@ -258,15 +260,28 @@ namespace MobileMekaniko_Final.Controllers
         }
 
         // GET : Invoice List
-        public async Task<IActionResult> GetInvoiceList()
+        public async Task<IActionResult> GetInvoiceList(int pageNumber = 1, string search = null, string filter = null)
         {
             try
             {
                 _logger.LogInformation("Request to fetch invoice list.");
 
-                var invoice = await _unitOfWork.Invoice.GetInvoiceListAsync();
+                var invoice = await _unitOfWork.Invoice.GetInvoiceListAsync(pageNumber, pageSize, search, filter);
 
-                _logger.LogInformation($"Fetched {invoice.Count} numbers of invoice.");
+                ViewBag.CurrentFilter = filter;
+                ViewBag.CurrentSearch = search;
+
+                //// ViewBag data for the filter dropdown
+                //ViewBag.CurrentFilter = filter;
+                //ViewBag.FilterOptions = new List<SelectListItem>
+                //{
+                //    new SelectListItem { Value = "", Text = "All invoices", Selected = string.IsNullOrEmpty(filter)},
+                //    new SelectListItem { Value = "paid", Text = "Paid", Selected = filter == "paid"},
+                //    new SelectListItem { Value = "unpaid", Text = "Unpaid", Selected = filter == "unpaid"},
+                //    new SelectListItem { Value = "unsent", Text = "Unsent emails", Selected = filter == "unsent"}
+                //};
+
+                _logger.LogInformation($"Fetched {invoice.Items.Count} numbers of invoice.");
                 return View(invoice);
             }
             catch(Exception ex)
@@ -277,88 +292,88 @@ namespace MobileMekaniko_Final.Controllers
         }
 
         // GET : Search invoice by rego
-        public async Task<IActionResult> SearchInvoiceByRego(string rego)
-        {
-            try
-            {
-                _logger.LogInformation($"Request to fetch invoices with rego {rego}");
+        //public async Task<IActionResult> SearchInvoiceByRego(string rego)
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation($"Request to fetch invoices with rego {rego}");
 
-                var invoice = await _unitOfWork.Invoice.SerachInvoiceByRegoAsync(rego);
+        //        var invoice = await _unitOfWork.Invoice.SerachInvoiceByRegoAsync(rego);
 
-                _logger.LogInformation($"Success fully fetched invoice details, returning invoice");
-                return View("GetInvoiceList", invoice);
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, $"An error occured while fetching invoices with rego # {rego}");
+        //        _logger.LogInformation($"Success fully fetched invoice details, returning invoice");
+        //        return View("GetInvoiceList", invoice);
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"An error occured while fetching invoices with rego # {rego}");
 
-                TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
+        //        TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
 
-                return RedirectToAction("GetInvoiceList"); 
-            }
-        }
+        //        return RedirectToAction("GetInvoiceList"); 
+        //    }
+        //}
 
         // GET : Paid Invoices
-        public async Task<IActionResult> GetPaidInvoices()
-        {
-            try
-            {
-                _logger.LogInformation("Request to fetch paid invoices");
+        //public async Task<IActionResult> GetPaidInvoices()
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation("Request to fetch paid invoices");
 
-                var invoices = await _unitOfWork.Invoice.FilterPaidInvoicesAsync();
-
-
-                _logger.LogInformation($"{invoices.Count} paid invoice.");
-                return View("GetInvoiceList", invoices);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching paid invoices");
-                TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
-                return RedirectToAction("GetInvoiceList");
-            }
-        }
-
-        // GET : Unpaid Invoices
-        public async Task<IActionResult> GetUnpaidInvoices()
-        {
-            try
-            {
-                _logger.LogInformation("Request to fetch unpaid invoices");
-
-                var invoices = await _unitOfWork.Invoice.FilterUnpaidInvoicesAsync();
+        //        var invoices = await _unitOfWork.Invoice.FilterPaidInvoicesAsync();
 
 
-                _logger.LogInformation($"{invoices.Count} unpaid invoice.");
-                return View("GetInvoiceList", invoices);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching unpaid invoices");
-                TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
-                return RedirectToAction("GetInvoiceList");
-            }
-        }
+        //        _logger.LogInformation($"{invoices.Items.Count} paid invoice.");
+        //        return View("GetInvoiceList", invoices);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while fetching paid invoices");
+        //        TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
+        //        return RedirectToAction("GetInvoiceList");
+        //    }
+        //}
 
         // GET : Unpaid Invoices
-        public async Task<IActionResult> GetUnsentEmail()
-        {
-            try
-            {
-                _logger.LogInformation("Request to fetch unsent emails");
+        //public async Task<IActionResult> GetUnpaidInvoices()
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation("Request to fetch unpaid invoices");
 
-                var invoices = await _unitOfWork.Invoice.FilterUnsentEmailAsync();
+        //        var invoices = await _unitOfWork.Invoice.FilterUnpaidInvoicesAsync();
 
 
-                _logger.LogInformation($"{invoices.Count} unsent emails.");
-                return View("GetInvoiceList", invoices);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching unsent emails");
-                TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
-                return RedirectToAction("GetInvoiceList");
-            }
-        }
+        //        _logger.LogInformation($"{invoices.Items.Count} unpaid invoice.");
+        //        return View("GetInvoiceList", invoices);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while fetching unpaid invoices");
+        //        TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
+        //        return RedirectToAction("GetInvoiceList");
+        //    }
+        //}
+
+        // GET : Unpaid Invoices
+        //public async Task<IActionResult> GetUnsentEmail()
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation("Request to fetch unsent emails");
+
+        //        var invoices = await _unitOfWork.Invoice.FilterUnsentEmailAsync();
+
+
+        //        _logger.LogInformation($"{invoices.Items.Count} unsent emails.");
+        //        return View("GetInvoiceList", invoices);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while fetching unsent emails");
+        //        TempData["ErrorMessage"] = "An error occurred while processing your request. Please try again later.";
+        //        return RedirectToAction("GetInvoiceList");
+        //    }
+        //}
     }
 }

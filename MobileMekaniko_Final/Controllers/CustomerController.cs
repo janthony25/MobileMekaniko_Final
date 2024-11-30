@@ -30,6 +30,8 @@ namespace MobileMekaniko_Final.Controllers
 
                 var customer = await _unitOfWork.Customer.GetCustomersAsync(pageNumber, pageSize, search);
 
+                ViewBag.CurrentSearch = search;
+
 
                 _logger.LogInformation($"Successfully retrieved {customer.Items.Count} customers.");
                 return View(customer);
