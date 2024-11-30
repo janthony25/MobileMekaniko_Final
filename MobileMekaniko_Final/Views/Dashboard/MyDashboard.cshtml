@@ -83,7 +83,7 @@
                 <h4>Unpaid Invoices</h4>
             </div>
             <div>
-                <a asp-action="GetUnpaidInvoices" asp-controller="Invoice">View All</a>
+                <a asp-controller="Invoice" asp-action="GetInvoiceList" as-route-filter="ViewBag.UnpaidInvoices">View All</a>
             </div>
         </div>
         <table class="table" style="width: 600px">

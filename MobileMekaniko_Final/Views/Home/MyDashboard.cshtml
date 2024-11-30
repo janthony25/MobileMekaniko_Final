@@ -172,7 +172,7 @@
                 <h4>Unpaid Invoices</h4>
             </div>
             <div style="margin-left: 387px;">
-                <a asp-action="GetUnpaidInvoices" asp-controller="Invoice">View All</a>
+                <a asp-controller="Invoice" asp-action="GetInvoiceList" asp-route-filter="unpaid">View All</a>
             </div>
         </div>
         <table class="table table-striped unpaid-invoice-table" style="width: 600px">
