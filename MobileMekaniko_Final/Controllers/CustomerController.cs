@@ -13,6 +13,7 @@ namespace MobileMekaniko_Final.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CustomerController> _logger;
+        private const int pageSize = 10;
 
         public CustomerController(IUnitOfWork unitOfWork, ILogger<CustomerController> logger)
         {
@@ -21,30 +22,44 @@ namespace MobileMekaniko_Final.Controllers
         }
 
         // GET : Customer List page
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        // GET : Populate Customer table
-        public async Task<IActionResult> GetCustomers()
+        public async Task<IActionResult> Index(int pageNumber = 1, string search = null)
         {
             try
             {
                 _logger.LogInformation("Received request to fetch customer list.");
 
-                var customer = await _unitOfWork.Customer.GetCustomersAsync();
+                var customer = await _unitOfWork.Customer.GetCustomersAsync(pageNumber, pageSize, search);
 
-             
-                _logger.LogInformation($"Successfully retrieved {customer.Count} customers.");
-                return Json(customer);
+
+                _logger.LogInformation($"Successfully retrieved {customer.Items.Count} customers.");
+                return View(customer);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while fetching customers.");
                 return Json(new { success = false, message = "An error occurred while trying to fetch customers." });
             }
         }
+
+        // GET : Populate Customer table
+        //public async Task<IActionResult> GetCustomers(int pageNumber = 1)
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation("Received request to fetch customer list.");
+
+        //        var customer = await _unitOfWork.Customer.GetCustomersAsync(pageNumber, pageSize);
+
+             
+        //        _logger.LogInformation($"Successfully retrieved {customer.Items.Count} customers.");
+        //        return Json(customer);
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while fetching customers.");
+        //        return Json(new { success = false, message = "An error occurred while trying to fetch customers." });
+        //    }
+        //}
 
 
         // GET: Show Customer Details

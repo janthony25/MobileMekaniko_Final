@@ -1,7 +1,10 @@
-﻿@model List<MobileMekaniko_Final.Models.Dto.CustomerListSummaryDto>
+﻿@using MobileMekaniko_Final.Helpers;
+@using MobileMekaniko_Final.Models.Dto;
+@model PaginatedList<MobileMekaniko_Final.Models.Dto.CustomerListSummaryDto>
 
 @{
     ViewData["Title"] = "CUSTOMERS";
+    ViewData["PaginationAction"] = "Index";
 }
 
 <h4 class="text-center fw-bold mb-5 mt-5">@ViewData["Title"]</h4>
@@ -13,11 +16,17 @@
     </div>
 
     <div class="d-flex align-items-center">
-        <div>
+       @*  <div>  --- old search button
             <input id="searchCustomerValue" placeholder="Search Customer" />
-            <button id="btnSearchCustomer" class="btn btn-primary btn-sm ms-1" @* onclick="SearchCustomer();" *@><i class="bi bi-search "></i></button>
+            <button id="btnSearchCustomer" class="btn btn-primary btn-sm ms-1"><i class="bi bi-search "></i></button>
         </div>
-       
+        *@
+        <div>
+            <form role="search">
+                <input type="search" name="search" />
+                <button type="submit" class="btn btn-primary btn-sm ms-1"><i class="bi bi-search "></i></button>
+            </form>
+        </div>
 
         <div class="dropdown ms-1">
             <button class="btn btn-secondary invoice-status-filter btn-sm dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -28,10 +37,13 @@
             @*Filter button*@
             <ul class="dropdown-menu" aria-labelledby="filterDropdown">
                 <li>
+                    <form method="get" asp-action="Index">
                         <input type="hidden" name="status" value="unknown" />
-                        <button type="submit" class="dropdown-item btn-sm" onclick="GetCustomers();">
-                            Show All
+                        <button type="submit" class="dropdown-item btn-sm" @* onclick="GetCustomers();" *@>
+                            All customers
                         </button>
+                    </form>
+                       
                 </li>
             </ul>
         </div>
@@ -50,12 +62,34 @@
             <td class="text-center"></td>
         </tr>
     </thead>
-    <tbody id="customerTblBody">
-
+    <tbody id="customerTblBody2">
+        @foreach(var customer in Model.Items)
+        {
+        <tr>
+            <td class="text-center">
+                    <a href="#" onclick="CustomerModal('@customer.CustomerId', 'updateCustomer');">@customer.CustomerId </a>
+            </td>
+            <td class="text-center">@customer.CustomerName</td>
+            <td class="text-center">@customer.CustomerEmail</td>
+            <td class="text-center">@customer.CustomerNumber</td>
+            <td class="text-center">
+                <div>
+                        <a href="@Url.Action("GetCustomerCars", "Customer", new { id = customer.CustomerId })" class="btn btn-primary btn-sm">
+            <i class="bi bi-car-front" id="viewCar"></i> View
+        </a>
+        <a class="btn btn-secondary btn-sm" onclick="CustomerModal('@customer.CustomerId', 'deleteCustomer')">
+            <i class="bi bi-trash3"></i>
+        </a>
+                </div>
+            </td>
+        </tr>
+        }
     </tbody>
 </table>
 
-<partial name="_AddUpdateDeleteCustomerModal">
+<partial name="_Pagination" />
+
+<partial name="_AddUpdateDeleteCustomerModal" model="new CustomerDetailsDto{CustomerName = string.Empty}">
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 

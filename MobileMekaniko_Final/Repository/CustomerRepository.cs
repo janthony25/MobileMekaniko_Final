@@ -3,6 +3,7 @@ using Azure.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using MobileMekaniko_Final.Data;
+using MobileMekaniko_Final.Helpers;
 using MobileMekaniko_Final.Models;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
@@ -154,21 +155,32 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
-        public async Task<List<CustomerListSummaryDto>> GetCustomersAsync()
+        public async Task<PaginatedList<CustomerListSummaryDto>> GetCustomersAsync(int pageNumber, int pageSize, string? searchTerm)
         {
             try
             {
-                var customer = await _data.Customers
-                    .OrderByDescending(c => c.DateAdded)
-                    .Select(c => new CustomerListSummaryDto
-                    {
-                        CustomerId = c.CustomerId,
-                        CustomerName = c.CustomerName,
-                        CustomerEmail = c.CustomerEmail,
-                        CustomerNumber = c.CustomerNumber
-                    }).ToListAsync();
+                var query = _data.Customers
+                        .OrderByDescending(c => c.DateAdded)
+                        .AsQueryable();
 
-                return customer;
+                // Apply search filter if searchTerm is provided
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    searchTerm = searchTerm.ToLower();
+                    query = query.Where(c => c.CustomerName.ToLower().Contains(searchTerm));
+                }
+
+                var finalQuery = query.Select(c => new CustomerListSummaryDto
+                {
+                    CustomerId = c.CustomerId,
+                    CustomerName = c.CustomerName,
+                    CustomerEmail = c.CustomerEmail,
+                    CustomerNumber = c.CustomerNumber
+                });
+
+
+
+                return await PaginatedList<CustomerListSummaryDto>.CreateAsync(finalQuery, pageNumber, pageSize);
             }
             catch (Exception ex)
             {
@@ -182,11 +194,11 @@ namespace MobileMekaniko_Final.Repository
             try
             {
 
-                if (string.IsNullOrEmpty(customerName))
-                {
-                    _logger.LogInformation("customer name is empty. Fetching all customers.");
-                    return await GetCustomersAsync();
-                }
+                //if (string.IsNullOrEmpty(customerName))
+                //{
+                //    _logger.LogInformation("customer name is empty. Fetching all customers.");
+                //    return await GetCustomersAsync();
+                //}
 
                 // Find customer by Id
                 var customer = await _data.Customers

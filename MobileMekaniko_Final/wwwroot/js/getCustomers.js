@@ -1,5 +1,5 @@
 ﻿$(function () {
-    GetCustomers();
+    //GetCustomers();
 
     $('#customerModal').on('hidden.bs.modal', function () {
         HideModal();
@@ -28,49 +28,49 @@
 
 });
 
-function GetCustomers() {
-    $.ajax({
-        url: '/customer/GetCustomers',
-        type: 'GET',
-        dataType: 'json',
-        contentType: 'application/json;charset=utf8',
-        success: function (response) {
-            console.log(response);
-            let tableRows = '';
+//function GetCustomers() {
+//    $.ajax({
+//        url: '/customer/GetCustomers',
+//        type: 'GET',
+//        dataType: 'json',
+//        contentType: 'application/json;charset=utf8',
+//        success: function (response) {
+//            console.log(response);
+//            let tableRows = '';
 
-            if (response == null || response == undefined || response.length == 0) {
-                tableRows = `
-                <tr>
-                    <td colspan="5" class="text-center">No customers available.</td>
-                </tr>`;
-            }
-            else {
-                $.each(response, function (index, item) {
-                    tableRows += `
-                        <tr>
-                            <td class="text-center">
-                                <a href="#" onclick="CustomerModal(${item.customerId}, 'updateCustomer');">${item.customerId} </a>
-                            </td>
-                            <td class="text-center">${item.customerName}</td>
-                            <td class="text-center">${item.customerEmail ? item.customerEmail : ''}</td>
-                            <td class="text-center">${item.customerNumber ? item.customerNumber : ''}</td>
-                            <td class="text-center">
-                                <div>
-                                    <a href="/customer/GetCustomerCars/${item.customerId}" class="btn btn-primary btn-sm"><i class="bi bi-car-front" id="viewCar"></i> View</a>
-                                    <a class="btn btn-secondary btn-sm" onclick="CustomerModal(${item.customerId}, 'deleteCustomer')"><i class="bi bi-trash3"></i></a>
-                                </div>
-                            </td>
-                        </tr>`;
-                });
-            } 
-            console.log(tableRows);
-            $('#customerTblBody').html(tableRows);
-        },
-        error: function () {
-            alert('An error occurred while fetching customer list.');
-        }
-    });
-}
+//            if (response == null || response == undefined || response.length == 0) {
+//                tableRows = `
+//                <tr>
+//                    <td colspan="5" class="text-center">No customers available.</td>
+//                </tr>`;
+//            }
+//            else {
+//                $.each(response, function (index, item) {
+//                    tableRows += `
+//                        <tr>
+//                            <td class="text-center">
+//                                <a href="#" onclick="CustomerModal(${item.customerId}, 'updateCustomer');">${item.customerId} </a>
+//                            </td>
+//                            <td class="text-center">${item.customerName}</td>
+//                            <td class="text-center">${item.customerEmail ? item.customerEmail : ''}</td>
+//                            <td class="text-center">${item.customerNumber ? item.customerNumber : ''}</td>
+//                            <td class="text-center">
+//                                <div>
+//                                    <a href="/customer/GetCustomerCars/${item.customerId}" class="btn btn-primary btn-sm"><i class="bi bi-car-front" id="viewCar"></i> View</a>
+//                                    <a class="btn btn-secondary btn-sm" onclick="CustomerModal(${item.customerId}, 'deleteCustomer')"><i class="bi bi-trash3"></i></a>
+//                                </div>
+//                            </td>
+//                        </tr>`;
+//                });
+//            } 
+//            console.log(tableRows);
+//            $('#customerTblBody').html(tableRows);
+//        },
+//        error: function () {
+//            alert('An error occurred while fetching customer list.');
+//        }
+//    });
+//}
 
 
 
@@ -242,10 +242,15 @@ function AddCustomer() {
         data: formData,
         type: 'POST',
         success: function (response) {
-                Validate();
-                GetCustomers();
-                alert('Customer added successfully.');
-                HideModal(); 
+            console.log('Response received:', response);
+            Validate();
+            console.log('After validate');
+            alert('Customer added successfully.');
+            console.log('After alert');
+            HideModal();
+            console.log('After hide modal');
+            window.location.reload(true);
+            console.log('After reload command'); // This might not show if reload works
         },
         error: function () {
             alert('An error occurred while adding customer.');
@@ -278,8 +283,9 @@ function UpdateCustomer() {
         success: function (response) {
             if (response.success) {
                 alert(response.message);
-                GetCustomers();
+                //GetCustomers();
                 HideModal();
+                window.location.reload(true);
             }
         },
         error: function () {
@@ -301,8 +307,9 @@ function DeleteCustomer() {
         },
         success: function (response) {
             alert(response.message);
-            GetCustomers();
+            //GetCustomers();
             HideModal();
+            window.location.reload(true);
         },
         error: function () {
             alert('An error occurred while deleting customer.');
@@ -360,5 +367,5 @@ function UpdateCustomerTable(customers) {
         });
     }
 
-    $('#customerTblBody').html(tableRows);  // Assuming you have a table with this ID
+    $('#customerTblBody2').html(tableRows);  // Assuming you have a table with this ID
 }
