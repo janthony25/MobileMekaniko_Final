@@ -1,4 +1,5 @@
-﻿using MobileMekaniko_Final.Models.Dto;
+﻿using MobileMekaniko_Final.Helpers;
+using MobileMekaniko_Final.Models.Dto;
 
 namespace MobileMekaniko_Final.Repository.IRepository
 {
@@ -10,8 +11,8 @@ namespace MobileMekaniko_Final.Repository.IRepository
         Task UpdateQuotationAsync(UpdateQuotationDto dto);
         Task DeleteQuotationAsync(int id);
         Task UpdateIsEmailSendAsync(int id, bool emailSent);
-        Task<List<QuotationListDto>> GetQuotationListAsync();
-        Task<List<QuotationListDto>> SearchQuotationByRego(string rego);
-        Task<List<QuotationListDto>> FilterUnsentEmail();
+        Task<PaginatedList<QuotationListDto>> GetQuotationListAsync(int pageNumber, int pageSize, string? searchTerm, string? filter = null);
+        //Task<List<QuotationListDto>> SearchQuotationByRego(string rego);
+        //Task<List<QuotationListDto>> FilterUnsentEmail();
     }
 }

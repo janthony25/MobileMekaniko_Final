@@ -1,4 +1,9 @@
-﻿@model List<MobileMekaniko_Final.Models.Dto.QuotationListDto>
+﻿@using MobileMekaniko_Final.Helpers;
+@model PaginatedList<MobileMekaniko_Final.Models.Dto.QuotationListDto>
+
+@{
+    ViewData["PaginationAction"] = "GetQuotationList";
+}
 
 @if(TempData["ErrorMessage"] != null)
 {
@@ -10,21 +15,37 @@
 <h4 class="text-center fw-bold mt-5 mb-5">QUOTATIONS</h4>
 
 <div class="d-flex justify-content-end align-items-center mb-5">
-    <form method="get" asp-controller="Quotation" asp-action="FilteredQuotationsByRego" class="d-flex">
+  @*   <form method="get" asp-controller="Quotation" asp-action="FilteredQuotationsByRego" class="d-flex">
         <input type="text" name="rego" placeholder="Search Rego #" />
         <button type="Submit" class="btn btn-primary ms-1 btn-sm">
             <i class="bi bi-search"></i>
         </button>
+    </form> *@
+    <form role="search">
+        <input type="search" name="search" placeholder="Search Rego#" />
+        <button type="submit" class="btn btn-primary btn-sm">
+            <i class="bi bi-search "></i>
+        </button>
     </form>
 
     <div class="dropdown ms-1">
-        <button class="btn btn-secondary invoice-status-filter btn-sm dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="dropdown">
+            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-funnel"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                <li><a class="dropdown-item" href="@Url.Action("GetQuotationList", new { filter = "" })">Show All</a></li>
+                <li><a class="dropdown-item" href="@Url.Action("GetQuotationList", new { filter = "unsent" })">Unsent email</a></li>
+            </ul>
+        </div>
+
+        @* <button class="btn btn-secondary invoice-status-filter btn-sm dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-funnel"></i>
             <span class="visually-hidden">Toggle Dropdown</span>
-        </button>
+        </button> *@
 
         @*Filter button*@
-        <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+        @* <ul class="dropdown-menu" aria-labelledby="filterDropdown">
             <li>
                 <form method="get" asp-action="GetQuotationList" asp-controller="Quotation" class="mb-0">
                     <input type="hidden" name="status" value="unknown" />
@@ -41,7 +62,7 @@
                     </button>
                 </form>
             </li>
-        </ul>
+        </ul> *@
     </div>
 </div>
 
@@ -59,7 +80,7 @@
         </tr>
     </thead>
     <tbody>
-        @if (!Model.Any())
+        @if (!Model.Items.Any())
         {
             <tr>
                 <td class="text-center" colspan="8">No Quotes Data Yet</td>
@@ -67,7 +88,7 @@
         }
         else
         {
-            @foreach(var quote in Model)
+            @foreach(var quote in Model.Items)
             {
                 <tr>
                     <td class="text-center">
@@ -119,6 +140,8 @@
         }
     </tbody>
 </table>
+
+<partial name="_Pagination" />
 
 <partial name="_CarQuotationModal" model="new MobileMekaniko_Final.Models.Dto.QuotationDetailsDto()" />
 

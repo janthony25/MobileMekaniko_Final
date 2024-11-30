@@ -16,6 +16,7 @@ namespace MobileMekaniko_Final.Controllers
         private readonly ILogger<QuotationController> _logger;
         private readonly IQuotationPdfService _quotationPdfService;
         private readonly EmailPdfService _emailPdfService;
+        private const int pageSize = 10;
 
         public QuotationController(
                 IUnitOfWork unitOfWork,
@@ -247,13 +248,15 @@ namespace MobileMekaniko_Final.Controllers
         }
 
         // GET : Quoataion List
-        public async Task<IActionResult> GetQuotationList()
+        public async Task<IActionResult> GetQuotationList(int pageNumber = 1, string search = null, string filter = null)
         {
             try
             {
                 _logger.LogInformation($"Request to fetch quotation list.");
 
-                var quotations = await _unitOfWork.Quotation.GetQuotationListAsync();
+                var quotations = await _unitOfWork.Quotation.GetQuotationListAsync(pageNumber, pageSize, search, filter);
+                ViewBag.CurrentFilter = filter;
+                ViewBag.CurrentSearch = search;
 
                 _logger.LogInformation($"quotation list fetched successfully.");
                 return View(quotations);
@@ -266,44 +269,44 @@ namespace MobileMekaniko_Final.Controllers
         }
 
         // GET : Filtered Quotations by Car Rego
-        public async Task<IActionResult> FilteredQuotationsByRego(string rego)
-        {
-            try
-            {
-                _logger.LogInformation($"Request to fetch quotations under car with Rego # {rego}");
+        //public async Task<IActionResult> FilteredQuotationsByRego(string rego)
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation($"Request to fetch quotations under car with Rego # {rego}");
 
-                var filteredQuoations = await _unitOfWork.Quotation.SearchQuotationByRego(rego);
+        //        var filteredQuoations = await _unitOfWork.Quotation.SearchQuotationByRego(rego);
 
-                _logger.LogInformation("Successfully filtered quoatations.");
-                return View("GetQuotationList", filteredQuoations);
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, $"An error occurred while trying to fetch quotations under car with Rego # {rego}");
+        //        _logger.LogInformation("Successfully filtered quoatations.");
+        //        return View("GetQuotationList", filteredQuoations);
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"An error occurred while trying to fetch quotations under car with Rego # {rego}");
 
-                TempData["ErrorMessage"] = "An error occurred while processing your request.";
-                return RedirectToAction("GetQuotationList");
-            }
-        }
+        //        TempData["ErrorMessage"] = "An error occurred while processing your request.";
+        //        return RedirectToAction("GetQuotationList");
+        //    }
+        //}
 
         // GET : Filtered Unsent Quotation Emails
-        public async Task<IActionResult> FilteredUnsentEmails()
-        {
-            try
-            {
-                _logger.LogInformation("Request to fetch unsent quotation email list.");
+        //public async Task<IActionResult> FilteredUnsentEmails()
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation("Request to fetch unsent quotation email list.");
 
-                var unsentEmails = await _unitOfWork.Quotation.FilterUnsentEmail();
-                _logger.LogInformation("Successfully fetched list.");
-                return View("GetQuotationList", unsentEmails);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching unsent quotation emails.");
+        //        var unsentEmails = await _unitOfWork.Quotation.FilterUnsentEmail();
+        //        _logger.LogInformation("Successfully fetched list.");
+        //        return View("GetQuotationList", unsentEmails);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while fetching unsent quotation emails.");
 
-                TempData["ErrorMessage"] = "An error occurred while processing your request.";
-                return RedirectToAction("GetQuotationList");
-            }
-        }
+        //        TempData["ErrorMessage"] = "An error occurred while processing your request.";
+        //        return RedirectToAction("GetQuotationList");
+        //    }
+        //}
     }
 }

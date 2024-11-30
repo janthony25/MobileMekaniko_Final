@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MobileMekaniko_Final.Data;
+using MobileMekaniko_Final.Helpers;
 using MobileMekaniko_Final.Models;
 using MobileMekaniko_Final.Models.Dto;
 using MobileMekaniko_Final.Repository.IRepository;
@@ -87,41 +88,41 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
-        public async Task<List<QuotationListDto>> FilterUnsentEmail()
-        {
-            try
-            {
-                var unsentEmails = await _data.Quotations
-                    .Include(q => q.Car)
-                        .ThenInclude(car => car.Customer)
-                    .OrderByDescending(q => q.DateAdded)
-                    .Where(q => q.IsEmailSent == false)
-                    .Select(q => new QuotationListDto
-                    {
-                        QuotationId = q.QuotationId,
-                        IssueName = q.IssueName,
-                        CustomerName = q.Car.Customer.CustomerName,
-                        CarRego = q.Car.CarRego,
-                        DateAdded = q.DateAdded,
-                        TotalAmount = q.TotalAmount,
-                        IsEmailSent = q.IsEmailSent
-                    }).ToListAsync();
+        //public async Task<List<QuotationListDto>> FilterUnsentEmail()
+        //{
+        //    try
+        //    {
+        //        var unsentEmails = await _data.Quotations
+        //            .Include(q => q.Car)
+        //                .ThenInclude(car => car.Customer)
+        //            .OrderByDescending(q => q.DateAdded)
+        //            .Where(q => q.IsEmailSent == false)
+        //            .Select(q => new QuotationListDto
+        //            {
+        //                QuotationId = q.QuotationId,
+        //                IssueName = q.IssueName,
+        //                CustomerName = q.Car.Customer.CustomerName,
+        //                CarRego = q.Car.CarRego,
+        //                DateAdded = q.DateAdded,
+        //                TotalAmount = q.TotalAmount,
+        //                IsEmailSent = q.IsEmailSent
+        //            }).ToListAsync();
 
-                if (unsentEmails == null || unsentEmails.Count == 0)
-                {
-                    _logger.LogInformation("All emails has been sent already. Returning Quotation List.");
-                    return await GetQuotationListAsync();
-                }
+        //        if (unsentEmails == null || unsentEmails.Count == 0)
+        //        {
+        //            _logger.LogInformation("All emails has been sent already. Returning Quotation List.");
+        //            return await GetQuotationListAsync();
+        //        }
 
-                _logger.LogInformation($"Successfully fetched {unsentEmails.Count} unsent emails.");
-                return unsentEmails;
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, $"An error occurred while fetching unsent quotation emails.");
-                throw;
-            }
-        }
+        //        _logger.LogInformation($"Successfully fetched {unsentEmails.Count} unsent emails.");
+        //        return unsentEmails;
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"An error occurred while fetching unsent quotation emails.");
+        //        throw;
+        //    }
+        //}
 
         public async Task<CarQuotationSummaryDto> GetCarQuotationSummaryAsync(int id)
         {
@@ -226,27 +227,58 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
-        public async Task<List<QuotationListDto>> GetQuotationListAsync()
+        public async Task<PaginatedList<QuotationListDto>> GetQuotationListAsync(int pageNumber, int pageSize, string? searchTerm, string? filter = null)
         {
             try
             {
-                var quoataions = await _data.Quotations
-                    .Include(q => q.Car)
-                        .ThenInclude(car => car.Customer)
-                    .OrderByDescending(q => q.DateAdded)
-                    .Select(q => new QuotationListDto
-                    {
-                        QuotationId = q.QuotationId,
-                        CustomerName = q.Car.Customer.CustomerName,
-                        CarRego = q.Car.CarRego,
-                        IssueName = q.IssueName,
-                        DateAdded = q.DateAdded,
-                        TotalAmount = q.TotalAmount,
-                        IsEmailSent = q.IsEmailSent
-                    }).ToListAsync();
+                var query = _data.Quotations
+                            .Include(q => q.Car)
+                                .ThenInclude(car => car.Customer)
+                            .AsQueryable();
 
-                _logger.LogInformation($"Fetched {quoataions.Count} Quotations.");
-                return quoataions;
+                // Apply search filter if searchTerm is provided
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    searchTerm = searchTerm.ToLower();
+                    query = query.Where(q => q.Car.CarRego.ToLower().Contains(searchTerm));
+                }
+
+                // Apply filters
+                query = filter?.ToLower() switch
+                {
+                    "unsent" => query.Where(q => q.IsEmailSent == false),
+                    _ => query
+                };
+
+                var finalQuery = query
+                                 .OrderByDescending(q => q.DateAdded)
+                                 .Select(q => new QuotationListDto
+                                 {
+                                     QuotationId = q.QuotationId,
+                                     CustomerName = q.Car.Customer.CustomerName,
+                                     CarRego = q.Car.CarRego,
+                                     IssueName = q.IssueName,
+                                     DateAdded = q.DateAdded,
+                                     TotalAmount = q.TotalAmount,
+                                     IsEmailSent = q.IsEmailSent
+                                 });
+
+                //var quoataions = await _data.Quotations
+                //    .Include(q => q.Car)
+                //        .ThenInclude(car => car.Customer)
+                //    .OrderByDescending(q => q.DateAdded)
+                //    .Select(q => new QuotationListDto
+                //    {
+                //        QuotationId = q.QuotationId,
+                //        CustomerName = q.Car.Customer.CustomerName,
+                //        CarRego = q.Car.CarRego,
+                //        IssueName = q.IssueName,
+                //        DateAdded = q.DateAdded,
+                //        TotalAmount = q.TotalAmount,
+                //        IsEmailSent = q.IsEmailSent
+                //    }).ToListAsync();
+
+                return await PaginatedList<QuotationListDto>.CreateAsync(finalQuery, pageNumber, pageSize);
             }
             catch(Exception ex)
             {
@@ -255,41 +287,41 @@ namespace MobileMekaniko_Final.Repository
             }
         }
 
-        public async Task<List<QuotationListDto>> SearchQuotationByRego(string rego)
-        {
-            try
-            {
-                // Return all quotes if no rego is being searched
-                if (string.IsNullOrEmpty(rego))
-                {
-                    return await GetQuotationListAsync();
-                }
+        //public async Task<List<QuotationListDto>> SearchQuotationByRego(string rego)
+        //{
+        //    try
+        //    {
+        //        // Return all quotes if no rego is being searched
+        //        if (string.IsNullOrEmpty(rego))
+        //        {
+        //            return await GetQuotationListAsync();
+        //        }
 
-                var filteredQuotations = await _data.Quotations
-                    .Include(q => q.Car)
-                        .ThenInclude(car => car.Customer)
-                    .OrderByDescending(q => q.DateAdded)
-                    .Where(q => q.Car.CarRego.Contains(rego))
-                    .Select(q => new QuotationListDto
-                    {
-                        QuotationId = q.QuotationId,
-                        IssueName = q.IssueName,
-                        CustomerName = q.Car.Customer.CustomerName,
-                        CarRego = q.Car.CarRego,
-                        DateAdded = q.DateAdded,
-                        TotalAmount = q.TotalAmount,
-                        IsEmailSent = q.IsEmailSent
-                    }).ToListAsync();
+        //        var filteredQuotations = await _data.Quotations
+        //            .Include(q => q.Car)
+        //                .ThenInclude(car => car.Customer)
+        //            .OrderByDescending(q => q.DateAdded)
+        //            .Where(q => q.Car.CarRego.Contains(rego))
+        //            .Select(q => new QuotationListDto
+        //            {
+        //                QuotationId = q.QuotationId,
+        //                IssueName = q.IssueName,
+        //                CustomerName = q.Car.Customer.CustomerName,
+        //                CarRego = q.Car.CarRego,
+        //                DateAdded = q.DateAdded,
+        //                TotalAmount = q.TotalAmount,
+        //                IsEmailSent = q.IsEmailSent
+        //            }).ToListAsync();
 
-                _logger.LogInformation($"Fetched {filteredQuotations.Count} quotations with Rego # {rego}");
-                return filteredQuotations;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"An error occurred while trying to fetch quotations with Rego # {rego}");
-                throw;
-            }
-        }
+        //        _logger.LogInformation($"Fetched {filteredQuotations.Count} quotations with Rego # {rego}");
+        //        return filteredQuotations;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"An error occurred while trying to fetch quotations with Rego # {rego}");
+        //        throw;
+        //    }
+        //}
 
         public async Task UpdateIsEmailSendAsync(int id, bool emailSent)
         {
