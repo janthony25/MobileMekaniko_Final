@@ -116,6 +116,8 @@
 ### Framework: 
 - ASP .NET Core 8 MVC
 ### Frontend:
+- HTML
+- CSS
 - JQuery
 - Bootstrap 5
 - Chartjs
